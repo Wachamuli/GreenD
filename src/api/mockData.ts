@@ -38,19 +38,22 @@ export const Services = [
   {
     serviceId: 1,
     serviceName: "Plomería",
-    serviceDescription: "Trabajo sobre cañerías, baños y piscinas",
-    serviceRegistrationDate: new Date("2021-01-16")
+    serviceDescription: "Trabajo sobre cañerías, baños y piscinas.",
+    serviceRegistrationDate: new Date("2021-01-16"),
+    serviceImage: require("../assets/placeholders/plumber.webp")
   },
   {
     serviceId: 2,
     serviceName: "Jardinería",
-    serviceDescription: "Servicio dedicado al mantenimiento de patios, frentes y arreglos florales para jardines", 
-    serviceRegistrationDate: new Date("2022-12-05")
+    serviceDescription: "Servicio dedicado al mantenimiento de patios, frentes y arreglos florales para jardines.", 
+    serviceRegistrationDate: new Date("2022-12-05"),
+    serviceImage: require("../assets/placeholders/garden.jpg")
   },
   {
     serviceId: 3,
-    serviceName: "",
-    serviceDescription: "Servicio dedicado al mantenimiento de patios, frentes y arreglos florales para jardines", 
-    serviceRegistrationDate: new Date("2023-07-22")
+    serviceName: "Pintura",
+    serviceDescription: "Renovación de pintura en los exteriores e interiores del hogar.", 
+    serviceRegistrationDate: new Date("2023-07-22"),
+    serviceImage: require("../assets/placeholders/painter.jpg")
   }
 ]
