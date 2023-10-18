@@ -40,7 +40,7 @@ export const Services = [
     serviceName: "Plomería",
     serviceDescription: "Trabajo sobre cañerías, baños y piscinas.",
     serviceRegistrationDate: new Date("2021-01-16"),
-    serviceImage: require("../assets/placeholders/plumber.webp")
+    serviceImage: require("../assets/placeholders/plumber.webp"),
   },
   {
     serviceId: 2,
