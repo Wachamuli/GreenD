@@ -7,8 +7,8 @@ import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 const ServiceList = (): JSX.Element => {
   return (
-    <ScrollView style={styles.serviceCardListContainer}>
       <FlatList
+        style={styles.serviceCardListContainer}
         data={Services}
         renderItem={({ item }) => (
           <ServiceCard
@@ -20,7 +20,6 @@ const ServiceList = (): JSX.Element => {
         )}
         keyExtractor={item => item.serviceId.toString()}
       />
-    </ScrollView>
   );
 };
 

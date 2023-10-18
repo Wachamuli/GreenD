@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
   serviceCardImage: {
     width: "100%",
     maxHeight: verticalScale(130),
-    borderEndEndRadius: moderateScale(10),
+    borderTopLeftRadius: moderateScale(10),
+    borderTopRightRadius: moderateScale(10),
     marginBottom: verticalScale(20)
   },
   serviceCardName: {
