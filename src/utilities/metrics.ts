@@ -12,4 +12,4 @@ const verticalScale = (size: number) => (height / guidelineBaseHeight) * size;
 // Usage: fontSize, borderRadius, etc.
 const moderateScale = (size: number, factor = 0.5) => size + (horizontalScale(size) - size) * factor;
 
-export { horizontalScale, verticalScale, moderateScale };
+export { width, height, horizontalScale, verticalScale, moderateScale };

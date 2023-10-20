@@ -10,7 +10,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-import ServiceList from "./components/ServiceList";
+import HomeScreen from "./screens/HomeScreen";
 import MyProfileScreen from "./screens/MyProfileScreen";
 import ActiveServicesScreen from "./screens/ActiveServicesScreen";
 import HistorialScreen from "./screens/HistorialScreen";
@@ -23,9 +23,10 @@ const App = (): JSX.Element => {
       <Tab.Navigator initialRouteName="home">
         <Tab.Screen
           name="home"
-          component={ServiceList}
+          component={HomeScreen}
           options={{
             title: "Inicio",
+            headerShown: false,
             tabBarIcon: ({ color }) => (
               <FontAwesomeIcon icon={faHome} color={color} />
             ),
