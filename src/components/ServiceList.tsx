@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, StyleSheet, View, Text } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 
 import { Services } from "../api/mockData";
 import ServiceCard from "../components/ServiceCard";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 const initialDimension = Dimensions.get("screen");
 
