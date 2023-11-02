@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -8,86 +8,151 @@ import {
   FlatList,
   Button,
 } from "react-native";
-import CheckBox from "expo-checkbox";
+
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { RootStackParamList } from "../screens/HomeScreen";
+import { RootStackParamList, navigationProp } from "../screens/HomeScreen";
 import { Services } from "../api/mockData";
 import { Image } from "react-native";
+import Gheader from "./Gheader";
+import Gtext from "./Gtext";
+import Gbutton from "./Gbutton";
+import Detail from "./Detail";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
 
+// TODO: Maybe use agenda
+import { Agenda, Calendar } from "react-native-calendars";
+import { useNavigation } from "@react-navigation/native";
+
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
 const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
+  const [isChecked, setIsChecked] = useState<boolean[]>([]);
+  const [selectedDetails, setSelectedDetails] = useState(["Suma"]);
+
+  const [notes, setNotes] = useState("");
+  const navigation = useNavigation<navigationProp>();
+
   const getService = Services.find(
     item => item.serviceId.toString() == route.params.serviceId,
   );
 
-  const [toggleCheckbox, setToggleCheckbox] = useState(false);
-  const [notes, setNotes] = useState("");
+
+  useEffect(() => console.log(selectedDetails), [selectedDetails])
+
 
   return (
-    <View style={{ position: "relative" }}>
-      <Image source={getService?.serviceImage} style={styles.serviceImage} />
-      <Text style={styles.textContainer}>
-        <Text style={styles.header}>{getService?.serviceName}</Text>
-        <Text>{getService?.serviceFullDescription}</Text> {"\n"}
-        <Text>
-          {getService?.serviceDetails.map((item, index) => (
-            <>
-              <CheckBox
-                disabled={false}
-                value={toggleCheckbox}
-                onValueChange={() => setToggleCheckbox(!toggleCheckbox)}
-                />
-                <Text>{item}</Text> {"\n"}
-            </>
+    <>
+      <ScrollView
+        contentContainerStyle={{ backgroundColor: "white" }}
+        style={styles.serviceDetailsContainer}>
+        <Image source={getService?.serviceImage} style={styles.serviceImage} />
+        <View style={styles.textContainer}>
+          <Gheader title={getService?.serviceName} />
+          <View style={styles.serviceDescriptionContainer}>
+            <Gtext>{getService?.serviceFullDescription}</Gtext>
+          </View>
+
+          {selectedDetails.map((value, index) => (
+            <Gtext key={index}>{value}</Gtext>
           ))}
-        </Text>
-      </Text>
-      <Text>Notas</Text>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={setNotes}
-        value={notes}
-        placeholder="Escriba una nota aquí"
-      />
+
+          <Gheader title="Contratar" />
+          <View style={styles.detailsContainer}>
+            {getService?.serviceDetails.map((detail, index) => (
+              <Detail
+                detail={detail}
+                key={index}
+                value={isChecked[index]}
+                onValueChange={() => {
+                  const newCheks = [...isChecked]
+                  newCheks[index] = !newCheks[index]
+
+                  if (newCheks[index]) {
+                    setSelectedDetails(prevState => [...prevState, detail])
+                  } else {
+                    setSelectedDetails(selectedDetails.filter((value) => value !== detail))
+                  }
+
+                  setIsChecked(newCheks)
+                }} 
+              />
+            ))}
+          </View>
+
+          <Gheader title={"Agendar"} />
+          <View style={styles.agendaContainer}>
+            <Calendar />
+          </View>
+
+          <Gheader title="Nota" />
+          <View style={styles.textInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              onChangeText={setNotes}
+              value={notes}
+              selectTextOnFocus={true}
+              placeholder="Escriba una nota aquí"
+              placeholderTextColor={"black"}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
       <View style={styles.buttonContainer}>
-        <Button title="Solicitar" />
+        <Gbutton
+          title="Solicitar"
+          onPress={() =>
+            navigation.navigate("serviceResume", {
+              serviceId: route.params.serviceId,
+            })
+          }
+        />
       </View>
-    </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  serviceDetailsContainer: {
+    position: "relative",
+  },
   serviceImage: {
     width: "100%",
     maxHeight: verticalScale(200),
   },
   textContainer: {
-    color: "black",
-    paddingHorizontal: horizontalScale(10),
+    marginHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(10),
   },
-  header: {
-    fontSize: moderateScale(24),
-    fontWeight: "bold",
-    marginBottom: verticalScale(20),
+  serviceDescriptionContainer: {
+    marginBottom: verticalScale(30),
   },
-  buttonContainer: {
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
+  detailsContainer: {
+    marginBottom: verticalScale(30),
+  },
+  agendaContainer: {
+    marginBottom: verticalScale(30),
+  },
+  textInputContainer: {
+    marginBottom: verticalScale(30),
   },
   textInput: {
     color: "black",
-    width: "100%",
     borderColor: "black",
+    textAlignVertical: "top",
     borderWidth: 2,
+    minHeight: verticalScale(100),
+  },
+  buttonContainer: {
+    position: "absolute",
+    // padding: 6,
+    width: "100%",
+    bottom: 0,
   },
 });
 

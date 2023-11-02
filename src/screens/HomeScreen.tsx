@@ -2,16 +2,17 @@ import React from "react";
 
 import { NavigationProp } from "@react-navigation/native";
 import {
-  NativeStackScreenProps,
   createNativeStackNavigator,
 } from "@react-navigation/native-stack";
 
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../components/ServiceDetails";
+import ServiceResume from "../components/ServiceResume";
 
 export type RootStackParamList = {
   serviceList: undefined;
   serviceDetails: { serviceId: string };
+  serviceResume: { serviceId: string };
 };
 
 // Use this one just for navigation
@@ -31,6 +32,11 @@ const HomeScreen = (): JSX.Element => {
         name="serviceDetails"
         component={ServiceDetails}
         options={{ headerTitle: "Detalles del servicio" }}
+      />
+      <Stack.Screen
+        name="serviceResume"
+        component={ServiceResume}
+        options={{ headerTitle: "Resumen del servicio" }}
       />
     </Stack.Navigator>
   );

@@ -20,7 +20,9 @@ const Tab = createBottomTabNavigator();
 const App = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="home">
+      <Tab.Navigator
+        initialRouteName="home"
+        screenOptions={{ tabBarHideOnKeyboard: true }}>
         <Tab.Screen
           name="home"
           component={HomeScreen}
