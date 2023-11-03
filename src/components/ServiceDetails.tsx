@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header from "./Header";
 import Par from "./Par";
 import Tappable from "./controls/Tappable";
-import Detail from "./controls/Detail";
+import Checkbox from "./controls/Checkbox";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { RootStackParamList, navigationProp } from "../screens/HomeScreen";
 import { Services } from "../api/mockData";
@@ -88,8 +88,8 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
           <Header title="Solicitar" />
           <View style={styles.detailsContainer}>
             {getService?.serviceDetails.map((detail, index) => (
-              <Detail
-                detail={detail}
+              <Checkbox
+                text={detail}
                 key={index}
                 value={checkedDetails[detail]}
                 onValueChange={() => {

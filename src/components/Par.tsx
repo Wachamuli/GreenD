@@ -12,10 +12,10 @@ const Par = ({ children, style, numberOfLines }: Props): JSX.Element => {
     <Text
       numberOfLines={numberOfLines}
       style={{
-        ...style,
         fontFamily: undefined,
         fontSize: moderateScale(16),
         color: "black",
+        ...style,
       }}>
       {children}
     </Text>

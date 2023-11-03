@@ -7,16 +7,17 @@ import Par from "../Par";
 import { View } from "react-native";
 
 type Props = {
+  style?: {},
   value?: boolean | undefined,
-  detail: string;
+  text: string;
   disabled?: boolean;
   onValueChange?: SetStateAction<any>; 
   onChange?: () => void; 
 }
 
-const Detail = (props: Props): JSX.Element => {
+const Checkbox = (props: Props): JSX.Element => {
   return (
-    <View style={styles.detailContainer}>
+    <View style={{...styles.detailContainer, ...props.style}}>
       <CheckBox
         style={styles.checkbox}
         disabled={props.disabled}
@@ -24,7 +25,7 @@ const Detail = (props: Props): JSX.Element => {
         onValueChange={props.onValueChange}
         onChange={props.onChange}
       />
-      <Par>{props.detail}</Par>
+      <Par>{props.text}</Par>
       </View>
   );
 };
@@ -40,4 +41,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Detail;
+export default Checkbox;
