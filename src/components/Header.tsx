@@ -1,12 +1,12 @@
 import React from "react";
+import { Text } from "react-native";
 
-import Gtext from "./Gtext";
+import Par from "./Par";
 import { moderateScale, verticalScale } from "../utilities/metrics";
-import { Text, View } from "react-native";
 
-const Gheader = ({ title }: { title: string | undefined }): JSX.Element => {
+const Header = ({ title }: { title: string | undefined }): JSX.Element => {
   return (
-    <Gtext style={{ marginBottom: verticalScale(10)}}>
+    <Par style={{ marginBottom: verticalScale(10)}}>
       <Text
         style={{
           color: "black",
@@ -15,8 +15,8 @@ const Gheader = ({ title }: { title: string | undefined }): JSX.Element => {
         }}>
         {title}
       </Text>
-    </Gtext>
+    </Par>
   );
 };
 
-export default Gheader;
+export default Header;

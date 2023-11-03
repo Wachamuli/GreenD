@@ -12,6 +12,107 @@ export const Condominium = [
   },
 ];
 
+export const Outsourcers = [
+  {
+    outsourcerId: 1,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Plomería por un tubo y sietes llaves",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 2,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 3,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 4,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 5,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 6,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+  {
+    outsourcerId: 7,
+    outsourcerName: "Pepe Plomo",
+    outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
+    outsourcerBriefDescription: "Lorem",
+    outsourcerFullDescription: "",
+    outsourcerNcf: "000000000",
+    outsourcerAvailability: "",
+    outsourcerOwner: "Felipe Sánchez Guerrero",
+    outsourcerOwnerNickname: "Pepe",
+    outsourcerRegistrationDate: new Date("2023-12-28"),
+    outsourcerNickname: new Date("2023-12-28"),
+    outsourcerService_type: "Plumbing"  
+  },
+];
+
 export const Users = [
   {
     userId: 1,

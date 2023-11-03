@@ -3,12 +3,14 @@ import { StyleProp, TextStyle, Text } from "react-native";
 import { moderateScale } from "../utilities/metrics";
 
 type Props = PropsWithChildren & {
-  style?: {} // TODO: Type-check this with StyleProp and TextStyle or other way
-}
+  style?: {}; // TODO: Type-check this with StyleProp and TextStyle or other way
+  numberOfLines?: number;
+};
 
-const Gtext = ({ children, style}: Props): JSX.Element => {
+const Par = ({ children, style, numberOfLines }: Props): JSX.Element => {
   return (
     <Text
+      numberOfLines={numberOfLines}
       style={{
         ...style,
         fontFamily: undefined,
@@ -20,4 +22,4 @@ const Gtext = ({ children, style}: Props): JSX.Element => {
   );
 };
 
-export default Gtext;
+export default Par;

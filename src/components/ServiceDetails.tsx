@@ -1,54 +1,46 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ScrollView,
-  Text,
   StyleSheet,
   View,
   TextInput,
-  FlatList,
-  Button,
   Alert,
+  Image,
 } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+import Header from "./Header";
+import Par from "./Par";
+import Tappable from "./controls/Tappable";
+import Detail from "./controls/Detail";
+import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { RootStackParamList, navigationProp } from "../screens/HomeScreen";
 import { Services } from "../api/mockData";
-import { Image } from "react-native";
-import Gheader from "./Gheader";
-import Gtext from "./Gtext";
-import Gbutton from "./Gbutton";
-import Detail from "./Detail";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../utilities/metrics";
 
 // TODO: Maybe use agenda
-import { Agenda, Calendar, WeekCalendar } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
+import OutsourcerCard from "./OutsourcerCard";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
 const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
-  const [checkedDetails, setCheckedDetails] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [checkedDetails, setCheckedDetails] = useState<{ [key: string]: boolean }>({});
   const [selectedDay, setSelectedDay] = useState<string>("");
+  const [selectedOutsourcer, setSelectedOutsourcer] = useState("");
   const [notes, setNotes] = useState("");
   const navigation = useNavigation<navigationProp>();
 
-  const getDetails = (checkedDetails: { [key: string]: boolean }) => {
-    const cleanDetails = Object.entries(checkedDetails).filter(
-      check => check[1],
-    );
-    return Object.assign(cleanDetails);
-  };
-
-  const getService = Services.find(
-    item => item.serviceId.toString() == route.params.serviceId,
-  );
+  const marked = useMemo(() => {
+    return {
+      [selectedDay]: {
+        selected: true,
+        selectedColor: "black",
+        textColor: "white",
+      },
+    };
+  }, [selectedDay]);
 
   useEffect(() =>
     navigation.addListener("beforeRemove", event => {
@@ -67,15 +59,16 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
     }),
   );
 
-  const marked = useMemo(() => {
-    return {
-      [selectedDay]: {
-        selected: true,
-        selectedColor: "black",
-        textColor: "white",
-      },
-    };
-  }, [selectedDay]);
+  const getDetails = (checkedDetails: { [key: string]: boolean }) => {
+    const cleanDetails = Object.entries(checkedDetails).filter(
+      check => check[1],
+    );
+    return Object.assign(cleanDetails);
+  };
+
+  const getService = Services.find(
+    item => item.serviceId.toString() == route.params.serviceId,
+  );
 
   const today = new Date();
   today.setDate(today.getDay() + 15);
@@ -87,12 +80,12 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
         style={styles.serviceDetailsContainer}>
         <Image source={getService?.serviceImage} style={styles.serviceImage} />
         <View style={styles.textContainer}>
-          <Gheader title={getService?.serviceName} />
+          <Header title={getService?.serviceName} />
           <View style={styles.serviceDescriptionContainer}>
-            <Gtext>{getService?.serviceFullDescription}</Gtext>
+            <Par>{getService?.serviceFullDescription}</Par>
           </View>
 
-          <Gheader title="Contratar" />
+          <Header title="Solicitar" />
           <View style={styles.detailsContainer}>
             {getService?.serviceDetails.map((detail, index) => (
               <Detail
@@ -111,11 +104,11 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
             ))}
           </View>
 
-          <Gheader title={"Agendar"} />
+          <Header title="Agendar" />
           <View style={styles.agendaContainer}>
             <Calendar
               enableSwipeMonths
-              // disableAllTouchEventsForDisabledDays
+              disableAllTouchEventsForDisabledDays
               testID="Details"
               minDate={new Date().toString()}
               maxDate={today.toString()}
@@ -124,7 +117,12 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
             />
           </View>
 
-          <Gheader title="Nota" />
+          <Header title="Contratar" />
+          <View style={styles.agendaContainer}>
+            <OutsourcerCard setValue={setSelectedOutsourcer} />
+          </View>
+
+          <Header title="Nota" />
           <View style={styles.textInputContainer}>
             <TextInput
               style={styles.textInput}
@@ -139,13 +137,14 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
       </ScrollView>
 
       <View style={styles.buttonContainer}>
-        <Gbutton
+        <Tappable
           title="Solicitar"
           onPress={() =>
             navigation.navigate("serviceResume", {
               serviceId: route.params.serviceId,
               selectedDetails: getDetails(checkedDetails),
               selectedDay: selectedDay,
+              selectedOutsourcer: selectedOutsourcer,
               note: notes,
             })
           }
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "absolute",
-    // padding: 6,
     width: "100%",
     bottom: 0,
   },

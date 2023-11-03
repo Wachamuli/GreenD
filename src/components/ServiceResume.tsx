@@ -3,20 +3,21 @@ import { View } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/HomeScreen";
-import Gtext from "./Gtext";
-import Gheader from "./Gheader";
+import Par from "./Par";
+import Header from "./Header";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
 
 const ServiceResume = ({ route }: ScreenProps) => {
   return (
     <View>
-      <Gheader title="Resumen" />
+      <Header title="Resumen" />
       {route.params.selectedDetails.map((value, index) => (
-        <Gtext key={index}>{value}</Gtext>
+        <Par key={index}>{value}</Par>
       ))}
-      <Gheader title={route.params.selectedDay}/>
-      <Gtext>{route.params.note}</Gtext>
+      <Header title={route.params.selectedDay}/>
+      <Par>{route.params.selectedOutsourcer}</Par>
+      <Par>{route.params.note}</Par>
     </View>
   );
 };

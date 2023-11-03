@@ -2,8 +2,8 @@ import React, { SetStateAction } from "react";
 import {StyleSheet} from "react-native";
 import  CheckBox  from "expo-checkbox";
 
-import { horizontalScale, verticalScale } from "../utilities/metrics";
-import Gtext from "./Gtext";
+import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import Par from "../Par";
 import { View } from "react-native";
 
 type Props = {
@@ -24,7 +24,7 @@ const Detail = (props: Props): JSX.Element => {
         onValueChange={props.onValueChange}
         onChange={props.onChange}
       />
-      <Gtext>{props.detail}</Gtext>
+      <Par>{props.detail}</Par>
       </View>
   );
 };
