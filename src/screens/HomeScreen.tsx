@@ -1,9 +1,7 @@
 import React from "react";
 
 import { NavigationProp } from "@react-navigation/native";
-import {
-  createNativeStackNavigator,
-} from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../components/ServiceDetails";
@@ -12,7 +10,12 @@ import ServiceResume from "../components/ServiceResume";
 export type RootStackParamList = {
   serviceList: undefined;
   serviceDetails: { serviceId: string };
-  serviceResume: { serviceId: string };
+  serviceResume: {
+    serviceId: string;
+    selectedDetails: string[];
+    selectedDay: string;
+    note: string;
+  };
 };
 
 // Use this one just for navigation

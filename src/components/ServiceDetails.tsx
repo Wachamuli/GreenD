@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -7,6 +7,7 @@ import {
   TextInput,
   FlatList,
   Button,
+  Alert,
 } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -25,23 +26,59 @@ import {
 } from "../utilities/metrics";
 
 // TODO: Maybe use agenda
-import { Agenda, Calendar } from "react-native-calendars";
+import { Agenda, Calendar, WeekCalendar } from "react-native-calendars";
 import { useNavigation } from "@react-navigation/native";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
 const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
-  const [checkedDetails, setCheckedDetails] = useState<{ [key: string]: boolean }>({});
+  const [checkedDetails, setCheckedDetails] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const [selectedDay, setSelectedDay] = useState<string>("");
   const [notes, setNotes] = useState("");
   const navigation = useNavigation<navigationProp>();
+
+  const getDetails = (checkedDetails: { [key: string]: boolean }) => {
+    const cleanDetails = Object.entries(checkedDetails).filter(
+      check => check[1],
+    );
+    return Object.assign(cleanDetails);
+  };
 
   const getService = Services.find(
     item => item.serviceId.toString() == route.params.serviceId,
   );
 
+  useEffect(() =>
+    navigation.addListener("beforeRemove", event => {
+      event.preventDefault();
+      Alert.alert(
+        "¿Descartar solicitud?",
+        "Si sales de esta sección se eliminarán los detalles de tu solicitud",
+        [
+          { text: "Continuar", onPress: () => {} },
+          {
+            text: "Descartar",
+            onPress: () => navigation.dispatch(event.data.action),
+          },
+        ],
+      );
+    }),
+  );
 
-  useEffect(() => console.log(checkedDetails), [checkedDetails])
+  const marked = useMemo(() => {
+    return {
+      [selectedDay]: {
+        selected: true,
+        selectedColor: "black",
+        textColor: "white",
+      },
+    };
+  }, [selectedDay]);
 
+  const today = new Date();
+  today.setDate(today.getDay() + 15);
 
   return (
     <>
@@ -63,17 +100,28 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
                 key={index}
                 value={checkedDetails[detail]}
                 onValueChange={() => {
-                  const newCheks = {...checkedDetails}
-                  newCheks[detail] = !newCheks[detail]
-                  setCheckedDetails(prevState => ({...prevState, [detail]: newCheks[detail]}))
-                }} 
+                  const newCheks = { ...checkedDetails };
+                  newCheks[detail] = !newCheks[detail];
+                  setCheckedDetails(prevState => ({
+                    ...prevState,
+                    [detail]: newCheks[detail],
+                  }));
+                }}
               />
             ))}
           </View>
 
           <Gheader title={"Agendar"} />
           <View style={styles.agendaContainer}>
-            <Calendar />
+            <Calendar
+              enableSwipeMonths
+              // disableAllTouchEventsForDisabledDays
+              testID="Details"
+              minDate={new Date().toString()}
+              maxDate={today.toString()}
+              onDayPress={day => setSelectedDay(day.dateString)}
+              markedDates={marked}
+            />
           </View>
 
           <Gheader title="Nota" />
@@ -96,6 +144,9 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
           onPress={() =>
             navigation.navigate("serviceResume", {
               serviceId: route.params.serviceId,
+              selectedDetails: getDetails(checkedDetails),
+              selectedDay: selectedDay,
+              note: notes,
             })
           }
         />

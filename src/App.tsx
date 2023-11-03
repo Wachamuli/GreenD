@@ -10,10 +10,13 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { calendarSetup } from "./utilities/calendarSetup";
 import HomeScreen from "./screens/HomeScreen";
 import MyProfileScreen from "./screens/MyProfileScreen";
 import ActiveServicesScreen from "./screens/ActiveServicesScreen";
 import HistorialScreen from "./screens/HistorialScreen";
+
+calendarSetup("es");
 
 const Tab = createBottomTabNavigator();
 
