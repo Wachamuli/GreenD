@@ -1,73 +1,28 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faFileInvoice,
-  faHome,
-  faSpinner,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
 
 import { calendarSetup } from "./utilities/calendarSetup";
-import HomeScreen from "./screens/HomeScreen";
-import MyProfileScreen from "./screens/MyProfileScreen";
-import ActiveServicesScreen from "./screens/ActiveServicesScreen";
-import HistorialScreen from "./screens/HistorialScreen";
+import { NavigationContainer, NavigationProp } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./screens/LoginScreen";
+import IndexScreen from "./screens/IndexScreen";
 
 calendarSetup("es");
 
-const Tab = createBottomTabNavigator();
+export type RootStackParamList = {
+  login: undefined;
+  index: undefined;
+}
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+export type navigationProp = NavigationProp<RootStackParamList>;
 
 const App = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="home"
-        screenOptions={{ tabBarHideOnKeyboard: true }}>
-        <Tab.Screen
-          name="home"
-          component={HomeScreen}
-          options={{
-            title: "Inicio",
-            headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faHome} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="activeServices"
-          component={ActiveServicesScreen}
-          options={{
-            title: "Servicios Activos",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faSpinner} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="historial"
-          component={HistorialScreen}
-          options={{
-            title: "Historial",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faFileInvoice} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="myProfile"
-          component={MyProfileScreen}
-          options={{
-            title: "Mi Perfil",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faUser} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false}}>
+        <Stack.Screen name="login" component={LoginScreen} />
+        <Stack.Screen name="index" component={IndexScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };

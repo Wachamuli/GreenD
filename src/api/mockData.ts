@@ -17,7 +17,7 @@ export const Outsourcers = [
     outsourcerId: 1,
     outsourcerName: "Pepe Plomo",
     outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
-    outsourcerBriefDescription: "Plomería por un tubo y sietes llaves",
+    outsourcerBriefDescription: "Plomería por un tubo y sietes llaves.",
     outsourcerFullDescription: "",
     outsourcerNcf: "000000000",
     outsourcerAvailability: "",
