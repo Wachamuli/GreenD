@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -8,39 +8,43 @@ import {
   Image,
 } from "react-native";
 
+import { Controller, useForm } from "react-hook-form";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import z from "zod";
 
 import Header from "./Header";
 import Par from "./Par";
 import Tappable from "./controls/Tappable";
 import Checkbox from "./controls/Checkbox";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../utilities/metrics";
 import { RootStackParamList, navigationProp } from "../screens/HomeScreen";
-import { Services } from "../api/mockData";
+import { Outsourcers, Services } from "../api/mockData";
 
 // TODO: Maybe use agenda
-import { Calendar } from "react-native-calendars";
-import { useNavigation } from "@react-navigation/native";
 import OutsourcerCard from "./OutsourcerCard";
+import { zodResolver } from "@hookform/resolvers/zod";
+import MyCalendar from "./MyCalendar";
+import Field from "./controls/Field";
+import Details from "./Details";
+import ErrorMessage from "./ErrorMessage";
+
+const ServiceDetailsSchema = z.object({
+  details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
+  calendar: z.coerce.date(),
+  outsourcer: z.string().min(1, "Asigna un contrata"),
+  note: z.string().optional(),
+});
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
-const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
-  const [checkedDetails, setCheckedDetails] = useState<{ [key: string]: boolean }>({});
-  const [selectedDay, setSelectedDay] = useState<string>("");
-  const [selectedOutsourcer, setSelectedOutsourcer] = useState("");
-  const [notes, setNotes] = useState("");
-  const navigation = useNavigation<navigationProp>();
-
-  const marked = useMemo(() => {
-    return {
-      [selectedDay]: {
-        selected: true,
-        selectedColor: "black",
-        textColor: "white",
-      },
-    };
-  }, [selectedDay]);
+const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
+  const { handleSubmit, control, getValues, setValue, formState } = useForm({
+    resolver: zodResolver(ServiceDetailsSchema),
+  });
 
   useEffect(() =>
     navigation.addListener("beforeRemove", event => {
@@ -58,13 +62,6 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
       );
     }),
   );
-
-  const getDetails = (checkedDetails: { [key: string]: boolean }) => {
-    const cleanDetails = Object.entries(checkedDetails).filter(
-      check => check[1],
-    );
-    return Object.assign(cleanDetails);
-  };
 
   const getService = Services.find(
     item => item.serviceId.toString() == route.params.serviceId,
@@ -87,50 +84,37 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
 
           <Header title="Solicitar" />
           <View style={styles.detailsContainer}>
-            {getService?.serviceDetails.map((detail, index) => (
-              <Checkbox
-                text={detail}
-                key={index}
-                value={checkedDetails[detail]}
-                onValueChange={() => {
-                  const newCheks = { ...checkedDetails };
-                  newCheks[detail] = !newCheks[detail];
-                  setCheckedDetails(prevState => ({
-                    ...prevState,
-                    [detail]: newCheks[detail],
-                  }));
-                }}
-              />
-            ))}
+            <Details
+              name="details"
+              data={getService?.serviceDetails}
+              formValue={setValue}
+              control={control}
+            />
           </View>
 
           <Header title="Agendar" />
           <View style={styles.agendaContainer}>
-            <Calendar
-              enableSwipeMonths
-              disableAllTouchEventsForDisabledDays
-              testID="Details"
-              minDate={new Date().toString()}
-              maxDate={today.toString()}
-              onDayPress={day => setSelectedDay(day.dateString)}
-              markedDates={marked}
-            />
+            <MyCalendar name="calendar" formSet={setValue} control={control} />
           </View>
 
           <Header title="Contratar" />
           <View style={styles.agendaContainer}>
-            <OutsourcerCard setValue={setSelectedOutsourcer} />
+            <OutsourcerCard
+              name="outsourcer"
+              data={Outsourcers}
+              control={control}
+              formSet={setValue}
+            />
           </View>
 
           <Header title="Nota" />
           <View style={styles.textInputContainer}>
-            <TextInput
+            <Field
+              name="note"
+              control={control}
               style={styles.textInput}
-              onChangeText={setNotes}
-              value={notes}
               selectTextOnFocus={true}
               placeholder="Escriba una nota aquí"
-              placeholderTextColor={"black"}
             />
           </View>
         </View>
@@ -139,15 +123,15 @@ const ServiceDetails = ({ route }: ScreenProps): JSX.Element => {
       <View style={styles.buttonContainer}>
         <Tappable
           title="Solicitar"
-          onPress={() =>
+          onPress={handleSubmit(() =>
             navigation.navigate("serviceResume", {
               serviceId: route.params.serviceId,
-              selectedDetails: getDetails(checkedDetails),
-              selectedDay: selectedDay,
-              selectedOutsourcer: selectedOutsourcer,
-              note: notes,
-            })
-          }
+              selectedDetails: getValues("details"),
+              selectedDay: getValues("calendar"),
+              selectedOutsourcer: getValues("outsourcer"),
+              note: getValues("note"),
+            }),
+          )}
         />
       </View>
     </>
@@ -182,8 +166,10 @@ const styles = StyleSheet.create({
     color: "black",
     borderColor: "black",
     textAlignVertical: "top",
-    borderWidth: 2,
-    minHeight: verticalScale(100),
+    borderWidth: 3,
+    borderRadius: moderateScale(10),
+    width: "100%",
+    minHeight: verticalScale(150),
   },
   buttonContainer: {
     position: "absolute",

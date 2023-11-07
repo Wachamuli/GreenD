@@ -1,32 +1,48 @@
-import React, { SetStateAction } from "react";
-import {StyleSheet} from "react-native";
-import  CheckBox  from "expo-checkbox";
+import React, { SetStateAction, SyntheticEvent } from "react";
+import { NativeSyntheticEvent, StyleSheet } from "react-native";
 
-import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import { Control, FieldValue, useController } from "react-hook-form";
+import CheckBox, { CheckboxEvent } from "expo-checkbox";
+
+import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
 import Par from "../Par";
 import { View } from "react-native";
+import ErrorMessage from "../ErrorMessage";
 
 type Props = {
-  style?: {},
-  value?: boolean | undefined,
-  text: string;
+  name: string;
+  style?: {};
+  control: Control<FieldValue<any>>;
+  label?: string;
   disabled?: boolean;
-  onValueChange?: SetStateAction<any>; 
-  onChange?: () => void; 
-}
+  onChange?: (value: boolean) => void;
+};
 
 const Checkbox = (props: Props): JSX.Element => {
+  const {
+    field,
+    fieldState: { error },
+  } = useController({
+    control: props.control,
+    defaultValue: false,
+    name: props.name,
+  });
+
   return (
-    <View style={{...styles.detailContainer, ...props.style}}>
+    <View style={{ ...styles.detailContainer, ...props.style }}>
       <CheckBox
         style={styles.checkbox}
         disabled={props.disabled}
-        value={props.value}
-        onValueChange={props.onValueChange}
-        onChange={props.onChange}
+        value={field.value}
+        color={"black"}
+        onValueChange={(e) =>{
+          if (props.onChange) props.onChange(e.valueOf())
+          field.onChange(e)
+        }}
       />
-      <Par>{props.text}</Par>
-      </View>
+      {props.label && <Par>{props.label}</Par>}
+      <ErrorMessage error={error} />
+    </View>
   );
 };
 
@@ -34,11 +50,16 @@ const styles = StyleSheet.create({
   detailContainer: {
     display: "flex",
     flexDirection: "row",
-    marginBottom: verticalScale(5)
+    marginBottom: verticalScale(5),
   },
   checkbox: {
-    marginRight: horizontalScale(10) 
-  }
-})
+    marginRight: horizontalScale(10),
+    borderRadius: moderateScale(20),
+    padding: moderateScale(10),
+  },
+  error: {
+    color: "red",
+  },
+});
 
 export default Checkbox;

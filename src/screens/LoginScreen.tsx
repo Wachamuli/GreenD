@@ -17,6 +17,7 @@ import { navigationProp } from "../App";
 const LoginSchema = z.object({
   username: z.string().min(1, { message: "Nombre de usuario requerido " }),
   password: z.string().min(1, { message: "Contraseña requerida " }),
+  rememberMe: z.literal(true),
 });
 
 const LoginScreen = () => {
@@ -45,10 +46,10 @@ const LoginScreen = () => {
         />
         <Par style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Par>
         <Checkbox
-          onValueChange={setRememberMe}
-          value={rememberMe}
+          name="rememberMe"
+          control={control}
           style={styles.rememberMe}
-          text="Recuérdame"
+          label="Recuérdame"
         />
         <Tappable
           title="Iniciar Sesión"

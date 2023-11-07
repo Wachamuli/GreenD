@@ -13,11 +13,11 @@ const ServiceResume = ({ route }: ScreenProps) => {
     <View>
       <Header title="Resumen" />
       {route.params.selectedDetails.map((value, index) => (
-        <Par key={index}>{value}</Par>
+        <Par key={index}>{index + ":"}{value}</Par>
       ))}
-      <Header title={route.params.selectedDay}/>
-      <Par>{route.params.selectedOutsourcer}</Par>
-      <Par>{route.params.note}</Par>
+      <Par>Day: {route.params.selectedDay}</Par>
+      <Par>OutsourcerID: {route.params.selectedOutsourcer}</Par>
+      <Par>Note: {route.params.note}</Par>
     </View>
   );
 };

@@ -10,26 +10,38 @@ import {
 } from "../utilities/metrics";
 import Par from "./Par";
 import Tappable from "./controls/Tappable";
+import { Outsourcer } from "../api/mockData";
+import { Control, FieldValue, useController } from "react-hook-form";
+import ErrorMessage from "./ErrorMessage";
 
 type Props = {
-  setValue: (value: SetStateAction<string>) => void;
-}
+  name: string;
+  data: Outsourcer[];
+  control: Control<FieldValue<any>>;
+  setValue?: (value: SetStateAction<string>) => void;
+  formSet: (name: string, value: string) => void;
+};
 
 const OutsourcerCard = (props: Props) => {
+  const { fieldState: { error } } = useController({
+    name: props.name,
+    control: props.control,
+    defaultValue: "",
+  });
   const [isAsigned, setIsAsigned] = useState<boolean[]>([]);
 
   return (
     <View>
       <FlatList
         horizontal
-        data={Outsourcers}
+        data={props.data}
         renderItem={({ item, index }) => (
           <View style={styles.outsourcerCardContainer}>
             <Image
               style={styles.outsourcerCardImage}
-              source={item.outsourcerLogo}></Image>
-            <View
-              style={styles.rightSideContainer}>
+              source={item.outsourcerLogo}
+            />
+            <View style={styles.rightSideContainer}>
               <Par style={styles.outsourcerName}>{item.outsourcerName}</Par>
               <Par numberOfLines={2}>{item.outsourcerBriefDescription}</Par>
               <Tappable
@@ -39,16 +51,20 @@ const OutsourcerCard = (props: Props) => {
                   color: isAsigned[index] ? "white" : "green",
                 }}
                 title={isAsigned[index] ? "Asignado" : "Asignar"}
-                onPress={() => setIsAsigned(prevState => {
-                   const newValues = [...prevState];
-                   newValues[index] = !newValues[index];
-                   props.setValue(item.outsourcerId.toString());
-                   return newValues
-                })}
+                onPress={() => {
+                  props.formSet(props.name, item.outsourcerId.toString());
+                  setIsAsigned(prevStates => {
+                    const newStates = [...prevStates].map(() => false);
+                    newStates[index] = true;
+                    if (error) error.message = ""
+                    return newStates;
+                  });
+                }}
               />
             </View>
           </View>
         )}></FlatList>
+      <ErrorMessage error={error} />
     </View>
   );
 };
@@ -70,7 +86,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(100),
     marginRight: horizontalScale(10),
   },
-  rightSideContainer : {
+  rightSideContainer: {
     display: "flex",
     justifyContent: "flex-end",
     maxWidth: horizontalScale(180),

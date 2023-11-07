@@ -12,7 +12,23 @@ export const Condominium = [
   },
 ];
 
-export const Outsourcers = [
+export type Outsourcer = {
+
+    outsourcerId: number,
+    outsourcerName: string,
+    outsourcerLogo: any,
+    outsourcerBriefDescription: string,
+    outsourcerFullDescription: string,
+    outsourcerNcf: string,
+    outsourcerAvailability: string,
+    outsourcerOwner: string,
+    outsourcerOwnerNickname: string,
+    outsourcerRegistrationDate: Date,
+    outsourcerNickname: Date,
+    outsourcerService_type: string  
+}
+
+export const Outsourcers: Outsourcer[] = [
   {
     outsourcerId: 1,
     outsourcerName: "Pepe Plomo",

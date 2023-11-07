@@ -1,21 +1,24 @@
 import React from "react";
+
 import { StyleSheet, TextInput, View } from "react-native";
-import { useController } from "react-hook-form";
+import { Control, FieldValue, useController } from "react-hook-form";
 
 import Par from "../Par";
 import { horizontalScale, verticalScale } from "../../utilities/metrics";
-import { Control, FieldValue } from "react-hook-form";
+import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   name: string;
+  style?: {};
   control: Control<FieldValue<any>>;
   label?: string;
   placeholder?: string;
   secureTextEntry?: boolean;
+  selectTextOnFocus?: boolean;
 };
 
 const Field = (props: Props) => {
-  const { field, formState: { errors } } = useController({
+  const { field, fieldState: { error } } = useController({
     control: props.control,
     defaultValue: "",
     name: props.name,
@@ -30,9 +33,10 @@ const Field = (props: Props) => {
         secureTextEntry={props.secureTextEntry}
         placeholder={props.placeholder}
         placeholderTextColor={"#D9D9D9"}
-        style={styles.input}
+        selectTextOnFocus={props.selectTextOnFocus}
+        style={{...styles.input, ...props.style}}
       />
-      { errors[props.name] && <Par style={styles.error}>{errors[props.name]?.message?.toString()}</Par> }
+      <ErrorMessage error={error} /> 
     </View>
   );
 };
@@ -46,9 +50,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     marginBottom: verticalScale(10),
   },
-  error: {
-    color: "red"
-  }
 });
 
 export default Field;

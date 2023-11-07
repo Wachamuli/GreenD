@@ -1,5 +1,5 @@
 import React from "react";
-import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
+import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
 import { verticalScale } from "../../utilities/metrics";
 
 type Props = {
