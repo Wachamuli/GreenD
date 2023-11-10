@@ -4,7 +4,7 @@ LocaleConfig.locales["es"] = {
   monthNames: [
     "Enero",
     "Febrero",
-    "Marzon",
+    "Marzo",
     "Abril",
     "Mayo",
     "Junio",

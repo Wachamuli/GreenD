@@ -20,7 +20,7 @@ const Details = (props: Props): JSX.Element => {
 
   return (
     <Controller
-      name="details"
+      name={props.name}
       control={props.control}
       render={({ fieldState: { error } }) => (
         <View>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
 import { verticalScale } from "../../utilities/metrics";
 
 type Props = {
-  title: string;
+  title?: string;
+  children?: ReactNode;
   disabled?: boolean;
   style?: {},
   onPress?: (event: GestureResponderEvent) => void;
@@ -13,7 +14,7 @@ type Props = {
 const Tappable = (props: Props): JSX.Element => {
   return (
     <Pressable onPress={props.onPress} disabled={props.disabled}>
-        <Text style={{...styles.button, ...props.style}}>{props.title}</Text>
+        <Text style={{...styles.button, ...props.style}}>{props.title}{props.children}</Text>
     </Pressable>
   );
 };

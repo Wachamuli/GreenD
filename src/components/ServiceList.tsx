@@ -21,12 +21,13 @@ const ServiceList = (): JSX.Element => {
   return (
     <View>
       <FlatList
+        data={Services}
         horizontal={hasRotated}
+        keyExtractor={item => item.serviceId.toString()}
         contentContainerStyle={{
           display: "flex",
           flexDirection: hasRotated ? "row" : "column",
         }}
-        data={Services}
         renderItem={({ item }) => (
           <ServiceCard
             id={item.serviceId.toString()}
@@ -36,7 +37,6 @@ const ServiceList = (): JSX.Element => {
             image={item.serviceImage}
           />
         )}
-        keyExtractor={item => item.serviceId.toString()}
       />
     </View>
   );

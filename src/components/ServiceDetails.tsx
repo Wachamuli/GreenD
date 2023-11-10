@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -30,7 +30,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import MyCalendar from "./MyCalendar";
 import Field from "./controls/Field";
 import Details from "./Details";
-import ErrorMessage from "./ErrorMessage";
+import TimePicker from "./TimePicker";
+import DatePicker from "react-native-date-picker";
+import DateDisplayer from "./DateDisplayer";
+import WheelPicker from "react-native-wheely";
 
 const ServiceDetailsSchema = z.object({
   details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
@@ -67,12 +70,12 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     item => item.serviceId.toString() == route.params.serviceId,
   );
 
-  const today = new Date();
-  today.setDate(today.getDay() + 15);
+  const [date, setDate] = useState<string>();
 
   return (
     <>
       <ScrollView
+        keyboardDismissMode="on-drag"
         contentContainerStyle={{ backgroundColor: "white" }}
         style={styles.serviceDetailsContainer}>
         <Image source={getService?.serviceImage} style={styles.serviceImage} />
@@ -94,7 +97,16 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
 
           <Header title="Agendar" />
           <View style={styles.agendaContainer}>
-            <MyCalendar name="calendar" formSet={setValue} control={control} />
+            <MyCalendar
+              name="calendar"
+              onValueChange={setDate}
+              formSet={setValue}
+              control={control}
+            />
+            <View style={styles.bottonAgendaContainer}>
+              <DateDisplayer date={""} />
+              <TimePicker name="timePicker" control={control} />
+            </View>
           </View>
 
           <Header title="Contratar" />
@@ -147,7 +159,7 @@ const styles = StyleSheet.create({
     maxHeight: verticalScale(200),
   },
   textContainer: {
-    marginHorizontal: horizontalScale(10),
+    // marginHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(10),
   },
   serviceDescriptionContainer: {
@@ -158,6 +170,11 @@ const styles = StyleSheet.create({
   },
   agendaContainer: {
     marginBottom: verticalScale(30),
+  },
+  bottonAgendaContainer: {
+    display: "flex",
+    flexDirection: "row",
+    gap: horizontalScale(8), 
   },
   textInputContainer: {
     marginBottom: verticalScale(30),
