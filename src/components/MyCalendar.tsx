@@ -1,7 +1,6 @@
 import React, {
   Dispatch,
   memo,
-  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -13,27 +12,15 @@ import {
   UseFormSetValue,
   useController,
 } from "react-hook-form";
-import {
-  AgendaList,
-  Calendar,
-  CalendarProvider,
-  ExpandableCalendar,
-} from "react-native-calendars";
+import { Calendar, CalendarProvider, ExpandableCalendar } from "react-native-calendars";
 import ErrorMessage from "./ErrorMessage";
-import Par from "./Par";
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { horizontalScale } from "../utilities/metrics";
+import { Dimensions } from "react-native";
 
 type Props = {
   name: string;
   control: Control<FieldValue<any>>;
-  formSet: (name: string, value: string) => void;
+  onChange: (name: string, value: string) => void;
   onValueChange: Dispatch<React.SetStateAction<string | undefined>>;
 };
 
@@ -42,11 +29,10 @@ const MyCalendar = (props: Props): JSX.Element => {
     fieldState: { error },
   } = useController({
     control: props.control,
-    defaultValue: "",
     name: props.name,
   });
 
-  const [selectedDay, setSelectedDay] = useState<string>(new Date().toString());
+  const [selectedDay, setSelectedDay] = useState<string>((new Date()).toString());
 
   const marked = useMemo(() => {
     return {
@@ -60,24 +46,30 @@ const MyCalendar = (props: Props): JSX.Element => {
 
   useEffect(() => {
     props.onValueChange(selectedDay);
-    props.formSet(props.name, selectedDay);
+    props.onChange(props.name, selectedDay);
   }, [selectedDay]);
 
+  const maxDate = new Date();
+  maxDate.setDate(maxDate.getDate() + 15);
+
   return (
-    <CalendarProvider date={selectedDay}>
+    <CalendarProvider date={"2020-05-05"}>
       <ExpandableCalendar
+        firstDay={1}
         enableSwipeMonths
+        futureScrollRange={1}
         disableAllTouchEventsForDisabledDays
-        testID="Details"
-        minDate={new Date().toString()}
-        // maxDate={today.toString()}
+        // minDate={new Date().toString()}
+        // maxDate={maxDate.toString()}
+        maxToRenderPerBatch={1}
+        markedDates={marked}
+        calendarWidth={Dimensions.get("screen").width - horizontalScale(20)} /* FIXME: */
         onDayPress={day => {
           setSelectedDay(day.dateString);
           if (error) error.message = "";
         }}
-        markedDates={marked}
       />
-      <ErrorMessage error={error} />
+      {/* // <ErrorMessage error={error} /> */}
     </CalendarProvider>
   );
 };

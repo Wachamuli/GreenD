@@ -51,6 +51,8 @@ const styles = StyleSheet.create({
   },
   wheelContainer: {
     display: "flex",
+    borderWidth: moderateScale(2),
+    borderRadius: moderateScale(10),
     alignItems: "center",
     gap: horizontalScale(10),
     flexDirection: "row",

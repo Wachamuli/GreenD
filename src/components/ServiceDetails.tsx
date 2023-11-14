@@ -1,44 +1,34 @@
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  TextInput,
-  Alert,
-  Image,
-} from "react-native";
+import { ScrollView, StyleSheet, View, Alert, Image } from "react-native";
 
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
 import Header from "./Header";
 import Par from "./Par";
 import Tappable from "./controls/Tappable";
-import Checkbox from "./controls/Checkbox";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { RootStackParamList, navigationProp } from "../screens/HomeScreen";
+import { RootStackParamList } from "../screens/HomeScreen";
 import { Outsourcers, Services } from "../api/mockData";
 
-// TODO: Maybe use agenda
 import OutsourcerCard from "./OutsourcerCard";
-import { zodResolver } from "@hookform/resolvers/zod";
 import MyCalendar from "./MyCalendar";
 import Field from "./controls/Field";
-import Details from "./Details";
+import Details from "./DetailList";
 import TimePicker from "./TimePicker";
-import DatePicker from "react-native-date-picker";
 import DateDisplayer from "./DateDisplayer";
-import WheelPicker from "react-native-wheely";
 
 const ServiceDetailsSchema = z.object({
   details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
   calendar: z.coerce.date(),
   outsourcer: z.string().min(1, "Asigna un contrata"),
+  timePicker: z.string(),
   note: z.string().optional(),
 });
 
@@ -90,7 +80,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
             <Details
               name="details"
               data={getService?.serviceDetails}
-              formValue={setValue}
+              onValueChange={setValue}
               control={control}
             />
           </View>
@@ -100,22 +90,24 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
             <MyCalendar
               name="calendar"
               onValueChange={setDate}
-              formSet={setValue}
+              onChange={setValue}
               control={control}
             />
-            <View style={styles.bottonAgendaContainer}>
-              <DateDisplayer date={""} />
-              <TimePicker name="timePicker" control={control} />
-            </View>
+            <DateDisplayer date={date} />
+            <TimePicker
+              onValueChange={setValue}
+              name="timePicker"
+              control={control}
+            />
           </View>
 
           <Header title="Contratar" />
-          <View style={styles.agendaContainer}>
+          <View>
             <OutsourcerCard
               name="outsourcer"
               data={Outsourcers}
               control={control}
-              formSet={setValue}
+              onValueChange={setValue}
             />
           </View>
 
@@ -140,6 +132,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               serviceId: route.params.serviceId,
               selectedDetails: getValues("details"),
               selectedDay: getValues("calendar"),
+              selectedTime: getValues("timePicker"),
               selectedOutsourcer: getValues("outsourcer"),
               note: getValues("note"),
             }),
@@ -159,7 +152,7 @@ const styles = StyleSheet.create({
     maxHeight: verticalScale(200),
   },
   textContainer: {
-    // marginHorizontal: horizontalScale(10),
+    marginHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(10),
   },
   serviceDescriptionContainer: {
@@ -170,11 +163,12 @@ const styles = StyleSheet.create({
   },
   agendaContainer: {
     marginBottom: verticalScale(30),
+    rowGap: verticalScale(10),
+    alignItems: "center",
   },
   bottonAgendaContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: horizontalScale(8), 
+    justifyContent: "center",
+    // rowGap: verticalScale(8),
   },
   textInputContainer: {
     marginBottom: verticalScale(30),

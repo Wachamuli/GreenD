@@ -1,6 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import Tappable from "./controls/Tappable";
-import { Control, Controller, FieldValue } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldValue,
+  useController,
+} from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
 import {
   horizontalScale,
@@ -8,18 +13,57 @@ import {
   verticalScale,
 } from "../utilities/metrics";
 import Par from "./Par";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WheelTimePicker from "./WheelTimePicker";
+
+let hours = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+];
+
+let minutes = [
+  "00",
+  "05",
+  "10",
+  "15",
+  "20",
+  "25",
+  "30",
+  "35",
+  "40",
+  "45",
+  "50",
+  "55",
+];
 
 type Props = {
   name: string;
   control: Control<FieldValue<any>>;
+  onValueChange: (name: string, value: string) => void;
 };
 
 const TimePicker = (props: Props): JSX.Element => {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [meridiem, setMeridiem] = useState(true);
+
+  useEffect(() => {
+    const meridiemString = meridiem ? "AM" : "PM";
+    props.onValueChange(
+      props.name,
+      hours[hour] + ":" + minutes[minute] + " " + meridiemString,
+    );
+  }, [hour, minute, meridiem]);
 
   return (
     <Controller
@@ -31,39 +75,13 @@ const TimePicker = (props: Props): JSX.Element => {
             <WheelTimePicker
               value={hour}
               onValueChange={setHour}
-              options={[
-                "01",
-                "02",
-                "03",
-                "04",
-                "05",
-                "06",
-                "07",
-                "08",
-                "09",
-                "10",
-                "11",
-                "12",
-              ]}
+              options={hours}
             />
             <Par style={styles.colon}>:</Par>
             <WheelTimePicker
               value={minute}
               onValueChange={setMinute}
-              options={[
-                "00",
-                "05",
-                "10",
-                "15",
-                "20",
-                "25",
-                "30",
-                "35",
-                "40",
-                "45",
-                "50",
-                "55",
-              ]}
+              options={minutes}
             />
             <View style={styles.buttonContainer}>
               <Tappable

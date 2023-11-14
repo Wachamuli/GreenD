@@ -1,17 +1,28 @@
-import React, { SetStateAction, SyntheticEvent } from "react";
-import { NativeSyntheticEvent, StyleSheet } from "react-native";
+import React from "react";
+import {
+  NativeSyntheticEvent,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 
 import { Control, FieldValue, useController } from "react-hook-form";
 import CheckBox, { CheckboxEvent } from "expo-checkbox";
 
-import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../../utilities/metrics";
 import Par from "../Par";
 import { View } from "react-native";
 import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   name: string;
-  style?: {};
+  style?: StyleProp<ViewStyle>;
+  labelStyle?: StyleProp<TextStyle>;
   control: Control<FieldValue<any>>;
   label?: string;
   disabled?: boolean;
@@ -29,18 +40,18 @@ const Checkbox = (props: Props): JSX.Element => {
   });
 
   return (
-    <View style={{ ...styles.detailContainer, ...props.style }}>
+    <View style={[styles.detailContainer, props.style]}>
       <CheckBox
         style={styles.checkbox}
         disabled={props.disabled}
         value={field.value}
         color={"black"}
-        onValueChange={(e) =>{
-          if (props.onChange) props.onChange(e.valueOf())
-          field.onChange(e)
+        onValueChange={event => {
+          if (props.onChange) props.onChange(event.valueOf());
+          field.onChange(event);
         }}
       />
-      {props.label && <Par>{props.label}</Par>}
+      {props.label && <Par style={props.labelStyle}>{props.label}</Par>}
       <ErrorMessage error={error} />
     </View>
   );

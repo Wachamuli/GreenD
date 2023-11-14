@@ -17,6 +17,7 @@ export type RootStackParamList = {
     serviceId: string;
     selectedDetails: string[];
     selectedDay: string;
+    selectedTime: string;
     selectedOutsourcer: string;
     note: string;
   };
@@ -31,26 +32,26 @@ const condominiumName = Condominium[0].condominiumName;
 
 const HomeScreen = (): JSX.Element => {
   return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="serviceList"
-          component={ServiceList}
-          options={{
-            headerTitle: "Inicio",
-            headerRight: () => <Par>{condominiumName}</Par>,
-          }}
-        />
-        <Stack.Screen
-          name="serviceDetails"
-          component={ServiceDetails}
-          options={{ headerTitle: "Detalles del servicio" }}
-        />
-        <Stack.Screen
-          name="serviceResume"
-          component={ServiceResume}
-          options={{ headerTitle: "Resumen del servicio" }}
-        />
-      </Stack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen
+        name="serviceList"
+        component={ServiceList}
+        options={{
+          headerTitle: "Inicio",
+          headerRight: () => <Par>{condominiumName}</Par>,
+        }}
+      />
+      <Stack.Screen
+        name="serviceDetails"
+        component={ServiceDetails}
+        options={{ headerTitle: "Detalles del servicio" }}
+      />
+      <Stack.Screen
+        name="serviceResume"
+        component={ServiceResume}
+        options={{ headerTitle: "Resumen del servicio" }}
+      />
+    </Stack.Navigator>
   );
 };
 

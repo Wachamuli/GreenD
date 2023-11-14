@@ -6,17 +6,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
-  date: string;
+  date?: string;
 };
 
-const DateDisplayer = (prop: Props) => {
+const DateDisplayer = (props: Props) => {
   return (
     <View style={styles.displayerContainer}>
       <View style={styles.calendarIconContainer}>
         <FontAwesomeIcon icon={faCalendarDays} color="white" />
       </View>
       <View style={styles.dateContainer}>
-        <Par style={styles.date}>Sábado, Agosto 23</Par>
+        <Par style={styles.date}>{props.date || "Sin fecha"}</Par>
       </View>
     </View>
   );
@@ -27,15 +27,13 @@ const styles = StyleSheet.create({
     width: "50%",
     marginVertical: verticalScale(20),
     borderRadius: moderateScale(20),
-    borderWidth: moderateScale(1),
+    borderWidth: moderateScale(2),
     backgroundColor: "white",
     flexDirection: "row",
     overflow: "hidden",
   },
   calendarIconContainer: {
-    display: "flex",
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "black",
     paddingHorizontal: horizontalScale(10),
   },
@@ -44,7 +42,6 @@ const styles = StyleSheet.create({
   },
   date: {
     color: "black",
-    textAlign: "center",
     fontWeight: "bold",
   },
 });

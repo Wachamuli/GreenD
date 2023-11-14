@@ -17,7 +17,6 @@ import { navigationProp } from "../App";
 const LoginSchema = z.object({
   username: z.string().min(1, { message: "Nombre de usuario requerido " }),
   password: z.string().min(1, { message: "Contraseña requerida " }),
-  rememberMe: z.literal(true),
 });
 
 const LoginScreen = () => {

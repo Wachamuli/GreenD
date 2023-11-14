@@ -13,9 +13,11 @@ import {
 
 import HomeScreen from "./HomeScreen";
 import MyProfileScreen from "./MyProfileScreen";
-import ActiveServicesScreen from "./ActiveServicesScreen";
 import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
+import ActiveServicesScreen from "./ActiveServicesScreen";
+import { moderateScale } from "../utilities/metrics";
+import Par from "../components/Par";
 
 const Tab = createBottomTabNavigator();
 
@@ -26,55 +28,58 @@ const IndexScreen = () => {
     navigation.addListener("beforeRemove", event => {
       event.preventDefault();
       BackHandler.exitApp();
-    })
-  })
+    });
+  });
 
   return (
-      <Tab.Navigator
-        initialRouteName="home"
-        screenOptions={{ tabBarHideOnKeyboard: true }}>
-        <Tab.Screen
-          name="home"
-          component={HomeScreen}
-          options={{
-            title: "Inicio",
-            headerShown: false,
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faHome} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="activeServices"
-          component={ActiveServicesScreen}
-          options={{
-            title: "Servicios Activos",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faSpinner} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="historial"
-          component={HistorialScreen}
-          options={{
-            title: "Historial",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faFileInvoice} color={color} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="myProfile"
-          component={MyProfileScreen}
-          options={{
-            title: "Mi Perfil",
-            tabBarIcon: ({ color }) => (
-              <FontAwesomeIcon icon={faUser} color={color} />
-            ),
-          }}
-        />
-      </Tab.Navigator>
+    <Tab.Navigator
+      initialRouteName="home"
+      sceneContainerStyle={{
+        // padding: moderateScale(10),
+      }}
+      screenOptions={{ tabBarHideOnKeyboard: true }}>
+      <Tab.Screen
+        name="home"
+        component={HomeScreen}
+        options={{
+          title: "Inicio",
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faHome} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="activeServices"
+        component={ActiveServicesScreen}
+        options={{
+          title: "Servicios Activos",
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faSpinner} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="historial"
+        component={HistorialScreen}
+        options={{
+          title: "Historial",
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faFileInvoice} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="myProfile"
+        component={MyProfileScreen}
+        options={{
+          title: "Mi Perfil",
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faUser} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 

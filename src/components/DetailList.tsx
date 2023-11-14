@@ -3,19 +3,20 @@ import Checkbox from "./controls/Checkbox";
 import { Control, Controller, FieldValue } from "react-hook-form";
 import { View } from "react-native";
 import ErrorMessage from "./ErrorMessage";
+import Detail from "./Detail";
 
 type Props = {
   name: string;
   data?: string[];
   control: Control<FieldValue<any>>;
-  formValue: (name: string, value: string[]) => void;
+  onValueChange: (name: string, value: string[]) => void;
 };
 
 const Details = (props: Props): JSX.Element => {
   const [selectedDetails, setSelectedDetails] = useState<string[]>([]);
 
   useEffect(() => {
-    props.formValue("details", selectedDetails);
+    props.onValueChange("details", selectedDetails);
   }, [selectedDetails]);
 
   return (
@@ -26,7 +27,7 @@ const Details = (props: Props): JSX.Element => {
         <View>
           {props.data &&
             props.data.map((detail, index) => (
-              <Checkbox
+              <Detail
                 name={`detail${index}`}
                 control={props.control}
                 key={index}

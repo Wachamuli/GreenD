@@ -13,25 +13,24 @@ export const Condominium = [
 ];
 
 export type Outsourcer = {
-
-    outsourcerId: number,
-    outsourcerName: string,
-    outsourcerLogo: any,
-    outsourcerBriefDescription: string,
-    outsourcerFullDescription: string,
-    outsourcerNcf: string,
-    outsourcerAvailability: string,
-    outsourcerOwner: string,
-    outsourcerOwnerNickname: string,
-    outsourcerRegistrationDate: Date,
-    outsourcerNickname: Date,
-    outsourcerService_type: string  
-}
+  outsourcerId: number;
+  outsourcerName: string;
+  outsourcerLogo: any;
+  outsourcerBriefDescription: string;
+  outsourcerFullDescription: string;
+  outsourcerNcf: string;
+  outsourcerAvailability: string;
+  outsourcerOwner: string;
+  outsourcerOwnerNickname: string;
+  outsourcerRegistrationDate: Date;
+  outsourcerNickname: Date;
+  outsourcerService_type: string;
+};
 
 export const Outsourcers: Outsourcer[] = [
   {
     outsourcerId: 1,
-    outsourcerName: "Pepe Plomo",
+    outsourcerName: "Prestige Plumbers",
     outsourcerLogo: require("../assets/placeholders/plumber-company-logo.png"),
     outsourcerBriefDescription: "Plomería por un tubo y sietes llaves.",
     outsourcerFullDescription: "",
@@ -41,7 +40,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 2,
@@ -55,7 +54,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 3,
@@ -69,7 +68,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 4,
@@ -83,7 +82,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 5,
@@ -97,7 +96,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 6,
@@ -111,7 +110,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
   {
     outsourcerId: 7,
@@ -125,7 +124,7 @@ export const Outsourcers: Outsourcer[] = [
     outsourcerOwnerNickname: "Pepe",
     outsourcerRegistrationDate: new Date("2023-12-28"),
     outsourcerNickname: new Date("2023-12-28"),
-    outsourcerService_type: "Plumbing"  
+    outsourcerService_type: "Plumbing",
   },
 ];
 

@@ -1,30 +1,69 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import DateDisplayer from "../components/DateDisplayer";
-import TimePicker from "../components/TimePicker";
-import { useForm } from "react-hook-form";
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import Par from "../components/Par";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
+import ActiveServiceCard from "../components/ActiveServiceCard";
 
 const ActiveServicesScreen = (): JSX.Element => {
-  const { control } = useForm();
-
   return (
     <View
       style={{
         display: "flex",
-        gap: horizontalScale(8),
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        paddingHorizontal: horizontalScale(20),
       }}>
-      <DateDisplayer date={""} />
-      <TimePicker name="timePicker" control={control} />
+      {/* <Par>Sin Servicios Activos</Par> */}
+      <View style={styles.cardContainer}>
+        <View style={styles.header}>
+          <Par style={[styles.label, styles.timeLabel]}>Hora</Par>
+          <Par style={[styles.label, styles.activeLabel]}>
+            Solicitudes Activas
+          </Par>
+        </View>
+
+        <View>
+          <ActiveServiceCard
+            time="9:30 a.m"
+            day="Lunes, noviembre 16"
+            detail="Actualización y mejora del sistema eléctrico"
+            status="En proceso de cotización..."
+          />
+        </View>
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: "white",
+    paddingVertical: horizontalScale(20),
+    paddingHorizontal: horizontalScale(20),
+    marginBottom: verticalScale(2),
+    borderRadius: moderateScale(10),
+    width: "100%",
+  },
+  header: {
+    flexDirection: "row",
+    marginBottom: verticalScale(20),
+    justifyContent: "space-evenly",
+  },
+  label: {
+    fontWeight: "bold",
+  },
+  timeLabelContainer: {
+    flexGrow: 1,
+  },
+  timeLabel: {
+    marginRight: horizontalScale(40),
+  },
+  activeLabel: {},
+});
 
 export default ActiveServicesScreen;

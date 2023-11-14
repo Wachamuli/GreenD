@@ -19,7 +19,7 @@ type Props = {
   data: Outsourcer[];
   control: Control<FieldValue<any>>;
   setValue?: (value: SetStateAction<string>) => void;
-  formSet: (name: string, value: string) => void;
+  onValueChange: (name: string, value: string) => void;
 };
 
 const OutsourcerCard = (props: Props) => {
@@ -52,9 +52,9 @@ const OutsourcerCard = (props: Props) => {
                 }}
                 title={isAsigned[index] ? "Asignado" : "Asignar"}
                 onPress={() => {
-                  props.formSet(props.name, item.outsourcerId.toString());
+                  props.onValueChange(props.name, item.outsourcerId.toString());
                   setIsAsigned(prevStates => {
-                    const newStates = [...prevStates].map(() => false);
+                    const newStates = [...prevStates].fill(false);
                     newStates[index] = true;
                     if (error) error.message = ""
                     return newStates;
