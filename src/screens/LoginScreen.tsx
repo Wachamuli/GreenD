@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 import * as z from "zod";
@@ -23,7 +23,6 @@ const LoginScreen = () => {
   const { handleSubmit, control } = useForm({
     resolver: zodResolver(LoginSchema),
   });
-  const [rememberMe, setRememberMe] = useState(false);
   const navigation = useNavigation<navigationProp>();
 
   return (

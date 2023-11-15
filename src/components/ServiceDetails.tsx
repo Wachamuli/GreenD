@@ -128,7 +128,10 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
             <FontAwesomeIcon style={styles.infoIcon} icon={faCircleInfo} />
             <Txt>
               <Txt style={styles.infoLabel}>info: </Txt>
-              <Txt style={styles.infoContent}>es recomendable dar detalles en la nota ¡ayuda con la cotización!</Txt>
+              <Txt style={styles.infoContent}>
+                es recomendable dar detalles en la nota ¡ayuda con la
+                cotización!
+              </Txt>
             </Txt>
           </View>
         </View>
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   infoContent: {
-    color: "#9ca3af"
+    color: "#9ca3af",
   },
   buttonContainer: {
     position: "absolute",
