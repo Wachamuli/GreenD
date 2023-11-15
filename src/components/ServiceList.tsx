@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 
 import { Services } from "../api/mockData";
-import ServiceCard from "../components/ServiceCard";
+import ServiceCard from "./serviceCard";
 
 const initialDimension = Dimensions.get("screen");
 

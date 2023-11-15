@@ -18,6 +18,7 @@ import { navigationProp } from "../App";
 import ActiveServicesScreen from "./ActiveServicesScreen";
 import { moderateScale } from "../utilities/metrics";
 import Par from "../components/Par";
+import BottomTab from "../components/layout/BottomTab";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,9 +35,12 @@ const IndexScreen = () => {
   return (
     <Tab.Navigator
       initialRouteName="home"
-      sceneContainerStyle={{
-        // padding: moderateScale(10),
-      }}
+      tabBar={BottomTab}
+      sceneContainerStyle={
+        {
+          // padding: moderateScale(10),
+        }
+      }
       screenOptions={{ tabBarHideOnKeyboard: true }}>
       <Tab.Screen
         name="home"
@@ -44,19 +48,15 @@ const IndexScreen = () => {
         options={{
           title: "Inicio",
           headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faHome} color={color} />
-          ),
+          tabBarIcon: props => <FontAwesomeIcon icon={faHome} {...props} />,
         }}
       />
       <Tab.Screen
-        name="activeServices"
+        name="solicitudes"
         component={ActiveServicesScreen}
         options={{
-          title: "Servicios Activos",
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faSpinner} color={color} />
-          ),
+          title: "Solicitudes",
+          tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
         }}
       />
       <Tab.Screen
@@ -64,8 +64,8 @@ const IndexScreen = () => {
         component={HistorialScreen}
         options={{
           title: "Historial",
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faFileInvoice} color={color} />
+          tabBarIcon: props => (
+            <FontAwesomeIcon icon={faFileInvoice} {...props} />
           ),
         }}
       />
@@ -74,9 +74,7 @@ const IndexScreen = () => {
         component={MyProfileScreen}
         options={{
           title: "Mi Perfil",
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faUser} color={color} />
-          ),
+          tabBarIcon: props => <FontAwesomeIcon icon={faUser} {...props} />,
         }}
       />
     </Tab.Navigator>
