@@ -30,11 +30,7 @@ const ServiceList = (): JSX.Element => {
         }}
         renderItem={({ item }) => (
           <ServiceCard
-            id={item.serviceId.toString()}
-            name={item.serviceName}
-            description={item.serviceDescription}
-            registrationDate={item.serviceRegistrationDate}
-            image={item.serviceImage}
+            serviceId={item.serviceId.toString()}
           />
         )}
       />

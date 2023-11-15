@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../components/ServiceDetails";
 import ServiceResume from "../components/ServiceResume";
-import Par from "../components/Par";
+import Txt from "../components/Par";
 import { Condominium } from "../api/mockData";
 import LoginScreen from "./LoginScreen";
 
@@ -38,7 +38,7 @@ const HomeScreen = (): JSX.Element => {
         component={ServiceList}
         options={{
           headerTitle: "Inicio",
-          headerRight: () => <Par>{condominiumName}</Par>,
+          headerRight: () => <Txt>{condominiumName}</Txt>,
         }}
       />
       <Stack.Screen

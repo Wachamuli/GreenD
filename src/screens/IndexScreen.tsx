@@ -17,7 +17,7 @@ import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
 import ActiveServicesScreen from "./ActiveServicesScreen";
 import { moderateScale } from "../utilities/metrics";
-import Par from "../components/Par";
+import Txt from "../components/Par";
 import BottomTab from "../components/layout/BottomTab";
 
 const Tab = createBottomTabNavigator();
@@ -36,11 +36,6 @@ const IndexScreen = () => {
     <Tab.Navigator
       initialRouteName="home"
       tabBar={BottomTab}
-      sceneContainerStyle={
-        {
-          // padding: moderateScale(10),
-        }
-      }
       screenOptions={{ tabBarHideOnKeyboard: true }}>
       <Tab.Screen
         name="home"

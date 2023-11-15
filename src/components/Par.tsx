@@ -7,7 +7,7 @@ type Props = PropsWithChildren & {
   numberOfLines?: number;
 };
 
-const Par = ({ children, style, numberOfLines }: Props): JSX.Element => {
+const Txt = ({ children, style, numberOfLines }: Props): JSX.Element => {
   return (
     <Text
       numberOfLines={numberOfLines}
@@ -24,4 +24,4 @@ const Par = ({ children, style, numberOfLines }: Props): JSX.Element => {
   );
 };
 
-export default Par;
+export default Txt;

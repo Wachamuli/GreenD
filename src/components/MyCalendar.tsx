@@ -53,7 +53,7 @@ const MyCalendar = (props: Props): JSX.Element => {
   maxDate.setDate(maxDate.getDate() + 15);
 
   return (
-    <CalendarProvider date={"2020-05-05"}>
+    <CalendarProvider date={selectedDay}>
       <ExpandableCalendar
         firstDay={1}
         enableSwipeMonths

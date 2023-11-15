@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import Par from "./Par";
+import Txt from "./Par";
 
 import { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import { horizontalScale, moderateScale, verticalScale } from "../utilities/metrics";
@@ -12,7 +12,7 @@ const ErrorMessage = ({
   return (
     <>
       {error?.message && (
-        <Par
+        <Txt
           style={{
             color: "#FF7D7D",
             marginTop: verticalScale(10),
@@ -23,7 +23,7 @@ const ErrorMessage = ({
             borderRadius: moderateScale(10),
           }}>
           {error?.message?.toString()}
-        </Par>
+        </Txt>
       )}
     </>
   );

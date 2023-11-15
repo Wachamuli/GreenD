@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Par from "./Par";
+import Txt from "./Par";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 type Props = {
@@ -14,14 +14,14 @@ const ActiveServiceCard = (props: Props): JSX.Element => {
   return (
     <View style={styles.container}>
       <View>
-        <Par>{props.time}</Par>
+        <Txt>{props.time}</Txt>
       </View>
 
       <View style={styles.apponitmentDetailsCard}>
         <View>
-        <Par>{props.day}</Par>
-          <Par numberOfLines={1}>{props.detail}</Par>
-          <Par style={styles.state}>{props.status}</Par>
+        <Txt>{props.day}</Txt>
+          <Txt numberOfLines={1}>{props.detail}</Txt>
+          <Txt style={styles.state}>{props.status}</Txt>
         </View>
       </View>
     </View>

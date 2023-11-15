@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Par from "../components/Par";
+import Txt from "../components/Par";
 import {
   horizontalScale,
   moderateScale,
@@ -21,10 +21,10 @@ const ActiveServicesScreen = (): JSX.Element => {
       {/* <Par>Sin Servicios Activos</Par> */}
       <View style={styles.cardContainer}>
         <View style={styles.header}>
-          <Par style={[styles.label, styles.timeLabel]}>Hora</Par>
-          <Par style={[styles.label, styles.activeLabel]}>
+          <Txt style={[styles.label, styles.timeLabel]}>Hora</Txt>
+          <Txt style={[styles.label, styles.activeLabel]}>
             Solicitudes Activas
-          </Par>
+          </Txt>
         </View>
 
         <View>

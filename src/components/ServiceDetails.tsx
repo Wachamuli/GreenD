@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
 import Header from "./Header";
-import Par from "./Par";
+import Txt from "./Par";
 import Tappable from "./controls/Tappable";
 import {
   horizontalScale,
@@ -23,6 +23,8 @@ import Field from "./controls/Field";
 import Details from "./DetailList";
 import TimePicker from "./TimePicker";
 import DateDisplayer from "./DateDisplayer";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 const ServiceDetailsSchema = z.object({
   details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
@@ -72,7 +74,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
         <View style={styles.textContainer}>
           <Header title={getService?.serviceName} />
           <View style={styles.serviceDescriptionContainer}>
-            <Par>{getService?.serviceFullDescription}</Par>
+            <Txt>{getService?.serviceFullDescription}</Txt>
           </View>
 
           <Header title="Solicitar" />
@@ -120,6 +122,14 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               selectTextOnFocus={true}
               placeholder="Escriba una nota aquí"
             />
+          </View>
+
+          <View style={styles.infoContainer}>
+            <FontAwesomeIcon style={styles.infoIcon} icon={faCircleInfo} />
+            <Txt>
+              <Txt style={styles.infoLabel}>info: </Txt>
+              <Txt style={styles.infoContent}>es recomendable dar detalles en la nota ¡ayuda con la cotización!</Txt>
+            </Txt>
           </View>
         </View>
       </ScrollView>
@@ -181,6 +191,20 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     width: "100%",
     minHeight: verticalScale(150),
+  },
+  infoContainer: {
+    flexDirection: "row",
+  },
+  infoIcon: {
+    marginRight: horizontalScale(2),
+    marginTop: horizontalScale(3),
+  },
+  infoLabel: {
+    textTransform: "uppercase",
+    fontWeight: "bold",
+  },
+  infoContent: {
+    color: "#9ca3af"
   },
   buttonContainer: {
     position: "absolute",

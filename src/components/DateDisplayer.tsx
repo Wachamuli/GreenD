@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import Header from "./Header";
-import Par from "./Par";
+import Txt from "./Par";
 import { horizontalScale, moderateScale, verticalScale } from "../utilities/metrics";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +16,7 @@ const DateDisplayer = (props: Props) => {
         <FontAwesomeIcon icon={faCalendarDays} color="white" />
       </View>
       <View style={styles.dateContainer}>
-        <Par style={styles.date}>{props.date || "Sin fecha"}</Par>
+        <Txt style={styles.date}>{props.date || "Sin fecha"}</Txt>
       </View>
     </View>
   );

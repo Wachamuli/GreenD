@@ -166,6 +166,9 @@ export const Services = [
     ],
     serviceRegistrationDate: new Date("2021-01-16"),
     serviceImage: require("../assets/placeholders/plumber.webp"),
+    serviceMinimumDate: new Date("2023-11-15"),
+    serviceMinimumPrice: 1500,
+    serviceAvailableOutsourcers: 57
   },
   {
     serviceId: 2,
@@ -182,6 +185,9 @@ export const Services = [
     ],
     serviceRegistrationDate: new Date("2022-12-05"),
     serviceImage: require("../assets/placeholders/garden.jpg"),
+    serviceMinimumDate: new Date("2023-11-17"),
+    serviceMinimumPrice: 3000,
+    serviceAvailableOutsourcers: 42
   },
   {
     serviceId: 3,
@@ -197,6 +203,9 @@ export const Services = [
     ],
     serviceRegistrationDate: new Date("2023-07-22"),
     serviceImage: require("../assets/placeholders/painter.jpg"),
+    serviceMinimumDate: new Date("2023-11-25"),
+    serviceMinimumPrice: 1800,
+    serviceAvailableOutsourcers: 12
   },
   {
     serviceId: 4,
@@ -213,5 +222,8 @@ export const Services = [
     ],
     serviceRegistrationDate: new Date("2023-07-22"),
     serviceImage: require("../assets/placeholders/electricist.jpg"),
+    serviceMinimumDate: new Date("2023-11-14"),
+    serviceMinimumPrice: 4000,
+    serviceAvailableOutsourcers: 32
   },
 ];

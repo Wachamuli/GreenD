@@ -8,7 +8,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Par from "./Par";
+import Txt from "./Par";
 import Tappable from "./controls/Tappable";
 import { Outsourcer } from "../api/mockData";
 import { Control, FieldValue, useController } from "react-hook-form";
@@ -42,8 +42,8 @@ const OutsourcerCard = (props: Props) => {
               source={item.outsourcerLogo}
             />
             <View style={styles.rightSideContainer}>
-              <Par style={styles.outsourcerName}>{item.outsourcerName}</Par>
-              <Par numberOfLines={2}>{item.outsourcerBriefDescription}</Par>
+              <Txt style={styles.outsourcerName}>{item.outsourcerName}</Txt>
+              <Txt numberOfLines={2}>{item.outsourcerBriefDescription}</Txt>
               <Tappable
                 style={{
                   ...styles.outsourcerButton,

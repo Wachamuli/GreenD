@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/HomeScreen";
-import Par from "./Par";
+import Txt from "./Par";
 import Header from "./Header";
 import Tappable from "./controls/Tappable";
 import { Outsourcers } from "../api/mockData";
@@ -39,30 +39,30 @@ const ServiceResume = ({ route }: ScreenProps) => {
           />
           <View style={styles.outsourcerInfoContainer}>
             <Header title={getOutsourcer?.outsourcerName} />
-            <Par>{getOutsourcer?.outsourcerBriefDescription}</Par>
+            <Txt>{getOutsourcer?.outsourcerBriefDescription}</Txt>
           </View>
 
           <View style={styles.detailsContainer}>
             {route.params.selectedDetails.map((value, index) => (
-              <Par style={styles.detail} key={index}>
+              <Txt style={styles.detail} key={index}>
                 {/* <FontAwesomeIcon style={styles.dotlist} icon={faCircle} /> */}
                 {value}
-              </Par>
+              </Txt>
             ))}
           </View>
 
           <View style={styles.appointment}>
             <View style={styles.row}>
-              <Par style={styles.key}>Día</Par>
-              <Par>{route.params.selectedDay}</Par>
+              <Txt style={styles.key}>Día</Txt>
+              <Txt>{route.params.selectedDay}</Txt>
             </View>
             <View style={styles.row}>
-              <Par style={styles.key}>Hora</Par>
-              <Par>{route.params.selectedTime}</Par>
+              <Txt style={styles.key}>Hora</Txt>
+              <Txt>{route.params.selectedTime}</Txt>
             </View>
             <View style={styles.row}>
-              <Par style={styles.key}>Nota</Par>
-              <Par> {route.params.note || "Sin anotaciones"}</Par>
+              <Txt style={styles.key}>Nota</Txt>
+              <Txt> {route.params.note || "Sin anotaciones"}</Txt>
             </View>
           </View>
         </View>

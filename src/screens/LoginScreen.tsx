@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Header from "../components/Header";
 import Field from "../components/controls/Field";
-import Par from "../components/Par";
+import Txt from "../components/Par";
 import Tappable from "../components/controls/Tappable";
 import Checkbox from "../components/controls/Checkbox";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
@@ -43,7 +43,7 @@ const LoginScreen = () => {
           placeholder="********"
           secureTextEntry={true}
         />
-        <Par style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Par>
+        <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
         <Checkbox
           name="rememberMe"
           control={control}
@@ -54,10 +54,10 @@ const LoginScreen = () => {
           title="Iniciar Sesión"
           onPress={handleSubmit(() => navigation.navigate("index"))}
         />
-        <Par style={styles.createAccount}>
+        <Txt style={styles.createAccount}>
           ¿No tienes contraseña?{" "}
-          <Par style={{ color: "blue" }}>Contáctanos</Par>
-        </Par>
+          <Txt style={{ color: "blue" }}>Contáctanos</Txt>
+        </Txt>
       </View>
     </View>
   );

@@ -15,7 +15,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import Par from "../Par";
+import Txt from "../Par";
 import { View } from "react-native";
 import ErrorMessage from "../ErrorMessage";
 
@@ -51,7 +51,7 @@ const Checkbox = (props: Props): JSX.Element => {
           field.onChange(event);
         }}
       />
-      {props.label && <Par style={props.labelStyle}>{props.label}</Par>}
+      {props.label && <Txt style={props.labelStyle}>{props.label}</Txt>}
       <ErrorMessage error={error} />
     </View>
   );

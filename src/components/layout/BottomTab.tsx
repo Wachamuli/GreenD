@@ -59,7 +59,7 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                 options.tabBarIcon({
                   focused: isFocused,
                   color: isFocused ? "#3b82f6" : "#9ca3af",
-                  size: 25, // It doesn't make any change (as intended)
+                  size: 20, 
                 })}
               <Txt style={{ color: isFocused ? "#3b82f6" : "#9ca3af" }}>
                 {label.toString()}

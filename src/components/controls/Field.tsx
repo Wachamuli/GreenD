@@ -3,7 +3,7 @@ import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { Control, FieldValue, useController } from "react-hook-form";
 
-import Par from "../Par";
+import Txt from "../Par";
 import { horizontalScale, verticalScale } from "../../utilities/metrics";
 import ErrorMessage from "../ErrorMessage";
 
@@ -26,7 +26,7 @@ const Field = (props: Props) => {
 
   return (
     <View>
-      <Par>{props.label}</Par>
+      <Txt>{props.label}</Txt>
       <TextInput
         value={field.value}
         onChangeText={field.onChange}

@@ -1,5 +1,5 @@
 import React from "react";
-import Par from "./Par";
+import Txt from "./Par";
 import Checkbox from "./controls/Checkbox";
 import { Control, useController } from "react-hook-form";
 import {

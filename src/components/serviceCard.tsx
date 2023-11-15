@@ -16,6 +16,12 @@ import {
   verticalScale,
 } from "../utilities/metrics";
 import { navigationProp } from "../screens/HomeScreen";
+import { Services } from "../api/mockData";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import Txt from "./Par";
+import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
+import { boxShadowXP } from "../utilities/crossplatform";
 
 type Props = {
   id: string;
@@ -25,19 +31,58 @@ type Props = {
   image: ImageRequireSource;
 };
 
-const ServiceCard = (props: Props): JSX.Element => {
+const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
   const navigation = useNavigation<navigationProp>();
+  const {
+    serviceName,
+    serviceImage,
+    serviceDescription,
+    serviceMinimumDate,
+    serviceMinimumPrice,
+    serviceAvailableOutsourcers,
+  } = Services.filter(({ serviceId }) => serviceId.toString() === id)[0];
+
+  const setColor =
+    serviceAvailableOutsourcers > 50
+      ? "#5cb85c"
+      : serviceAvailableOutsourcers > 30
+      ? "#FFC107"
+      : "red";
 
   return (
     <Pressable
-      style={styles.serviceCardContainer}
+      style={[
+        styles.serviceCardContainer,
+        boxShadowXP("black", 0.5, 20, -4, 5, 5),
+      ]}
       onPress={() => {
-        navigation.navigate("serviceDetails", { serviceId: props.id });
+        navigation.navigate("serviceDetails", { serviceId: id });
       }}>
-      <Image style={styles.serviceCardImage} source={props.image} />
+      <Image style={styles.serviceCardImage} source={serviceImage} />
       <View style={styles.serviceTextContainer}>
-        <Text style={styles.serviceCardName}>{props.name}</Text>
-        <Text style={styles.serviceCardDescription} numberOfLines={1}>{props.description}</Text>
+        <Text style={styles.serviceCardName}>{serviceName}</Text>
+        <Text style={styles.serviceCardDescription} numberOfLines={1}>
+          {serviceDescription}
+        </Text>
+
+        <View style={styles.infoContainer}>
+          <View style={styles.infoItemContainer}>
+            <FontAwesomeIcon icon={faCalendarDays} color="#9ca3af" />
+            <Txt style={styles.infoContent}>
+              {serviceMinimumDate.toString()}{" "}
+            </Txt>
+          </View>
+          <View style={styles.infoItemContainer}>
+            <FontAwesomeIcon icon={faDollarSign} color="#9ca3af" />
+            <Txt style={styles.infoContent}>Desde {serviceMinimumPrice} RD</Txt>
+          </View>
+          <View style={styles.infoItemContainer}>
+            <FontAwesomeIcon icon={faUser} color={setColor} />
+            <Txt style={[styles.infoContent, { color: setColor }]}>
+              {serviceAvailableOutsourcers} disponibles
+            </Txt>
+          </View>
+        </View>
       </View>
     </Pressable>
   );
@@ -46,12 +91,11 @@ const ServiceCard = (props: Props): JSX.Element => {
 const styles = StyleSheet.create({
   // TODO: Fix the minimium width when the phone is rotated
   serviceCardContainer: {
-    borderWidth: 4,
+    backgroundColor: "white",
     borderRadius: moderateScale(10),
-    borderColor: "black",
     marginHorizontal: horizontalScale(10),
     marginVertical: verticalScale(10),
-    maxHeight: verticalScale(200),
+    maxHeight: verticalScale(270),
     overflow: "hidden",
   },
   serviceCardImage: {
@@ -70,6 +114,17 @@ const styles = StyleSheet.create({
   serviceCardDescription: {
     fontSize: moderateScale(16),
     color: "gray",
+  },
+  infoContainer: {
+    marginTop: verticalScale(10),
+  },
+  infoItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  infoContent: {
+    marginLeft: horizontalScale(10),
+    color: "#9ca3af",
   },
 });
 

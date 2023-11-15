@@ -12,7 +12,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Par from "./Par";
+import Txt from "./Par";
 import { useEffect, useState } from "react";
 import WheelTimePicker from "./WheelTimePicker";
 
@@ -77,7 +77,7 @@ const TimePicker = (props: Props): JSX.Element => {
               onValueChange={setHour}
               options={hours}
             />
-            <Par style={styles.colon}>:</Par>
+            <Txt style={styles.colon}>:</Txt>
             <WheelTimePicker
               value={minute}
               onValueChange={setMinute}
