@@ -22,6 +22,7 @@ import Txt from "./Par";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";
+import dayjs from "dayjs";
 
 type Props = {
   id: string;
@@ -69,12 +70,12 @@ const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faCalendarDays} color="#9ca3af" />
             <Txt style={styles.infoContent}>
-              {serviceMinimumDate.toString()}{" "}
+              {dayjs(serviceMinimumDate.toString()).format("dddd, MMMM D")}
             </Txt>
           </View>
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faDollarSign} color="#9ca3af" />
-            <Txt style={styles.infoContent}>Desde {serviceMinimumPrice} RD</Txt>
+            <Txt style={styles.infoContent}>Desde {serviceMinimumPrice} DOP</Txt>
           </View>
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faUser} color={setColor} />

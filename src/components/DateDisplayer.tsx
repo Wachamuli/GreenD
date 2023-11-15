@@ -1,9 +1,11 @@
 import { View, StyleSheet } from "react-native";
-import Header from "./Header";
-import Txt from "./Par";
-import { horizontalScale, moderateScale, verticalScale } from "../utilities/metrics";
+
+import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+
+import { horizontalScale, moderateScale, verticalScale } from "../utilities/metrics";
+import Txt from "./Par";
 
 type Props = {
   date?: string;
@@ -16,7 +18,7 @@ const DateDisplayer = (props: Props) => {
         <FontAwesomeIcon icon={faCalendarDays} color="white" />
       </View>
       <View style={styles.dateContainer}>
-        <Txt style={styles.date}>{props.date || "Sin fecha"}</Txt>
+        <Txt style={styles.date}>{dayjs(props.date).format("dddd, MMMM D") || "Sin fecha"}</Txt>
       </View>
     </View>
   );
@@ -24,7 +26,7 @@ const DateDisplayer = (props: Props) => {
 
 const styles = StyleSheet.create({
   displayerContainer: {
-    width: "50%",
+    width: "auto",
     marginVertical: verticalScale(20),
     borderRadius: moderateScale(20),
     borderWidth: moderateScale(2),

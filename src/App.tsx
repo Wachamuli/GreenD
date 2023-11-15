@@ -1,11 +1,16 @@
 import React from "react";
 
-import { calendarSetup } from "./utilities/calendarSetup";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import dayjs from "dayjs";
+import "dayjs/locale/es"; 
+
+import { calendarSetup } from "./utilities/calendarSetup";
 import LoginScreen from "./screens/LoginScreen";
 import IndexScreen from "./screens/IndexScreen";
 
+dayjs.locale("es")
 calendarSetup("es");
 
 export type RootStackParamList = {
