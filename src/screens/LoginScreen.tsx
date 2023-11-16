@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -13,27 +13,45 @@ import Checkbox from "../components/controls/Checkbox";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { useNavigation } from "@react-navigation/native";
 import { navigationProp } from "../App";
+import { supabase } from "../lib/supabase";
 
 const LoginSchema = z.object({
-  username: z.string().min(1, { message: "Nombre de usuario requerido " }),
+  email: z.string().min(1, { message: "Correo requerido " }).email("Correo no válido"),
   password: z.string().min(1, { message: "Contraseña requerida " }),
 });
 
 const LoginScreen = () => {
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, control, getValues } = useForm({
     resolver: zodResolver(LoginSchema),
   });
   const navigation = useNavigation<navigationProp>();
+  const [loading, setLoading] = useState(false);
+
+  const signUp = async () => {
+    setLoading(true);
+
+    const { error } = await supabase.auth.signUp({
+      email: getValues("email"),
+      password: getValues("password"),
+    });
+
+    if (error) {
+      Alert.alert(error.message);
+      return;
+    }
+    setLoading(false);
+    navigation.navigate("index")
+  };
 
   return (
     <View style={styles.loginScreenContainer}>
       <View>
         <Header title="Iniciar Sesión" />
         <Field
-          name="username"
+          name="email"
           control={control}
-          label="Nombre de usuario"
-          placeholder="Jane Doe"
+          label="Correo electrónico"
+          placeholder="janedoe@domain.tls"
         />
         <Field
           name="password"
@@ -51,7 +69,7 @@ const LoginScreen = () => {
         />
         <Tappable
           title="Iniciar Sesión"
-          onPress={handleSubmit(() => navigation.navigate("index"))}
+          onPress={handleSubmit(() => signUp())}
         />
         <Txt style={styles.createAccount}>
           ¿No tienes contraseña?{" "}
