@@ -5,6 +5,8 @@ import {
   StyleProp,
   Text,
   TextStyle,
+  View,
+  ViewStyle,
 } from "react-native";
 import Txt from "../Txt";
 
@@ -13,6 +15,7 @@ type Props = {
   children?: ReactNode;
   disabled?: boolean;
   style?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 };
 
@@ -24,11 +27,14 @@ const Tappable = (props: Props): JSX.Element => {
       onPressOut={() => setPressed(false)}
       onPress={props.onPress}
       disabled={props.disabled}>
-      <Txt
-        style={[{ opacity: props.disabled || pressed ? 0.5 : 1 }, props.style]}>
-        {props.label}
+      <View
+        style={[
+          { opacity: props.disabled || pressed ? 0.8 : 1 },
+          props.containerStyle,
+        ]}>
+        {props.label && <Txt style={props.style}>{props.label}</Txt>}
         {props.children}
-      </Txt>
+      </View>
     </Pressable>
   );
 };

@@ -46,10 +46,9 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(10)
   },
   button: {
-    borderWidth: moderateScale(2),
     fontSize: moderateScale(14),
     minWidth: horizontalScale(150),
-    paddingVertical: verticalScale(10),
+    paddingVertical: verticalScale(15),
   },
 });
 

@@ -26,11 +26,14 @@ const Detail = (props: Props): JSX.Element => {
         paddingHorizontal: horizontalScale(10),
         borderRadius: moderateScale(10),
       }}
-      labelStyle={{
-        color: field.value ? "#28A745" : "black",
-      }}
-      {...props}
-    />
+      {...props}>
+      <Txt
+        style={{
+          color: field.value ? "#28A745" : "black",
+        }}>
+        {props.label}
+      </Txt>
+    </Checkbox>
   );
 };
 

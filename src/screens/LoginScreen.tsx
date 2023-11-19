@@ -35,7 +35,7 @@ const LoginScreen = () => {
   });
   const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(false);
-  const [openPopup, setOpenPopup] = useState(true);
+  const [openPopup, setOpenPopup] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
 
   const signIn = async () => {

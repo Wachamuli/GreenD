@@ -13,6 +13,7 @@ import Tappable from "./controls/Tappable";
 import { Outsourcer } from "../api/mockData";
 import { Control, FieldValue, useController } from "react-hook-form";
 import ErrorMessage from "./ErrorMessage";
+import Btn from "./controls/Btn";
 
 type Props = {
   name: string;
@@ -23,7 +24,9 @@ type Props = {
 };
 
 const OutsourcerCard = (props: Props) => {
-  const { fieldState: { error } } = useController({
+  const {
+    fieldState: { error },
+  } = useController({
     name: props.name,
     control: props.control,
     defaultValue: "",
@@ -44,7 +47,7 @@ const OutsourcerCard = (props: Props) => {
             <View style={styles.rightSideContainer}>
               <Txt style={styles.outsourcerName}>{item.outsourcerName}</Txt>
               <Txt numberOfLines={2}>{item.outsourcerBriefDescription}</Txt>
-              <Tappable
+              <Btn
                 style={{
                   ...styles.outsourcerButton,
                   backgroundColor: isAsigned[index] ? "green" : "white",
@@ -56,14 +59,15 @@ const OutsourcerCard = (props: Props) => {
                   setIsAsigned(prevStates => {
                     const newStates = [...prevStates].fill(false);
                     newStates[index] = true;
-                    if (error) error.message = ""
+                    if (error) error.message = "";
                     return newStates;
                   });
                 }}
               />
             </View>
           </View>
-        )}></FlatList>
+        )}
+      />
       <ErrorMessage error={error} />
     </View>
   );
@@ -98,6 +102,7 @@ const styles = StyleSheet.create({
   },
   outsourcerButton: {
     borderRadius: moderateScale(10),
+    minWidth: horizontalScale(1) /* Overrides the old value as intended */,
     borderColor: "green",
     color: "green",
     borderWidth: moderateScale(1),

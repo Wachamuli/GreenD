@@ -26,7 +26,7 @@ export type navigationProp = NavigationProp<RootStackParamList>;
 const App = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="login">
         <Stack.Screen
           options={{ headerShown: false }}
           name="login"

@@ -3,6 +3,7 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
+  ViewStyle,
 } from "react-native";
 import Tappable from "./Tappable";
 import {
@@ -15,6 +16,7 @@ type Props = {
   label?: string;
   disabled?: boolean;
   style?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 };
 

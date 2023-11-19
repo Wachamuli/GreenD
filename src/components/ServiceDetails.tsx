@@ -25,6 +25,7 @@ import TimePicker from "./TimePicker";
 import DateDisplayer from "./DateDisplayer";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import Btn from "./controls/Btn";
 
 const ServiceDetailsSchema = z.object({
   details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
@@ -138,7 +139,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
       </ScrollView>
 
       <View style={styles.buttonContainer}>
-        <Tappable
+        <Btn
           label="Solicitar"
           onPress={handleSubmit(() =>
             navigation.navigate("serviceResume", {

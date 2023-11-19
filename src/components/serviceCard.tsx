@@ -23,6 +23,7 @@ import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";
 import dayjs from "dayjs";
+import Tappable from "./controls/Tappable";
 
 type Props = {
   id: string;
@@ -51,8 +52,8 @@ const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
       : "red";
 
   return (
-    <Pressable
-      style={[
+    <Tappable
+      containerStyle={[
         styles.serviceCardContainer,
         boxShadowXP("black", 0.5, 20, -4, 5, 5),
       ]}
@@ -75,7 +76,9 @@ const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
           </View>
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faDollarSign} color="#9ca3af" />
-            <Txt style={styles.infoContent}>Desde {serviceMinimumPrice} DOP</Txt>
+            <Txt style={styles.infoContent}>
+              Desde {serviceMinimumPrice} DOP
+            </Txt>
           </View>
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faUser} color={setColor} />
@@ -85,7 +88,7 @@ const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
           </View>
         </View>
       </View>
-    </Pressable>
+    </Tappable>
   );
 };
 

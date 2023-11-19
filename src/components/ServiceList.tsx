@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions, FlatList, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 import { Services } from "../api/mockData";
 import ServiceCard from "./serviceCard";
-
-const initialDimension = Dimensions.get("screen");
 
 const ServiceList = (): JSX.Element => {
   return (
