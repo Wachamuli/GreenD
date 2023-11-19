@@ -90,7 +90,7 @@ const LoginScreen = () => {
           <Tappable
             label="Regístrate"
             style={{ color: "blue" }}
-            onPress={() => navigation.navigate("contactUs")}
+            onPress={() => navigation.navigate("signUp")}
           />
         </Txt>
       </View>

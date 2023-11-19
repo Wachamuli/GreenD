@@ -37,7 +37,9 @@
     "react-native-svg": "13.9.0",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-wheely": "^0.6.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "expo-splash-screen": "~0.20.5",
+    "expo-status-bar": "~1.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, Alert, Image } from "react-native";
 
 import { useForm } from "react-hook-form";
@@ -8,7 +8,6 @@ import z from "zod";
 
 import Header from "./Header";
 import Txt from "./Txt";
-import Tappable from "./controls/Tappable";
 import {
   horizontalScale,
   moderateScale,
@@ -88,9 +87,9 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
             />
           </View>
 
-          {/* <Header title="Agendar" />
-          <View style={styles.agendaContainer}>
-            <MyCalendar
+          <Header title="Agendar" />
+          {/* <View style={styles.agendaContainer}> */}
+            {/* <MyCalendar
               name="calendar"
               onValueChange={setDate}
               onChange={setValue}
@@ -101,8 +100,8 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               onValueChange={setValue}
               name="timePicker"
               control={control}
-            />
-          </View> */}
+            /> */}
+          {/* </View> */}
 
           <Header title="Contratar" />
           <View>

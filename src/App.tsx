@@ -17,7 +17,7 @@ calendarSetup("es");
 export type RootStackParamList = {
   login: undefined;
   index: undefined;
-  contactUs: undefined;
+  signUp: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -26,7 +26,7 @@ export type navigationProp = NavigationProp<RootStackParamList>;
 const App = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="login">
+      <Stack.Navigator initialRouteName="index">
         <Stack.Screen
           options={{ headerShown: false }}
           name="login"
@@ -40,7 +40,7 @@ const App = (): JSX.Element => {
         {/* TODO: Forgot password? */}
         <Stack.Screen
           options={{ headerTitle: "Contáctanos" }}
-          name="contactUs"
+          name="signUp"
           component={SignUp}
         />
       </Stack.Navigator>

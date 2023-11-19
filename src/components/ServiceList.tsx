@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList, View, ActivityIndicator } from "react-native";
 
 import { Services } from "../api/mockData";
 import ServiceCard from "./serviceCard";
