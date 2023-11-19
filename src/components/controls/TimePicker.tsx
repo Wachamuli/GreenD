@@ -12,7 +12,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import Txt from "../Par";
+import Txt from "../Txt";
 import { useEffect, useState } from "react";
 import WheelTimePicker from "./WheelTimePicker";
 
@@ -94,7 +94,7 @@ const TimePicker = (props: Props): JSX.Element => {
                     color: meridiem ? "white" : "black",
                   },
                 }}
-                title="AM"
+                label="AM"
               />
 
               <Tappable
@@ -107,7 +107,7 @@ const TimePicker = (props: Props): JSX.Element => {
                     color: !meridiem ? "white" : "black",
                   },
                 }}
-                title="PM"
+                label="PM"
               />
             </View>
             <ErrorMessage error={fieldState.error} />

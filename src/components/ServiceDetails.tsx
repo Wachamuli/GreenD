@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
 import Header from "./Header";
-import Txt from "./Par";
+import Txt from "./Txt";
 import Tappable from "./controls/Tappable";
 import {
   horizontalScale,
@@ -87,7 +87,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
             />
           </View>
 
-          <Header title="Agendar" />
+          {/* <Header title="Agendar" />
           <View style={styles.agendaContainer}>
             <MyCalendar
               name="calendar"
@@ -101,7 +101,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               name="timePicker"
               control={control}
             />
-          </View>
+          </View> */}
 
           <Header title="Contratar" />
           <View>
@@ -139,7 +139,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
 
       <View style={styles.buttonContainer}>
         <Tappable
-          title="Solicitar"
+          label="Solicitar"
           onPress={handleSubmit(() =>
             navigation.navigate("serviceResume", {
               serviceId: route.params.serviceId,

@@ -1,33 +1,36 @@
-import React, { ReactNode } from "react";
-import { GestureResponderEvent, Pressable, StyleSheet, Text } from "react-native";
-import { verticalScale } from "../../utilities/metrics";
+import React, { ReactNode, useState } from "react";
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleProp,
+  Text,
+  TextStyle,
+} from "react-native";
+import Txt from "../Txt";
 
 type Props = {
-  title?: string;
+  label?: string;
   children?: ReactNode;
   disabled?: boolean;
-  style?: {},
+  style?: StyleProp<TextStyle>;
   onPress?: (event: GestureResponderEvent) => void;
 };
 
-
 const Tappable = (props: Props): JSX.Element => {
+  const [pressed, setPressed] = useState(false);
   return (
-    <Pressable onPress={props.onPress} disabled={props.disabled}>
-        <Text style={{...styles.button, ...props.style}}>{props.title}{props.children}</Text>
+    <Pressable
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      onPress={props.onPress}
+      disabled={props.disabled}>
+      <Txt
+        style={[{ opacity: props.disabled || pressed ? 0.5 : 1 }, props.style]}>
+        {props.label}
+        {props.children}
+      </Txt>
     </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  button: {
-    paddingVertical: verticalScale(20),
-    backgroundColor: "black",
-    textTransform: "uppercase",
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center"
-  },
-});
 
 export default Tappable;

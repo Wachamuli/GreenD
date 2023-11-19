@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Txt from "./Par";
+import Txt from "./Txt";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 type Props = {

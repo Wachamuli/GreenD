@@ -2,7 +2,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import Txt from "../Par";
+import Txt from "../Txt";
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs";
 import { horizontalScale, moderateScale } from "../../utilities/metrics";
 

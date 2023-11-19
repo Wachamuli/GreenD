@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../components/ServiceDetails";
 import ServiceResume from "../components/ServiceResume";
-import Txt from "../components/Par";
+import Txt from "../components/Txt";
 import { Condominium } from "../api/mockData";
 import LoginScreen from "./LoginScreen";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
-import Txt from "./Par";
+import Txt from "./Txt";
 import { moderateScale, verticalScale } from "../utilities/metrics";
 
 const Header = ({ title }: { title: string | undefined }): JSX.Element => {

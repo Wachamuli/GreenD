@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import Txt from "../components/Par";
+import Txt from "../components/Txt";
 import {
   horizontalScale,
   moderateScale,

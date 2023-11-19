@@ -1,4 +1,7 @@
 {
   "name": "GreenD",
-  "displayName": "GreenD"
+  "displayName": "GreenD",
+  "expo": {
+    "orientation":  "portrait"
+  }
 }

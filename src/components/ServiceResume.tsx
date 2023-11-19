@@ -3,7 +3,7 @@ import { Image, StyleSheet, View } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/HomeScreen";
-import Txt from "./Par";
+import Txt from "./Txt";
 import Header from "./Header";
 import Tappable from "./controls/Tappable";
 import { Outsourcers } from "../api/mockData";
@@ -68,7 +68,7 @@ const ServiceResume = ({ route }: ScreenProps) => {
         </View>
       </View>
         <View style={styles.buttonContainer}>
-          <Tappable title="Solicitar" />
+          <Tappable label="Solicitar" />
         </View>
     </>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   NativeSyntheticEvent,
   StyleSheet,
@@ -15,16 +15,15 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import Txt from "../Par";
+import Txt from "../Txt";
 import { View } from "react-native";
 import ErrorMessage from "../ErrorMessage";
 
 type Props = {
   name: string;
   style?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
+  children?: ReactNode;
   control: Control<FieldValue<any>>;
-  label?: string;
   disabled?: boolean;
   onChange?: (value: boolean) => void;
 };
@@ -51,7 +50,7 @@ const Checkbox = (props: Props): JSX.Element => {
           field.onChange(event);
         }}
       />
-      {props.label && <Txt style={props.labelStyle}>{props.label}</Txt>}
+      {props.children}
       <ErrorMessage error={error} />
     </View>
   );

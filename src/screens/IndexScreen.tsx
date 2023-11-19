@@ -17,7 +17,7 @@ import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
 import ActiveServicesScreen from "./ActiveServicesScreen";
 import { moderateScale } from "../utilities/metrics";
-import Txt from "../components/Par";
+import Txt from "../components/Txt";
 import BottomTab from "../components/layout/BottomTab";
 
 const Tab = createBottomTabNavigator();

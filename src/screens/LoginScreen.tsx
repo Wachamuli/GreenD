@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -7,16 +7,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import Header from "../components/Header";
 import Field from "../components/controls/Field";
-import Txt from "../components/Par";
+import Txt from "../components/Txt";
 import Tappable from "../components/controls/Tappable";
 import Checkbox from "../components/controls/Checkbox";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../utilities/metrics";
 import { useNavigation } from "@react-navigation/native";
 import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
+import PopUp from "../components/PopUp";
+import Btn from "../components/controls/Btn";
 
 const LoginSchema = z.object({
-  email: z.string().min(1, { message: "Correo requerido " }).email("Correo no válido"),
+  email: z
+    .string()
+    .min(1, { message: "Correo requerido " })
+    .email("Correo no válido"),
   password: z.string().min(1, { message: "Contraseña requerida " }),
 });
 
@@ -26,21 +35,27 @@ const LoginScreen = () => {
   });
   const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(false);
+  const [openPopup, setOpenPopup] = useState(true);
+  const [errorDescription, setErrorDescription] = useState("");
 
-  const signUp = async () => {
+  const signIn = async () => {
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signInWithPassword({
       email: getValues("email"),
       password: getValues("password"),
     });
 
+    // TODO: Handle Specific errors
     if (error) {
-      Alert.alert(error.message);
+      setErrorDescription(error.message);
+      setOpenPopup(true);
+      setLoading(false);
       return;
     }
+
     setLoading(false);
-    navigation.navigate("index")
+    navigation.navigate("index");
   };
 
   return (
@@ -61,21 +76,32 @@ const LoginScreen = () => {
           secureTextEntry={true}
         />
         <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
-        <Checkbox
-          name="rememberMe"
-          control={control}
-          style={styles.rememberMe}
-          label="Recuérdame"
+        <Checkbox name="rememberMe" control={control} style={styles.rememberMe}>
+          <Txt>Recuérdame</Txt>
+        </Checkbox>
+        <Btn
+          disabled={loading}
+          label="Iniciar Sesión"
+          onPress={handleSubmit(signIn)}
         />
-        <Tappable
-          title="Iniciar Sesión"
-          onPress={handleSubmit(() => signUp())}
-        />
+
         <Txt style={styles.createAccount}>
-          ¿No tienes contraseña?{" "}
-          <Txt style={{ color: "blue" }}>Contáctanos</Txt>
+          ¿No tienes cuenta?{" "}
+          <Tappable
+            label="Regístrate"
+            style={{ color: "blue" }}
+            onPress={() => navigation.navigate("contactUs")}
+          />
         </Txt>
       </View>
+
+      {openPopup && (
+        <PopUp
+          setOpen={setOpenPopup}
+          title="¡Ups! Algo salió mal"
+          description={errorDescription}
+        />
+      )}
     </View>
   );
 };
@@ -97,7 +123,9 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   createAccount: {
-    marginTop: verticalScale(10),
+    marginTop: verticalScale(20),
+    alignItems: "center",
+    textAlignVertical: "center",
   },
 });
 

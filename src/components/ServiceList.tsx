@@ -7,27 +7,11 @@ import ServiceCard from "./serviceCard";
 const initialDimension = Dimensions.get("screen");
 
 const ServiceList = (): JSX.Element => {
-  const [screenDimensions, setDimension] = useState(initialDimension);
-  const hasRotated = screenDimensions.width > screenDimensions.height;
-
-  useEffect(() => {
-    const suscription = Dimensions.addEventListener("change", ({ screen }) => {
-      setDimension(screen);
-    });
-
-    return () => suscription?.remove();
-  });
-
   return (
     <View>
       <FlatList
         data={Services}
-        horizontal={hasRotated}
         keyExtractor={item => item.serviceId.toString()}
-        contentContainerStyle={{
-          display: "flex",
-          flexDirection: hasRotated ? "row" : "column",
-        }}
         renderItem={({ item }) => (
           <ServiceCard
             serviceId={item.serviceId.toString()}

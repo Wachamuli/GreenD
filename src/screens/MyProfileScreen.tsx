@@ -1,9 +1,11 @@
 import React from "react";
-import { FlatList, Text, View } from "react-native";
-import { Condominium, Outsourcer, Outsourcers } from "../api/mockData";
-import Txt from "../components/Par";
+import { Text, View } from "react-native";
+import Tappable from "../components/controls/Tappable";
+import { useNavigation } from "@react-navigation/native";
+import { navigationProp } from "../App";
 
 const MyProfileScreen = (): JSX.Element => {
+  const navigation = useNavigation<navigationProp>();
   return (
     <View
       style={{
@@ -13,6 +15,7 @@ const MyProfileScreen = (): JSX.Element => {
         justifyContent: "center",
       }}>
       <Text style={{ color: "gray" }}>My Profile</Text>
+      <Tappable onPress={() => navigation.navigate("login")}>Logout</Tappable>
     </View>
   );
 };

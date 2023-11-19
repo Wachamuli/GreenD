@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import Txt from "../Par";
+import Txt from "../Txt";
 import {
   horizontalScale,
   moderateScale,

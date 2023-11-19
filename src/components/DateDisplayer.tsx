@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 
 import { horizontalScale, moderateScale, verticalScale } from "../utilities/metrics";
-import Txt from "./Par";
+import Txt from "./Txt";
 
 type Props = {
   date?: string;

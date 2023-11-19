@@ -18,7 +18,7 @@ import {
 import { navigationProp } from "../screens/HomeScreen";
 import { Services } from "../api/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Txt from "./Par";
+import Txt from "./Txt";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";

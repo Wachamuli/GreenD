@@ -8,7 +8,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Txt from "./Par";
+import Txt from "./Txt";
 import Tappable from "./controls/Tappable";
 import { Outsourcer } from "../api/mockData";
 import { Control, FieldValue, useController } from "react-hook-form";
@@ -50,7 +50,7 @@ const OutsourcerCard = (props: Props) => {
                   backgroundColor: isAsigned[index] ? "green" : "white",
                   color: isAsigned[index] ? "white" : "green",
                 }}
-                title={isAsigned[index] ? "Asignado" : "Asignar"}
+                label={isAsigned[index] ? "Asignado" : "Asignar"}
                 onPress={() => {
                   props.onValueChange(props.name, item.outsourcerId.toString());
                   setIsAsigned(prevStates => {
