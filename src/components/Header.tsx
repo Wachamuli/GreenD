@@ -1,20 +1,27 @@
-import React from "react";
-import { Text } from "react-native";
-
 import Txt from "./Txt";
 import { moderateScale, verticalScale } from "../utilities/metrics";
+import { StyleProp, TextStyle } from "react-native";
 
-const Header = ({ title }: { title: string | undefined }): JSX.Element => {
+const Header = ({
+  title,
+  style,
+}: {
+  title: string | undefined;
+  style?: StyleProp<TextStyle>;
+}): JSX.Element => {
   return (
-    <Txt style={{ marginBottom: verticalScale(10)}}>
-      <Text
-        style={{
+    <Txt
+      style={[
+        {
+          marginBottom: verticalScale(10),
           color: "black",
           fontWeight: "bold",
           fontSize: moderateScale(22),
-        }}>
-        {title}
-      </Text>
+          alignSelf: "flex-start",
+        },
+        style,
+      ]}>
+      {title}
     </Txt>
   );
 };

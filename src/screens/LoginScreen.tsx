@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
-
-import * as z from "zod";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -10,43 +9,31 @@ import Field from "../components/controls/Field";
 import Txt from "../components/Txt";
 import Tappable from "../components/controls/Tappable";
 import Checkbox from "../components/controls/Checkbox";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../utilities/metrics";
-import { useNavigation } from "@react-navigation/native";
+import { verticalScale } from "../utilities/metrics";
 import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
 import PopUp from "../components/PopUp";
 import Btn from "../components/controls/Btn";
-
-const LoginSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Correo requerido " })
-    .email("Correo no válido"),
-  password: z.string().min(1, { message: "Contraseña requerida " }),
-});
+import { SignInSchema, signInSchema } from "../utilities/validators/LoginSchema";
 
 const LoginScreen = () => {
-  const { handleSubmit, control, getValues } = useForm({
-    resolver: zodResolver(LoginSchema),
+  const { handleSubmit, control } = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
   });
   const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
 
-  const signIn = async () => {
+  // TODO: Show splashscreen when loading and handle specific errors
+  const signIn = async (values: SignInSchema) => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: getValues("email"),
-      password: getValues("password"),
+      email: values.email,
+      password: values.password,
     });
 
-    // TODO: Handle Specific errors
     if (error) {
       setErrorDescription(error.message);
       setOpenPopup(true);
@@ -55,7 +42,7 @@ const LoginScreen = () => {
     }
 
     setLoading(false);
-    navigation.navigate("index");
+    // Goes to IndexScreen automatically
   };
 
   return (
@@ -66,6 +53,7 @@ const LoginScreen = () => {
           name="email"
           control={control}
           label="Correo electrónico"
+          keyboardType="email-address"
           placeholder="janedoe@domain.tls"
         />
         <Field
@@ -75,24 +63,26 @@ const LoginScreen = () => {
           placeholder="********"
           secureTextEntry={true}
         />
-        <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
+        <Tappable onPress={() => navigation.navigate("passwordRecovery")}>
+          <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
+        </Tappable>
         <Checkbox name="rememberMe" control={control} style={styles.rememberMe}>
           <Txt>Recuérdame</Txt>
         </Checkbox>
         <Btn
-          disabled={loading}
+          disabled={loading || openPopup}
           label="Iniciar Sesión"
           onPress={handleSubmit(signIn)}
         />
 
-        <Txt style={styles.createAccount}>
-          ¿No tienes cuenta?{" "}
+        <View style={styles.createAccount}>
+          <Txt>¿No tienes cuenta? </Txt>
           <Tappable
             label="Regístrate"
             style={{ color: "blue" }}
             onPress={() => navigation.navigate("signUp")}
           />
-        </Txt>
+        </View>
       </View>
 
       {openPopup && (
@@ -100,6 +90,7 @@ const LoginScreen = () => {
           setOpen={setOpenPopup}
           title="¡Ups! Algo salió mal"
           description={errorDescription}
+          bottonLabel="Entendido"
         />
       )}
     </View>
@@ -120,12 +111,12 @@ const styles = StyleSheet.create({
   },
   rememberMe: {
     marginTop: verticalScale(40),
-    marginBottom: verticalScale(10),
+    // marginBottom: verticalScale(10),
   },
   createAccount: {
-    marginTop: verticalScale(20),
-    alignItems: "center",
-    textAlignVertical: "center",
+    marginTop: verticalScale(40),
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
 

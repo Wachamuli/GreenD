@@ -12,6 +12,7 @@ import { Dispatch, SetStateAction } from "react";
 type Props = {
   title: string;
   description: string;
+  bottonLabel: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
@@ -23,7 +24,7 @@ const PopUp = (props: Props): JSX.Element => {
       <Btn
         onPress={() => props.setOpen(false)}
         style={styles.button}
-        label="Entendido"
+        label={props.bottonLabel}
       />
     </View>
   );
@@ -43,7 +44,8 @@ const styles = StyleSheet.create({
   },
   description: {
     textAlign: "center",
-    marginVertical: verticalScale(10)
+    marginTop: verticalScale(10),
+    marginBottom: verticalScale(30),
   },
   button: {
     fontSize: moderateScale(14),

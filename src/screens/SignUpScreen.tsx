@@ -1,38 +1,59 @@
-import React, { useState } from "react";
-import Header from "../components/Header";
-import { Pressable, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { supabase } from "../lib/supabase";
 import { navigationProp } from "../App";
 import Txt from "../components/Txt";
-import { useForm } from "react-hook-form";
 import Field from "../components/controls/Field";
-import { horizontalScale } from "../utilities/metrics";
+import { horizontalScale, verticalScale } from "../utilities/metrics";
 import Tappable from "../components/controls/Tappable";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-import { supabase } from "../lib/supabase";
 import Btn from "../components/controls/Btn";
 import Checkbox from "../components/controls/Checkbox";
+import Header from "../components/Header";
+import PasswordEnforcer from "../components/controls/PasswordEnforcer";
+import {
+  SignUpSchema,
+  signUpSchema,
+} from "../utilities/validators/SignUpSchema";
 
-const signUpSchema = z.object({});
-
-const SignUp = (): JSX.Element => {
-  const { control, handleSubmit, getValues } = useForm({
+const SignUpScreen = (): JSX.Element => {
+  const { control, handleSubmit } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<navigationProp>();
 
-  const signUp = async () => {
-    // const { error } = await supabase.auth.signUp({
-    //   email: getValues("email"),
-    // })
+  const signUp = async (values: SignUpSchema) => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email: values.email,
+      password: values.password,
+    });
+
+    if (error) {
+      Alert.alert(error.message);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false);
+    navigation.navigate("login");
   };
 
+  const [select, setSelect] = useState("");
+
   return (
-    <View style={styles.container}>
-      <Header title="Solicitar una cuenta" />
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={{ marginTop: verticalScale(20) }}>
+        <Header title="Solicitar una cuenta" />
+      </View>
+
       <Field name="name" control={control} label="Nombre" placeholder="Jane" />
+
       <Field
         name="surname"
         control={control}
@@ -43,44 +64,75 @@ const SignUp = (): JSX.Element => {
         name="email"
         control={control}
         label="Correo electrónico"
+        keyboardType="email-address"
         placeholder="janedoe@domain.tls"
       />
       <Field
         name="telephone"
         control={control}
         label="Número telefónico"
+        keyboardType="phone-pad"
         placeholder="809-000-0000"
       />
       <Field
         name="cellphone"
         control={control}
         label="Número celular"
+        keyboardType="phone-pad"
         placeholder="829-000-0000"
       />
-      <Field name="address" control={control} label="Dirección" />
-      <Field name="condominium" control={control} label="Residencial" />
+
+      <Txt style={{ marginVertical: verticalScale(10) }}>Residencial</Txt>
+
+      <Picker
+        mode="dialog"
+        style={{
+          backgroundColor: "#f3f4f6",
+          marginBottom: verticalScale(10),
+        }}
+        selectedValue={select}
+        onValueChange={itemValue => setSelect(itemValue)}>
+        <Picker.Item label="La Arboleda" value="La Arboleda" />
+        <Picker.Item label="Monte Verde" value="Monte Verde" />
+      </Picker>
+
+      <Field name="address" label="Dirección" control={control} />
+
+      <PasswordEnforcer name="password" label="Contraseña" control={control} />
+
+      <Field
+        name="confirmPassword"
+        label="Confirmar contraseña"
+        control={control}
+        secureTextEntry={true}
+        maxLength={16}
+        placeholder="********"
+      />
 
       <Checkbox name="terms" control={control}>
-        <Txt>Al registrarme acepto las </Txt>
-        <Tappable label="Políticas de Privacidad" />
-        <Txt> y </Txt>
-        <Tappable label="Términos de Uso" />
+        <Txt>He leído y acepto las </Txt>
+        <Tappable style={{ color: "blue" }} label="Políticas de Privacidad" />
       </Checkbox>
 
-      <Btn onPress={handleSubmit(signUp)} label="Registrarse" />
-    </View>
+      <Btn
+        disabled={loading}
+        onPress={handleSubmit(signUp)}
+        label="Registrarse"
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingHorizontal: horizontalScale(10),
     backgroundColor: "white",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
+    paddingRight: horizontalScale(60),
+    paddingLeft: horizontalScale(60),
   },
 });
 
-export default SignUp;
+export default SignUpScreen;

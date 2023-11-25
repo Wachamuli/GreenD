@@ -1,12 +1,19 @@
-import React from "react";
 import { Text, View } from "react-native";
-import Tappable from "../components/controls/Tappable";
-import { useNavigation } from "@react-navigation/native";
-import { navigationProp } from "../App";
+import { CommonActions, Link, useNavigation } from "@react-navigation/native";
+
 import Txt from "../components/Txt";
+import { supabase } from "../lib/supabase";
+import Btn from "../components/controls/Btn";
+import { navigationProp } from "../App";
 
 const MyProfileScreen = (): JSX.Element => {
   const navigation = useNavigation<navigationProp>();
+
+  const logout = async () => {
+    // TODO: Manage error
+    const { error } = await supabase.auth.signOut();
+  };
+
   return (
     <View
       style={{
@@ -16,7 +23,7 @@ const MyProfileScreen = (): JSX.Element => {
         justifyContent: "center",
       }}>
       <Text style={{ color: "gray" }}>My Profile</Text>
-      <Tappable onPress={() => navigation.navigate("login")}><Txt>Logout</Txt></Tappable>
+      <Btn onPress={logout} label="Logout" />
     </View>
   );
 };

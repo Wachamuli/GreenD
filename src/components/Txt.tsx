@@ -1,25 +1,23 @@
-import React, { PropsWithChildren } from "react";
-import { StyleProp, TextStyle, Text } from "react-native";
+import { PropsWithChildren } from "react";
+import { Text, TextProps } from "react-native";
+
 import { moderateScale } from "../utilities/metrics";
 
-type Props = PropsWithChildren & {
-  style?: StyleProp<TextStyle>;
-  numberOfLines?: number;
-};
+type Props = TextProps & PropsWithChildren;
 
-const Txt = ({ children, style, numberOfLines }: Props): JSX.Element => {
+const Txt = (props: Props): JSX.Element => {
   return (
     <Text
-      numberOfLines={numberOfLines}
+      {...props}
       style={[
         {
           fontFamily: undefined,
           fontSize: moderateScale(16),
           color: "black",
         },
-        style,
+        props.style,
       ]}>
-      {children}
+      {props.children}
     </Text>
   );
 };

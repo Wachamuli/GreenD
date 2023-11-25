@@ -1,6 +1,11 @@
-import React from "react";
-
-import { StyleSheet, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  TextInputProps,
+  TextInput,
+  View,
+  TextStyle,
+  StyleProp,
+} from "react-native";
 import { Control, FieldValue, useController } from "react-hook-form";
 
 import Txt from "../Txt";
@@ -11,14 +16,12 @@ import {
 } from "../../utilities/metrics";
 import ErrorMessage from "../ErrorMessage";
 
-type Props = {
+type Props = TextInputProps & {
   name: string;
-  style?: {};
+  style?: StyleProp<TextStyle>;
   control: Control<FieldValue<any>>;
+  onChangeText?: (text: string) => void;
   label?: string;
-  placeholder?: string;
-  secureTextEntry?: boolean;
-  selectTextOnFocus?: boolean;
 };
 
 const Field = (props: Props) => {
@@ -35,13 +38,15 @@ const Field = (props: Props) => {
     <View style={styles.container}>
       <Txt style={styles.label}>{props.label}</Txt>
       <TextInput
+        {...props}
         value={field.value}
-        onChangeText={field.onChange}
-        secureTextEntry={props.secureTextEntry}
-        placeholder={props.placeholder}
+        onChangeText={e => {
+          props.onChangeText && props.onChangeText(e);
+          field.onChange(e);
+        }}
         placeholderTextColor={"#9ca3af"}
         selectTextOnFocus={props.selectTextOnFocus}
-        style={{ ...styles.input, ...props.style }}
+        style={[styles.input, props.style]}
       />
       <ErrorMessage style={styles.errorMessageContainer} error={error} />
     </View>
@@ -51,12 +56,13 @@ const Field = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: verticalScale(8),
+    width: horizontalScale(250),
   },
   label: {
     marginBottom: verticalScale(5),
+    // fontWeight: "bold"
   },
   input: {
-    width: horizontalScale(250),
     color: "black",
     borderColor: "black",
     backgroundColor: "#f3f4f6",

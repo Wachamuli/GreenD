@@ -29,7 +29,7 @@ const Tappable = (props: Props): JSX.Element => {
       disabled={props.disabled}>
       <View
         style={[
-          { opacity: props.disabled || pressed ? 0.8 : 1 },
+          { opacity: props.disabled || pressed ? 0.5 : 1 },
           props.containerStyle,
         ]}>
         {props.label && <Txt style={props.style}>{props.label}</Txt>}

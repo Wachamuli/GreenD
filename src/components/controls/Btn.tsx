@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     textAlign: "center",
+    marginVertical: verticalScale(10),
   },
 });
 

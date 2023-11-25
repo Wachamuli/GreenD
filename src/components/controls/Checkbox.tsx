@@ -39,18 +39,20 @@ const Checkbox = (props: Props): JSX.Element => {
   });
 
   return (
-    <View style={[styles.detailContainer, props.style]}>
-      <CheckBox
-        style={styles.checkbox}
-        disabled={props.disabled}
-        value={field.value}
-        color={"black"}
-        onValueChange={event => {
-          if (props.onChange) props.onChange(event.valueOf());
-          field.onChange(event);
-        }}
-      />
-      {props.children}
+    <View>
+      <View style={[styles.detailContainer, props.style]}>
+        <CheckBox
+          style={styles.checkbox}
+          disabled={props.disabled}
+          value={field.value}
+          color={"black"}
+          onValueChange={event => {
+            if (props.onChange) props.onChange(event.valueOf());
+            field.onChange(event);
+          }}
+        />
+        <Txt>{props.children}</Txt>
+      </View>
       <ErrorMessage error={error} />
     </View>
   );

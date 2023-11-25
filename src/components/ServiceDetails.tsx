@@ -62,8 +62,6 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     item => item.serviceId.toString() == route.params.serviceId,
   );
 
-  const [date, setDate] = useState<string>();
-
   return (
     <>
       <ScrollView
