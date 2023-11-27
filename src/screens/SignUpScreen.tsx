@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +19,7 @@ import {
   SignUpSchema,
   signUpSchema,
 } from "../utilities/validators/SignUpSchema";
+import Menu from "../components/controls/Menu";
 
 const SignUpScreen = (): JSX.Element => {
   const { control, handleSubmit } = useForm<SignUpSchema>({
@@ -26,16 +27,43 @@ const SignUpScreen = (): JSX.Element => {
   });
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<navigationProp>();
+  const [condominiums, setCondomiums] = useState<
+    { id: string; name: string }[] | null
+  >();
+
+  const getCondomiums = async () => {
+    const { data, error } = await supabase
+      .from("condominiums")
+      .select("id, name");
+    if (error) {
+      /* Handle error */
+    }
+    setCondomiums(data);
+  };
+
+  useEffect(() => {
+    getCondomiums();
+  }, []);
 
   const signUp = async (values: SignUpSchema) => {
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
+      options: {
+        data: {
+          name: values.name,
+          surname: values.surname,
+          telephone: values.telephone,
+          cellphone: values.cellphone,
+          condominium: values.condominium,
+          address: values.address,
+        },
+      },
     });
 
     if (error) {
-      Alert.alert(error.message);
+      Alert.alert(`${error.name} (${error.status}): ${error.message}\n`);
       setLoading(false);
       return;
     }
@@ -44,21 +72,25 @@ const SignUpScreen = (): JSX.Element => {
     navigation.navigate("login");
   };
 
-  const [select, setSelect] = useState("");
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={{ marginTop: verticalScale(20) }}>
         <Header title="Solicitar una cuenta" />
       </View>
 
-      <Field name="name" control={control} label="Nombre" placeholder="Jane" />
-
+      <Field
+        name="name"
+        control={control}
+        label="Nombre"
+        placeholder="Jane"
+        maxLength={50}
+      />
       <Field
         name="surname"
         control={control}
         label="Apellido"
         placeholder="Doe"
+        maxLength={50}
       />
       <Field
         name="email"
@@ -82,19 +114,12 @@ const SignUpScreen = (): JSX.Element => {
         placeholder="829-000-0000"
       />
 
-      <Txt style={{ marginVertical: verticalScale(10) }}>Residencial</Txt>
-
-      <Picker
-        mode="dialog"
-        style={{
-          backgroundColor: "#f3f4f6",
-          marginBottom: verticalScale(10),
-        }}
-        selectedValue={select}
-        onValueChange={itemValue => setSelect(itemValue)}>
-        <Picker.Item label="La Arboleda" value="La Arboleda" />
-        <Picker.Item label="Monte Verde" value="Monte Verde" />
-      </Picker>
+      <Menu
+        name="condominium"
+        control={control}
+        placeholder="Seleccione un residencial"
+        options={condominiums}
+      />
 
       <Field name="address" label="Dirección" control={control} />
 

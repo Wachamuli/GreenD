@@ -38,6 +38,7 @@ const Field = (props: Props) => {
     <View style={styles.container}>
       <Txt style={styles.label}>{props.label}</Txt>
       <TextInput
+        maxLength={150}
         {...props}
         value={field.value}
         onChangeText={e => {

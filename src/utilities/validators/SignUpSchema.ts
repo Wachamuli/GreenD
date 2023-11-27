@@ -11,6 +11,7 @@ export const signUpSchema = z
       .email("Correo electrónico no válido"),
     telephone: z.string().optional(),
     cellphone: z.string().min(1, "Número celular es requerido"),
+    condominium: z.string().min(1, "Seleccione un residencial"),
     address: z.string().min(1, "Una dirección es requerido"),
     password: z
       .string()
