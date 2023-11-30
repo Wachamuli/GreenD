@@ -50,12 +50,12 @@ const SignUpScreen = (): JSX.Element => {
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
+      phone: values.cellphone,
       options: {
         data: {
           name: values.name,
           surname: values.surname,
           telephone: values.telephone,
-          cellphone: values.cellphone,
           condominium: values.condominium,
           address: values.address,
         },
@@ -97,6 +97,7 @@ const SignUpScreen = (): JSX.Element => {
         control={control}
         label="Correo electrónico"
         keyboardType="email-address"
+        autoCapitalize="none"
         placeholder="janedoe@domain.tls"
       />
       <Field
@@ -123,13 +124,18 @@ const SignUpScreen = (): JSX.Element => {
 
       <Field name="address" label="Dirección" control={control} />
 
-      <PasswordEnforcer name="password" label="Contraseña" control={control} />
+      <PasswordEnforcer
+        name="password"
+        label="Contraseña"
+        control={control}
+      />
 
       <Field
         name="confirmPassword"
         label="Confirmar contraseña"
         control={control}
         secureTextEntry={true}
+        autoCapitalize="none"
         maxLength={16}
         placeholder="********"
       />

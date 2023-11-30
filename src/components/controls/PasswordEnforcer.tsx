@@ -48,6 +48,7 @@ const PasswordEnforcer = (props: Props): JSX.Element => {
         label={props.label}
         control={props.control}
         secureTextEntry={true}
+        autoCapitalize="none"
         placeholder="********"
         maxLength={16}
       />

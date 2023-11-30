@@ -61,6 +61,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
           control={control}
           label="Correo electrónico"
           keyboardType="email-address"
+          autoCapitalize="none"
           placeholder="janedoe@domain.tls"
         />
 
@@ -94,6 +95,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
           control={control}
           secureTextEntry={true}
           maxLength={16}
+          autoCapitalize="none"
           placeholder="********"
         />
         <Btn onPress={handleSubmit(recovery)} label="Aceptar" />

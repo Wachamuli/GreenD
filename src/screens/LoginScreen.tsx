@@ -54,6 +54,7 @@ const LoginScreen = () => {
           control={control}
           label="Correo electrónico"
           keyboardType="email-address"
+          autoCapitalize="none"
           placeholder="janedoe@domain.tls"
         />
         <Field
@@ -61,6 +62,7 @@ const LoginScreen = () => {
           control={control}
           label="Contraseña"
           placeholder="********"
+          autoCapitalize="none"
           secureTextEntry={true}
         />
         <Tappable onPress={() => navigation.navigate("passwordRecovery")}>
