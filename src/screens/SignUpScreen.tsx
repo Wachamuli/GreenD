@@ -45,8 +45,9 @@ const SignUpScreen = (): JSX.Element => {
     getCondomiums();
   }, []);
 
-  const signUp = async (values: SignUpSchema) => {
+  const onSubmit = async (values: SignUpSchema) => {
     setLoading(true);
+
     const { error } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
@@ -99,6 +100,7 @@ const SignUpScreen = (): JSX.Element => {
         keyboardType="email-address"
         autoCapitalize="none"
         placeholder="janedoe@domain.tls"
+        maxLength={100}
       />
       <Field
         name="telephone"
@@ -106,6 +108,7 @@ const SignUpScreen = (): JSX.Element => {
         label="Número telefónico"
         keyboardType="phone-pad"
         placeholder="809-000-0000"
+        maxLength={50}
       />
       <Field
         name="cellphone"
@@ -113,6 +116,7 @@ const SignUpScreen = (): JSX.Element => {
         label="Número celular"
         keyboardType="phone-pad"
         placeholder="829-000-0000"
+        maxLength={50}
       />
 
       <Menu
@@ -122,13 +126,14 @@ const SignUpScreen = (): JSX.Element => {
         options={condominiums}
       />
 
-      <Field name="address" label="Dirección" control={control} />
-
-      <PasswordEnforcer
-        name="password"
-        label="Contraseña"
+      <Field
+        name="address"
+        label="Dirección"
         control={control}
+        maxLength={100}
       />
+
+      <PasswordEnforcer name="password" label="Contraseña" control={control} />
 
       <Field
         name="confirmPassword"
@@ -147,7 +152,7 @@ const SignUpScreen = (): JSX.Element => {
 
       <Btn
         disabled={loading}
-        onPress={handleSubmit(signUp)}
+        onPress={handleSubmit(onSubmit)}
         label="Registrarse"
       />
     </ScrollView>
