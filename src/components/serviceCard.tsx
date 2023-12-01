@@ -1,12 +1,4 @@
-import React from "react";
-import {
-  View,
-  Image,
-  ImageRequireSource,
-  StyleSheet,
-  Text,
-  Pressable,
-} from "react-native";
+import { View, Image, StyleSheet, Text } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -28,21 +20,19 @@ import Tappable from "./controls/Tappable";
 type Props = {
   id: string;
   name: string;
+  image: string;
   description: string;
-  registrationDate: Date;
-  image: ImageRequireSource;
 };
 
-const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
+const ServiceCard = (props: Props): JSX.Element => {
   const navigation = useNavigation<navigationProp>();
+
+  // TODO: Remove this, it is a mockup
   const {
-    serviceName,
-    serviceImage,
-    serviceDescription,
     serviceMinimumDate,
     serviceMinimumPrice,
     serviceAvailableOutsourcers,
-  } = Services.filter(({ serviceId }) => serviceId.toString() === id)[0];
+  } = Services.filter(({ serviceId }) => serviceId.toString() === "1")[0];
 
   const setColor =
     serviceAvailableOutsourcers > 50
@@ -58,13 +48,15 @@ const ServiceCard = ({ serviceId: id }: { serviceId: string }): JSX.Element => {
         boxShadowXP("black", 0.5, 20, -4, 5, 5),
       ]}
       onPress={() => {
-        navigation.navigate("serviceDetails", { serviceId: id });
+        navigation.navigate("serviceDetails", {
+          serviceId: props.id,
+        });
       }}>
-      <Image style={styles.serviceCardImage} source={serviceImage} />
+      <Image style={styles.serviceCardImage} source={{ uri: props.image }} />
       <View style={styles.serviceTextContainer}>
-        <Text style={styles.serviceCardName}>{serviceName}</Text>
+        <Text style={styles.serviceCardName}>{props.name}</Text>
         <Text style={styles.serviceCardDescription} numberOfLines={1}>
-          {serviceDescription}
+          {props.description}
         </Text>
 
         <View style={styles.infoContainer}>
@@ -104,11 +96,11 @@ const styles = StyleSheet.create({
   },
   serviceCardImage: {
     width: "100%",
-    maxHeight: verticalScale(130),
-    marginBottom: verticalScale(3),
+    height: verticalScale(130),
   },
   serviceTextContainer: {
     paddingHorizontal: horizontalScale(8),
+    paddingVertical: horizontalScale(8),
   },
   serviceCardName: {
     fontSize: moderateScale(18),
