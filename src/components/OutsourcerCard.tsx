@@ -1,8 +1,6 @@
 import React, { SetStateAction, useState } from "react";
 import { FlatList, Image, StyleSheet, View } from "react-native";
 
-import { Outsourcers } from "../api/mockData";
-
 import {
   horizontalScale,
   moderateScale,
@@ -17,7 +15,16 @@ import Btn from "./controls/Btn";
 
 type Props = {
   name: string;
-  data: Outsourcer[];
+  data:
+    | {
+        id: string;
+        name: string;
+        logo: string | null;
+        brief_description: string;
+        condominium: string;
+      }[]
+    | null
+    | undefined;
   control: Control<FieldValue<any>>;
   setValue?: (value: SetStateAction<string>) => void;
   onValueChange: (name: string, value: string) => void;
@@ -38,15 +45,15 @@ const OutsourcerCard = (props: Props) => {
       <FlatList
         horizontal
         data={props.data}
-        renderItem={({ item, index }) => (
+        renderItem={({ item: outsourcer, index }) => (
           <View style={styles.outsourcerCardContainer}>
             <Image
               style={styles.outsourcerCardImage}
-              source={item.outsourcerLogo}
+              source={{ uri: outsourcer.logo ?? ""  }}
             />
             <View style={styles.rightSideContainer}>
-              <Txt style={styles.outsourcerName}>{item.outsourcerName}</Txt>
-              <Txt numberOfLines={2}>{item.outsourcerBriefDescription}</Txt>
+              <Txt style={styles.outsourcerName}>{outsourcer.name}</Txt>
+              <Txt numberOfLines={2}>{outsourcer.brief_description}</Txt>
               <Btn
                 style={{
                   ...styles.outsourcerButton,
@@ -55,7 +62,7 @@ const OutsourcerCard = (props: Props) => {
                 }}
                 label={isAsigned[index] ? "Asignado" : "Asignar"}
                 onPress={() => {
-                  props.onValueChange(props.name, item.outsourcerId.toString());
+                  props.onValueChange(props.name, outsourcer.id);
                   setIsAsigned(prevStates => {
                     const newStates = [...prevStates].fill(false);
                     newStates[index] = true;
@@ -102,7 +109,7 @@ const styles = StyleSheet.create({
   },
   outsourcerButton: {
     borderRadius: moderateScale(10),
-    minWidth: horizontalScale(1) /* Overrides the old value as intended */,
+    width: "auto",
     borderColor: "green",
     color: "green",
     borderWidth: moderateScale(1),

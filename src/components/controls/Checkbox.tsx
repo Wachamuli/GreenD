@@ -1,14 +1,7 @@
 import React, { ReactNode } from "react";
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
-
+import { StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { Control, FieldValue, useController } from "react-hook-form";
-import CheckBox, { CheckboxEvent } from "expo-checkbox";
+import CheckBox from "expo-checkbox";
 
 import {
   horizontalScale,
@@ -45,7 +38,6 @@ const Checkbox = (props: Props): JSX.Element => {
           style={styles.checkbox}
           disabled={props.disabled}
           value={field.value}
-          color={"black"}
           onValueChange={event => {
             if (props.onChange) props.onChange(event.valueOf());
             field.onChange(event);

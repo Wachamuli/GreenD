@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { BackHandler } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faFileInvoice,
@@ -16,8 +15,6 @@ import MyProfileScreen from "./MyProfileScreen";
 import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
 import ActiveServicesScreen from "./ActiveServicesScreen";
-import { moderateScale } from "../utilities/metrics";
-import Txt from "../components/Txt";
 import BottomTab from "../components/layout/BottomTab";
 
 const Tab = createBottomTabNavigator();
@@ -47,7 +44,7 @@ const IndexScreen = () => {
         }}
       />
       <Tab.Screen
-        name="solicitudes"
+        name="requests"
         component={ActiveServicesScreen}
         options={{
           title: "Solicitudes",

@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, Alert, Image } from "react-native";
-
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+} from "react-native";
 import { useForm } from "react-hook-form";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
+import { supabase } from "../lib/supabase";
+import { Outsourcers, Services } from "../api/mockData";
 import Header from "./Header";
 import Txt from "./Txt";
 import {
@@ -14,52 +23,107 @@ import {
   verticalScale,
 } from "../utilities/metrics";
 import { RootStackParamList } from "../screens/HomeScreen";
-import { Outsourcers, Services } from "../api/mockData";
-
 import OutsourcerCard from "./OutsourcerCard";
 import MyCalendar from "./MyCalendar";
 import Field from "./controls/Field";
 import Details from "./DetailList";
 import TimePicker from "./TimePicker";
 import DateDisplayer from "./DateDisplayer";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import Btn from "./controls/Btn";
-
-const ServiceDetailsSchema = z.object({
-  details: z.array(z.string()).min(1, "Seleccione al menos un detalle."),
-  calendar: z.coerce.date(),
-  outsourcer: z.string().min(1, "Asigna un contrata"),
-  timePicker: z.string(),
-  note: z.string().optional(),
-});
+import { serviceDetailsSchema } from "../utilities/validators/ServiceDetailsSchema";
+import { boxShadowXP } from "../utilities/crossplatform";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
 const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
-  const { handleSubmit, control, getValues, setValue, formState } = useForm({
-    resolver: zodResolver(ServiceDetailsSchema),
+  const [service, setService] = useState<{
+    name: string;
+    image: string;
+    description: string;
+  } | null>();
+  const [details, setDetails] = useState<string[] | null>();
+  const [outsourcers, setOutsourcers] = useState<
+    | {
+        id: string;
+        name: string;
+        logo: string | null;
+        brief_description: string;
+        condominium: string;
+      }[]
+    | null
+  >();
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { isDirty: hasUnsavedChanges },
+  } = useForm({
+    resolver: zodResolver(serviceDetailsSchema),
   });
 
-  useEffect(() =>
-    navigation.addListener("beforeRemove", event => {
-      event.preventDefault();
-      Alert.alert(
-        "¿Descartar solicitud?",
-        "Si sales de esta sección se eliminarán los detalles de tu solicitud",
-        [
-          { text: "Continuar", onPress: () => {} },
-          {
-            text: "Descartar",
-            onPress: () => navigation.dispatch(event.data.action),
-          },
-        ],
-      );
-    }),
-  );
+  const getServiceData = async () => {
+    const { data, error } = await supabase
+      .from("services")
+      .select("name, image, description")
+      .eq("id", route.params.serviceId)
+      .single();
 
-  const getService = Services.find(
-    item => item.serviceId.toString() == route.params.serviceId,
+    setService(data);
+  };
+
+  const getDetails = async () => {
+    const { data, error } = await supabase
+      .from("details")
+      .select("detail")
+      .eq("service_id", route.params.serviceId);
+
+    const details = data?.map(item => item["detail"]);
+
+    setDetails(details);
+  };
+
+  const getOutsourcers = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    console.log(user?.user_metadata.condominium);
+
+    const { data, error } = await supabase
+      .from("outsourcers")
+      .select("id, name, logo, brief_description, condominium")
+      .eq("service", route.params.serviceId)
+      .eq("condominium", user?.user_metadata.condominium);
+
+    setOutsourcers(data);
+  };
+
+  useEffect(() => {
+    getServiceData();
+    getDetails();
+    getOutsourcers();
+  }, []);
+
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", event => {
+        if (!hasUnsavedChanges) return;
+
+        event.preventDefault();
+        Alert.alert(
+          "¿Descartar solicitud?",
+          "Si sales de esta sección se eliminarán los detalles de tu solicitud",
+          [
+            { text: "Continuar", onPress: () => {} },
+            {
+              text: "Descartar",
+              onPress: () => navigation.dispatch(event.data.action),
+            },
+          ],
+        );
+      }),
+    [navigation, hasUnsavedChanges],
   );
 
   return (
@@ -68,33 +132,32 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
         keyboardDismissMode="on-drag"
         contentContainerStyle={{ backgroundColor: "white" }}
         style={styles.serviceDetailsContainer}>
-        <Image source={getService?.serviceImage} style={styles.serviceImage} />
+        <Image source={{ uri: service?.image }} style={styles.serviceImage} />
         <View style={styles.textContainer}>
-          <Header title={getService?.serviceName} />
+          <Header title={service?.name} />
           <View style={styles.serviceDescriptionContainer}>
-            <Txt>{getService?.serviceFullDescription}</Txt>
+            <Txt>{service?.description}</Txt>
           </View>
 
           <Header title="Solicitar" />
           <View style={styles.detailsContainer}>
-            <Details
-              name="details"
-              data={getService?.serviceDetails}
-              onValueChange={setValue}
-              control={control}
-            />
+            {details ? (
+              <Details
+                name="details"
+                data={details}
+                onValueChange={setValue}
+                control={control}
+              />
+            ) : (
+              <ActivityIndicator size={40} />
+            )}
           </View>
 
           <Header title="Agendar" />
           {/* <View style={styles.agendaContainer}> */}
-            {/* <MyCalendar
-              name="calendar"
-              onValueChange={setDate}
-              onChange={setValue}
-              control={control}
-            />
-            <DateDisplayer date={date} />
-            <TimePicker
+          {/* <MyCalendar name="calendar" onChange={setValue} control={control} /> */}
+          {/* <DateDisplayer date={date} /> */}
+          {/* <TimePicker
               onValueChange={setValue}
               name="timePicker"
               control={control}
@@ -105,7 +168,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
           <View>
             <OutsourcerCard
               name="outsourcer"
-              data={Outsourcers}
+              data={outsourcers}
               control={control}
               onValueChange={setValue}
             />
@@ -132,24 +195,26 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               </Txt>
             </Txt>
           </View>
+
+          <Btn
+            label="Solicitar"
+            style={styles.button}
+            onPress={handleSubmit(values =>
+              navigation.navigate("serviceResume", {
+                serviceId: route.params.serviceId,
+                selectedDetails: values.details,
+                selectedDay: values.calendar,
+                selectedTime: values.timePicker,
+                selectedOutsourcer: values.outsourcer,
+                note: values.note,
+              }),
+            )}
+          />
         </View>
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
-        <Btn
-          label="Solicitar"
-          onPress={handleSubmit(() =>
-            navigation.navigate("serviceResume", {
-              serviceId: route.params.serviceId,
-              selectedDetails: getValues("details"),
-              selectedDay: getValues("calendar"),
-              selectedTime: getValues("timePicker"),
-              selectedOutsourcer: getValues("outsourcer"),
-              note: getValues("note"),
-            }),
-          )}
-        />
-      </View>
+      {/* <View style={styles.buttonContainer}> */}
+      {/* </View> */}
     </>
   );
 };
@@ -160,7 +225,7 @@ const styles = StyleSheet.create({
   },
   serviceImage: {
     width: "100%",
-    maxHeight: verticalScale(200),
+    height: verticalScale(200),
   },
   textContainer: {
     marginHorizontal: horizontalScale(10),
@@ -208,9 +273,17 @@ const styles = StyleSheet.create({
     color: "#9ca3af",
   },
   buttonContainer: {
+    borderTopWidth: verticalScale(1),
     position: "absolute",
+    backgroundColor: "white",
+    alignItems: "flex-end",
     width: "100%",
     bottom: 0,
+  },
+  button: {
+    borderRadius: moderateScale(10),
+    marginRight: horizontalScale(10),
+    width: horizontalScale(150),
   },
 });
 

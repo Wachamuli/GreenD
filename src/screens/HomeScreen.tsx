@@ -1,5 +1,6 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
+import { BackHandler } from "react-native";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -9,6 +10,8 @@ import ServiceResume from "../components/ServiceResume";
 import Txt from "../components/Txt";
 import { Condominium } from "../api/mockData";
 import LoginScreen from "./LoginScreen";
+import { supabase } from "../lib/supabase";
+import { Alert } from "react-native";
 
 export type RootStackParamList = {
   serviceList: undefined;
@@ -28,9 +31,50 @@ export type navigationProp = NavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const condominiumName = Condominium[0].condominiumName;
-
 const HomeScreen = (): JSX.Element => {
+  const [condominium, setCondomium] = useState("");
+
+  const getCondominiums = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+    if (error) Alert.alert(error.message);
+
+    if (error) Alert.alert(error.message);
+
+    const { data, error: er } = await supabase
+      .from("condominiums")
+      .select("name")
+      .eq("id", user?.user_metadata.condominium)
+      .single();
+
+    if (er) Alert.alert(er.message);
+
+    if (!data?.name) {
+      Alert.alert(
+        "Condominio no encontrado",
+        "No se ha podido encontrar su condominio, adiós",
+        [
+          {
+            text: "Entendido",
+            onPress: async () => {
+              await supabase.auth.signOut();
+              BackHandler.exitApp();
+            },
+            style: "cancel",
+          },
+        ],
+      );
+    }
+
+    setCondomium(data?.name ?? "Sin condominio");
+  };
+
+  useEffect(() => {
+    getCondominiums();
+  }, []);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -38,7 +82,9 @@ const HomeScreen = (): JSX.Element => {
         component={ServiceList}
         options={{
           headerTitle: "Inicio",
-          headerRight: () => <Txt>{condominiumName}</Txt>,
+          headerRight: () => (
+            <Txt style={{ fontStyle: "italic" }}>{condominium}</Txt>
+          ),
         }}
       />
       <Stack.Screen

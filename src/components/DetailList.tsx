@@ -4,10 +4,11 @@ import { Control, Controller, FieldValue } from "react-hook-form";
 import { View } from "react-native";
 import ErrorMessage from "./ErrorMessage";
 import Detail from "./Detail";
+import { moderateScale, verticalScale } from "../utilities/metrics";
 
 type Props = {
   name: string;
-  data?: string[];
+  data: string[] | null;
   control: Control<FieldValue<any>>;
   onValueChange: (name: string, value: string[]) => void;
 };
