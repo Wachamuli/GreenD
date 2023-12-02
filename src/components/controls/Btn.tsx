@@ -28,10 +28,11 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: verticalScale(20),
     borderRadius: moderateScale(40),
-    minWidth: horizontalScale(250),
+    width: horizontalScale(250),
+    // maxWidth: horizontalScale(250),
     backgroundColor: "blue",
     textTransform: "uppercase",
-    fontWeight: "bold",
+    fontFamily: "MontserratBold",
     color: "white",
     textAlign: "center",
     marginVertical: verticalScale(10),

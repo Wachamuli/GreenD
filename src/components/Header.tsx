@@ -15,7 +15,8 @@ const Header = ({
         {
           marginBottom: verticalScale(10),
           color: "black",
-          fontWeight: "bold",
+          // fontWeight: "bold",
+          fontFamily: "MontserratBold",
           fontSize: moderateScale(22),
           alignSelf: "flex-start",
         },

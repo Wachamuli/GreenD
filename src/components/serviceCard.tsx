@@ -16,6 +16,7 @@ import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";
 import dayjs from "dayjs";
 import Tappable from "./controls/Tappable";
+import Header from "./Header";
 
 type Props = {
   id: string;
@@ -54,10 +55,10 @@ const ServiceCard = (props: Props): JSX.Element => {
       }}>
       <Image style={styles.serviceCardImage} source={{ uri: props.image }} />
       <View style={styles.serviceTextContainer}>
-        <Text style={styles.serviceCardName}>{props.name}</Text>
-        <Text style={styles.serviceCardDescription} numberOfLines={1}>
+        <Txt style={styles.serviceCardName}>{props.name}</Txt>
+        <Txt style={styles.serviceCardDescription} numberOfLines={1}>
           {props.description}
-        </Text>
+        </Txt>
 
         <View style={styles.infoContainer}>
           <View style={styles.infoItemContainer}>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   },
   serviceCardName: {
     fontSize: moderateScale(18),
-    fontWeight: "bold",
+    fontFamily: "MontserratBold",
     color: "black",
   },
   serviceCardDescription: {
