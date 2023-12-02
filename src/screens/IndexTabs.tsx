@@ -10,16 +10,17 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-import HomeScreen from "./HomeScreen";
+import HomeStack from "./HomeStack";
 import MyProfileScreen from "./MyProfileScreen";
 import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
 import ActiveServicesScreen from "./ActiveServicesScreen";
 import BottomTab from "../components/layout/BottomTab";
+import Txt from "../components/Txt";
 
 const Tab = createBottomTabNavigator();
 
-const IndexScreen = () => {
+const IndexTabs = () => {
   const navigation = useNavigation<navigationProp>();
 
   useEffect(() => {
@@ -33,10 +34,13 @@ const IndexScreen = () => {
     <Tab.Navigator
       initialRouteName="home"
       tabBar={BottomTab}
-      screenOptions={{ tabBarHideOnKeyboard: true }}>
+      screenOptions={{
+        tabBarHideOnKeyboard: true,
+        headerTitleStyle: { fontFamily: "ffBold" },
+      }}>
       <Tab.Screen
         name="home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
           title: "Inicio",
           headerShown: false,
@@ -73,4 +77,4 @@ const IndexScreen = () => {
   );
 };
 
-export default IndexScreen;
+export default IndexTabs;

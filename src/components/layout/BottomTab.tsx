@@ -54,12 +54,12 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
             onPress={onPress}
             onLongPress={onLongPress}
             style={{ flex: 1 }}>
-            <View style={[, styles.bottomTabItemContainer]}>
+            <View style={styles.bottomTabItemContainer}>
               {options.tabBarIcon &&
                 options.tabBarIcon({
                   focused: isFocused,
                   color: isFocused ? "#3b82f6" : "#9ca3af",
-                  size: 20, 
+                  size: 20,
                 })}
               <Txt style={{ color: isFocused ? "#3b82f6" : "#9ca3af" }}>
                 {label.toString()}
@@ -76,13 +76,9 @@ const styles = StyleSheet.create({
   bottomTabContainer: {
     flexDirection: "row",
     alignItems: "center",
-    position: "absolute",
     justifyContent: "space-between",
-    marginHorizontal: horizontalScale(10),
     backgroundColor: "white",
-    bottom: 25,
-    borderRadius: moderateScale(20),
-    paddingHorizontal: moderateScale(0),
+    bottom: 0,
     paddingVertical: verticalScale(20),
   },
   bottomTabItemContainer: {

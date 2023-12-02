@@ -35,8 +35,7 @@ const Detail = (props: Props): JSX.Element => {
       {...props}>
       <Txt
         style={{
-          fontStyle: field.value ? "normal" : "italic",
-          fontWeight: field.value ? "bold" : "normal",
+          fontFamily: field.value ? "ffBold" : "ffItalic",
           color: field.value ? "#28A745" : "#9ca3af",
         }}>
         {props.label}

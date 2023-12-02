@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-
+import { useCallback, useState } from "react";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
 
 import dayjs from "dayjs";
 import "dayjs/locale/es";
@@ -9,9 +10,11 @@ import "dayjs/locale/es";
 import { supabase } from "./lib/supabase";
 import { calendarSetup } from "./utilities/calendarSetup";
 import LoginScreen from "./screens/LoginScreen";
-import IndexScreen from "./screens/IndexScreen";
+import IndexTabs from "./screens/IndexTabs";
 import SignUpScreen from "./screens/SignUpScreen";
 import PasswordRecoveryScreen from "./screens/PasswordRecoveryScreen";
+import { View } from "react-native";
+import Txt from "./components/Txt";
 
 dayjs.locale("es");
 calendarSetup("es");
@@ -25,6 +28,8 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export type navigationProp = NavigationProp<RootStackParamList>;
+
+SplashScreen.preventAutoHideAsync();
 
 const App = (): JSX.Element => {
   const [isSignedIn, setSignedIn] = useState(false);
@@ -42,38 +47,60 @@ const App = (): JSX.Element => {
     }
   });
 
-  // if (isLoading) return <SplashScreen/>
+  const [fontsLoaded, fontsError] = useFonts({
+    ffNormal: require("./assets/fonts/Montserrat/static/Montserrat-Regular.ttf"),
+    ffItalic: require("./assets/fonts/Montserrat/static/Montserrat-Italic.ttf"),
+    ffBold: require("./assets/fonts/Montserrat/static/Montserrat-Bold.ttf"),
+    ffBoldItalic: require("./assets/fonts/Montserrat/static/Montserrat-BoldItalic.ttf"),
+    ffBlack: require("./assets/fonts/Montserrat/static/Montserrat-Black.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontsError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontsError]);
+
+  if (!fontsLoaded && !fontsError) {
+    return <></>;
+  }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="login">
-        {isSignedIn ? (
-          <Stack.Screen
-            options={{ headerShown: false }}
-            name="index"
-            component={IndexScreen}
-          />
-        ) : (
-          <>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="login"
+          screenOptions={{
+            headerTitleStyle: { fontFamily: "ffBold" },
+          }}>
+          {isSignedIn ? (
             <Stack.Screen
               options={{ headerShown: false }}
-              name="login"
-              component={LoginScreen}
+              name="index"
+              component={IndexTabs}
             />
-            <Stack.Screen
-              options={{ headerTitle: "Contáctanos" }}
-              name="signUp"
-              component={SignUpScreen}
-            />
-            <Stack.Screen
-              options={{ headerTitle: "Recuperación de contraseña" }}
-              name="passwordRecovery"
-              component={PasswordRecoveryScreen}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+          ) : (
+            <>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="login"
+                component={LoginScreen}
+              />
+              <Stack.Screen
+                options={{ title: "Regístrate" }}
+                name="signUp"
+                component={SignUpScreen}
+              />
+              <Stack.Screen
+                options={{ title: "Recuperar contraseña" }}
+                name="passwordRecovery"
+                component={PasswordRecoveryScreen}
+              />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 };
 

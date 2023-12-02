@@ -12,6 +12,7 @@ import { Condominium } from "../api/mockData";
 import LoginScreen from "./LoginScreen";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
+import HeaderBar from "../components/layout/HeaderBar";
 
 export type RootStackParamList = {
   serviceList: undefined;
@@ -31,7 +32,7 @@ export type navigationProp = NavigationProp<RootStackParamList>;
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const HomeScreen = (): JSX.Element => {
+const HomeStack = (): JSX.Element => {
   const [condominium, setCondomium] = useState("");
 
   const getCondominiums = async () => {
@@ -76,12 +77,15 @@ const HomeScreen = (): JSX.Element => {
   }, []);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTitleStyle: { fontFamily: "ffBold" },
+      }}>
       <Stack.Screen
         name="serviceList"
         component={ServiceList}
         options={{
-          headerTitle: "Inicio",
+          title: "Inicio",
           headerRight: () => (
             <Txt style={{ fontStyle: "italic" }}>{condominium}</Txt>
           ),
@@ -90,15 +94,15 @@ const HomeScreen = (): JSX.Element => {
       <Stack.Screen
         name="serviceDetails"
         component={ServiceDetails}
-        options={{ headerTitle: "Detalles del servicio" }}
+        options={{ title: "Detalles del servicio" }}
       />
       <Stack.Screen
         name="serviceResume"
         component={ServiceResume}
-        options={{ headerTitle: "Resumen del servicio" }}
+        options={{ title: "Resumen del servicio" }}
       />
     </Stack.Navigator>
   );
 };
 
-export default HomeScreen;
+export default HomeStack;

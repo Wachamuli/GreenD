@@ -7,7 +7,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { navigationProp } from "../screens/HomeScreen";
+import { navigationProp } from "../screens/HomeStack";
 import { Services } from "../api/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Txt from "./Txt";
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   serviceCardName: {
     fontSize: moderateScale(18),
-    fontFamily: "MontserratBold",
+    fontFamily: "ffBold",
     color: "black",
   },
   serviceCardDescription: {
