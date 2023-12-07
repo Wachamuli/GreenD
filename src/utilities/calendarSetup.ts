@@ -1,4 +1,4 @@
-import { LocaleConfig } from "react-native-calendars";
+// import { LocaleConfig } from "react-native-calendars";
 import dayjs from "dayjs";
 import updateLocal from "dayjs/plugin/updateLocale";
 
@@ -55,16 +55,16 @@ const shortWeekdays = ["Dom", "Lun", "Mar", "Miér", "Juev", "Vier", "Sáb"];
 //   ordinal: n => `${n}°`,
 // })
 
-LocaleConfig.locales["es"] = {
-  monthNames: months,
-  monthNamesShort: shortMonths,
-  dayNames: weekdays,
-  dayNamesShort: shortWeekdays,
-  today: "Hoy",
-};
+// LocaleConfig.locales["es"] = {
+//   monthNames: months,
+//   monthNamesShort: shortMonths,
+//   dayNames: weekdays,
+//   dayNamesShort: shortWeekdays,
+//   today: "Hoy",
+// };
 
-const calendarSetup = (language: string) => {
-  LocaleConfig.defaultLocale = language;
-};
+// const calendarSetup = (language: string) => {
+//   LocaleConfig.defaultLocale = language;
+// };
 
-export { calendarSetup };
+// export { calendarSetup };

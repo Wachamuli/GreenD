@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: moderateScale(14),
-    minWidth: horizontalScale(150),
+    width: horizontalScale(150),
     paddingVertical: verticalScale(15),
   },
 });

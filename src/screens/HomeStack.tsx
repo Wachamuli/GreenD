@@ -23,7 +23,7 @@ export type RootStackParamList = {
     selectedDay: string;
     selectedTime: string;
     selectedOutsourcer: string;
-    note: string;
+    note: string | undefined;
   };
 };
 
