@@ -14,7 +14,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 import { supabase } from "../lib/supabase";
-import { Outsourcers, Services } from "../api/mockData";
 import Header from "./Header";
 import Txt from "./Txt";
 import {
@@ -22,7 +21,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { RootStackParamList } from "../screens/HomeScreen";
+import { RootStackParamList } from "../screens/HomeStack";
 import OutsourcerCard from "./OutsourcerCard";
 import MyCalendar from "./MyCalendar";
 import Field from "./controls/Field";
@@ -30,8 +29,12 @@ import Details from "./DetailList";
 import TimePicker from "./TimePicker";
 import DateDisplayer from "./DateDisplayer";
 import Btn from "./controls/Btn";
-import { serviceDetailsSchema } from "../utilities/validators/ServiceDetailsSchema";
+import {
+  ServiceDetailsSchema,
+  serviceDetailsSchema,
+} from "../utilities/validators/ServiceDetailsSchema";
 import { boxShadowXP } from "../utilities/crossplatform";
+import { Calendar } from "react-native-calendars";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
@@ -58,7 +61,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     control,
     setValue,
     formState: { isDirty: hasUnsavedChanges },
-  } = useForm({
+  } = useForm<ServiceDetailsSchema>({
     resolver: zodResolver(serviceDetailsSchema),
   });
 
@@ -88,8 +91,6 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
       data: { user },
     } = await supabase.auth.getUser();
 
-    console.log(user?.user_metadata.condominium);
-
     const { data, error } = await supabase
       .from("outsourcers")
       .select("id, name, logo, brief_description, condominium")
@@ -105,26 +106,39 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     getOutsourcers();
   }, []);
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", event => {
-        if (!hasUnsavedChanges) return;
+  useEffect(() => {
+    const handleBeforeRemove = (event: any) => {
+      if (!hasUnsavedChanges) return;
+      event.preventDefault();
 
-        event.preventDefault();
-        Alert.alert(
-          "¿Descartar solicitud?",
-          "Si sales de esta sección se eliminarán los detalles de tu solicitud",
-          [
-            { text: "Continuar", onPress: () => {} },
-            {
-              text: "Descartar",
-              onPress: () => navigation.dispatch(event.data.action),
-            },
-          ],
-        );
-      }),
-    [navigation, hasUnsavedChanges],
-  );
+      Alert.alert(
+        "¿Descartar solicitud?",
+        "Si sales de esta sección se eliminarán los detalles de tu solicitud",
+        [
+          { text: "Continuar", onPress: () => {} },
+          {
+            text: "Descartar",
+            onPress: () => navigation.dispatch(event.data.action),
+          },
+        ],
+      );
+    };
+
+    const handleBlur = () => {
+      navigation.removeListener("beforeRemove", handleBeforeRemove);
+    };
+
+    navigation.addListener("beforeRemove", handleBeforeRemove);
+    // FIXME: Look for a better event or var. because unsaved changes pop up
+    // it's not fired if you outfocus the screen to something else and comeback
+    // even if it is not the resume screen.
+    navigation.addListener("blur", handleBlur);
+
+    return () => {
+      navigation.removeListener("beforeRemove", handleBeforeRemove);
+      navigation.removeListener("blur", handleBlur);
+    };
+  }, [navigation, hasUnsavedChanges]);
 
   return (
     <>
@@ -154,15 +168,18 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
           </View>
 
           <Header title="Agendar" />
-          {/* <View style={styles.agendaContainer}> */}
-          {/* <MyCalendar name="calendar" onChange={setValue} control={control} /> */}
-          {/* <DateDisplayer date={date} /> */}
-          {/* <TimePicker
+          <View style={styles.agendaContainer}>
+            <MyCalendar
+              name="calendar"
+              onValueChange={setValue}
+              control={control}
+            />
+            <TimePicker
               onValueChange={setValue}
               name="timePicker"
               control={control}
-            /> */}
-          {/* </View> */}
+            />
+          </View>
 
           <Header title="Contratar" />
           <View>
@@ -203,7 +220,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               navigation.navigate("serviceResume", {
                 serviceId: route.params.serviceId,
                 selectedDetails: values.details,
-                selectedDay: values.calendar,
+                selectedDay: values.calendar.toUTCString(),
                 selectedTime: values.timePicker,
                 selectedOutsourcer: values.outsourcer,
                 note: values.note,

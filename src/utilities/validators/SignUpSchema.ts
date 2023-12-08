@@ -21,9 +21,9 @@ export const signUpSchema = z
         "La contraseña aún es débil, agregue mayúculas y números",
       ),
     confirmPassword: z.string().min(1, "Debes confirma la contraseña"),
-    terms: z.literal(true, {
-      invalid_type_error: "Debes aceptar los términos para continuar",
-    }),
+    terms: z.literal(true, 
+      { errorMap: () => ({ message: "Debes aceptar los términos y condiciones" })  },
+    ),
   })
   .refine(field => field.password === field.confirmPassword, {
     message: "Las contraseñas no coinciden",
