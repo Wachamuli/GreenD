@@ -1,20 +1,12 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+
 import Txt from "../Txt";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../utilities/metrics";
-import { boxShadowXP } from "../../utilities/crossplatform";
+import { moderateScale, verticalScale } from "../../utilities/metrics";
 
 const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (
-    <View
-      style={[
-        styles.bottomTabContainer,
-        boxShadowXP("black", 0.5, 20, -4, 5, 20),
-      ]}>
+    <View style={styles.bottomTabContainer}>
       {state.routes.map((route, index) => {
         const isFocused = state.index === index;
         const { options } = descriptors[route.key];
@@ -61,7 +53,11 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                   color: isFocused ? "#3b82f6" : "#9ca3af",
                   size: 25,
                 })}
-              <Txt style={{ fontSize: moderateScale(12), color: isFocused ? "#3b82f6" : "#9ca3af" }}>
+              <Txt
+                style={{
+                  fontSize: moderateScale(12),
+                  color: isFocused ? "#3b82f6" : "#9ca3af",
+                }}>
                 {label.toString()}
               </Txt>
             </View>
@@ -80,6 +76,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     bottom: 0,
     paddingVertical: verticalScale(20),
+    borderTopWidth: verticalScale(1),
+    borderRightWidth: verticalScale(1),
+    borderLeftWidth: verticalScale(1),
+    borderColor: "#9ca3af",
+    borderTopStartRadius: moderateScale(20),
+    borderTopEndRadius: moderateScale(20),
   },
   bottomTabItemContainer: {
     alignItems: "center",

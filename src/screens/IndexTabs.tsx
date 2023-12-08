@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faFileInvoice,
@@ -14,9 +14,8 @@ import HomeStack from "./HomeStack";
 import MyProfileScreen from "./MyProfileScreen";
 import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
-import ActiveServicesScreen from "./ActiveServicesScreen";
+import ServiceRequestsStack from "./ServiceRequestsStack";
 import BottomTab from "../components/layout/BottomTab";
-import Txt from "../components/Txt";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,7 +35,6 @@ const IndexTabs = () => {
       tabBar={BottomTab}
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        headerTitleStyle: { fontFamily: "ffBold" },
       }}>
       <Tab.Screen
         name="home"
@@ -49,9 +47,10 @@ const IndexTabs = () => {
       />
       <Tab.Screen
         name="requests"
-        component={ActiveServicesScreen}
+        component={ServiceRequestsStack}
         options={{
           title: "Solicitudes",
+          headerShown: false,
           tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
         }}
       />

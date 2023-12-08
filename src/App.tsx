@@ -1,5 +1,9 @@
 import { useCallback, useState } from "react";
-import { NavigationContainer, NavigationProp } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  NavigationProp,
+  DefaultTheme,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -17,6 +21,14 @@ import { View } from "react-native";
 
 dayjs.locale("es");
 // calendarSetup("es");
+
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "rgb(255, 255, 255)",
+  },
+};
 
 export type RootStackParamList = {
   login: undefined;
@@ -66,7 +78,7 @@ const App = (): JSX.Element => {
 
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>
+      <NavigationContainer theme={theme}>
         <Stack.Navigator
           initialRouteName="login"
           screenOptions={{

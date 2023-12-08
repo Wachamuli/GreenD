@@ -1,5 +1,9 @@
 export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$/;
 
+export const capitalize = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.substring(1)
+}
+
 export const timeFormatter = (time: string): string => {
   let formattedTime = "";
   let hours = time.slice(0, 2) as unknown as number;
@@ -18,10 +22,10 @@ export const timeFormatter = (time: string): string => {
 export const requestStatusFormatter = (status: number) => {
   switch (status) {
     case 1:
-      return "En proceso de cotización..."
+      return "En proceso de cotización...";
     case 2:
-      return "En espera de pago..."
+      return "En espera de pago...";
     case 3:
-      return "En proceso de ejecución..."
+      return "En proceso de ejecución...";
   }
-}
+};

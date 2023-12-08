@@ -23,10 +23,8 @@ export type RootStackParamList = {
   };
 };
 
-// Use this one just for navigation
-export type navigationProp = NavigationProp<RootStackParamList>;
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
+export type navigationProp = NavigationProp<RootStackParamList>;
 
 const HomeStack = (): JSX.Element => {
   const [condominium, setCondomium] = useState("");

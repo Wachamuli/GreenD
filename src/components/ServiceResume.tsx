@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Alert, Image, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/HomeStack";
@@ -10,7 +11,6 @@ import { boxShadowXP } from "../utilities/crossplatform";
 
 import Txt from "./Txt";
 import Header from "./Header";
-import { Outsourcers } from "../api/mockData";
 import Btn from "./controls/Btn";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
@@ -18,11 +18,27 @@ import { supabase } from "../lib/supabase";
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
 
 const ServiceResume = ({ route, navigation }: ScreenProps) => {
-  const getOutsourcer = Outsourcers.find(
-    item => item.outsourcerId.toString() == route.params.serviceId,
-  );
-
+  const [outsourcer, setOutsourcer] = useState<{
+    name: string;
+    logo: string | null;
+    brief_description: string;
+  } | null>();
   const parentNavigation = useNavigation<any>();
+
+  const getOutsourcer = async () => {
+    const { data } = await supabase
+      .from("outsourcers")
+      .select("name, logo, brief_description")
+      .eq("id", route.params.selectedOutsourcer)
+      .single()
+    
+      setOutsourcer(data)
+  };
+
+  useEffect(() => {
+    getOutsourcer()
+  }, []);
+
   const createRequest = async () => {
     const {
       data: { user },
@@ -31,9 +47,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
 
     if (error) Alert.alert(error?.message);
 
-    console.log(route.params.selectedDay, route.params.selectedTime);
-
-    const { data, error: insertionError } = await supabase
+    const { error: insertionError } = await supabase
       .from("service_requests")
       .insert({
         user_id: user?.id ?? "Jose",
@@ -41,6 +55,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
         outsourcer: route.params.selectedOutsourcer,
         r_date: route.params.selectedDay,
         r_time: route.params.selectedTime,
+        service: Number(route.params.serviceId),
         note: route.params.note,
         request_status: 1,
       });
@@ -73,14 +88,14 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
           <View style={styles.outsourcerInfoContainer}>
             <Image
               style={styles.outsourcerImage}
-              source={getOutsourcer?.outsourcerLogo}
+              source={{ uri: outsourcer?.logo ?? "Default image" }}
             />
             <Header
               style={styles.outsourcerName}
-              title={getOutsourcer?.outsourcerName}
+              title={outsourcer?.name}
             />
             <Txt style={styles.outsourcerBriefDescription}>
-              {getOutsourcer?.outsourcerBriefDescription}
+              {outsourcer?.brief_description}
             </Txt>
           </View>
 
@@ -129,7 +144,7 @@ const styles = StyleSheet.create({
   },
   outsourcerImage: {
     width: horizontalScale(150),
-    maxHeight: verticalScale(150),
+    height: verticalScale(150),
     borderRadius: 100,
   },
   outsourcerName: {

@@ -68,9 +68,6 @@ const LoginScreen = () => {
         <Tappable onPress={() => navigation.navigate("passwordRecovery")}>
           <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
         </Tappable>
-        <Checkbox name="rememberMe" control={control} style={styles.rememberMe}>
-          <Txt>Recuérdame</Txt>
-        </Checkbox>
         <Btn
           disabled={loading || openPopup}
           label="Iniciar Sesión"
@@ -109,6 +106,7 @@ const styles = StyleSheet.create({
   forgotPassword: {
     color: "blue",
     textAlign: "right",
+    marginBottom: verticalScale(40),
   },
   rememberMe: {
     marginTop: verticalScale(40),
