@@ -47,7 +47,11 @@ const Field = (props: Props) => {
         }}
         placeholderTextColor={"#9ca3af"}
         selectTextOnFocus={props.selectTextOnFocus}
-        style={[styles.input, props.style]}
+        style={[
+          { borderColor: error ? "#FF7D7D" : "#9ca3af" },
+          styles.input,
+          props.style,
+        ]}
       />
       <ErrorMessage style={styles.errorMessageContainer} error={error} />
     </View>
@@ -65,8 +69,8 @@ const styles = StyleSheet.create({
   },
   input: {
     color: "black",
-    borderColor: "black",
-    backgroundColor: "#f3f4f6",
+    borderWidth: moderateScale(1),
+    // backgroundColor: "#f3f4f6",
     paddingVertical: verticalScale(15),
     paddingHorizontal: horizontalScale(10),
     borderRadius: verticalScale(10),

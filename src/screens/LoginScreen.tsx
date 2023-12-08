@@ -102,7 +102,6 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   loginScreenContainer: {
     flex: 1,
-    backgroundColor: "white",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

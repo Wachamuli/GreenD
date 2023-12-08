@@ -4,7 +4,7 @@ import { Control, FieldValue } from "react-hook-form";
 import Field from "./Field";
 import Txt from "../Txt";
 import { useState } from "react";
-import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
 
 type Props = {
   name: string;
@@ -20,7 +20,7 @@ const PasswordEnforcer = (props: Props): JSX.Element => {
 
   const handleOnChangeText = (text: string) => {
     let status;
-    if (text.length > 1) status = "weak";
+    if (text.length > 0) status = "weak";
     if (text.match(/^(?=.*[a-zA-Z])(.{8,16})$/)) status = "moderate";
     if (text.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$/)) status = "strong";
 
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(4),
     paddingHorizontal: horizontalScale(30),
     marginLeft: horizontalScale(4),
+    borderRadius: moderateScale(10),
   },
   status: {
     fontStyle: "italic",
