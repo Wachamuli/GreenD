@@ -59,9 +59,9 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                 options.tabBarIcon({
                   focused: isFocused,
                   color: isFocused ? "#3b82f6" : "#9ca3af",
-                  size: 20,
+                  size: 25,
                 })}
-              <Txt style={{ color: isFocused ? "#3b82f6" : "#9ca3af" }}>
+              <Txt style={{ fontSize: moderateScale(12), color: isFocused ? "#3b82f6" : "#9ca3af" }}>
                 {label.toString()}
               </Txt>
             </View>

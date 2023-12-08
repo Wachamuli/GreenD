@@ -10,7 +10,7 @@ type Props = {
   name: string;
   data: string[] | null;
   control: Control<FieldValue<any>>;
-  onValueChange: (name: string, value: string[]) => void;
+  onValueChange: any;
 };
 
 const Details = (props: Props): JSX.Element => {

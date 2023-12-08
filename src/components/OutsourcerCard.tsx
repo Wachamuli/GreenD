@@ -27,7 +27,7 @@ type Props = {
     | undefined;
   control: Control<FieldValue<any>>;
   setValue?: (value: SetStateAction<string>) => void;
-  onValueChange: (name: string, value: string) => void;
+  onValueChange: any;
 };
 
 const OutsourcerCard = (props: Props) => {

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import Tappable from "./controls/Tappable";
 import {
   Control,
@@ -49,7 +49,7 @@ let minutes = [
 type Props = {
   name: string;
   control: Control<FieldValue<any>>;
-  onValueChange: (name: string, value: string) => void;
+  onValueChange: any;
 };
 
 const TimePicker = (props: Props): JSX.Element => {
@@ -66,55 +66,58 @@ const TimePicker = (props: Props): JSX.Element => {
   }, [hour, minute, meridiem]);
 
   return (
-    <Controller
-      name={props.name}
-      control={props.control}
-      render={({ fieldState }) => (
-        <View>
-          <View style={styles.timePickerContainer}>
-            <WheelTimePicker
-              value={hour}
-              onValueChange={setHour}
-              options={hours}
-            />
-            <Txt style={styles.colon}>:</Txt>
-            <WheelTimePicker
-              value={minute}
-              onValueChange={setMinute}
-              options={minutes}
-            />
-            <View style={styles.buttonContainer}>
-              <Tappable
-                onPress={() => setMeridiem(prevsState => !prevsState)}
-                style={{
-                  ...styles.button,
-                  ...styles.buttonA,
-                  ...{
-                    backgroundColor: meridiem ? "black" : "white",
-                    color: meridiem ? "white" : "black",
-                  },
-                }}
-                label="AM"
+    // FIXME: This scrollview is a workaround, get rid of it
+    <ScrollView horizontal>
+      <Controller
+        name={props.name}
+        control={props.control}
+        render={({ fieldState }) => (
+          <View>
+            <View style={styles.timePickerContainer}>
+              <WheelTimePicker
+                value={hour}
+                onValueChange={setHour}
+                options={hours}
               />
+              <Txt style={styles.colon}>:</Txt>
+              <WheelTimePicker
+                value={minute}
+                onValueChange={setMinute}
+                options={minutes}
+              />
+              <View style={styles.buttonContainer}>
+                <Tappable
+                  onPress={() => setMeridiem(prevsState => !prevsState)}
+                  style={{
+                    ...styles.button,
+                    ...styles.buttonA,
+                    ...{
+                      backgroundColor: meridiem ? "black" : "white",
+                      color: meridiem ? "white" : "black",
+                    },
+                  }}
+                  label="AM"
+                />
 
-              <Tappable
-                onPress={() => setMeridiem(prevsState => !prevsState)}
-                style={{
-                  ...styles.button,
-                  ...styles.buttonB,
-                  ...{
-                    backgroundColor: !meridiem ? "black" : "white",
-                    color: !meridiem ? "white" : "black",
-                  },
-                }}
-                label="PM"
-              />
+                <Tappable
+                  onPress={() => setMeridiem(prevsState => !prevsState)}
+                  style={{
+                    ...styles.button,
+                    ...styles.buttonB,
+                    ...{
+                      backgroundColor: !meridiem ? "black" : "white",
+                      color: !meridiem ? "white" : "black",
+                    },
+                  }}
+                  label="PM"
+                />
+              </View>
+              <ErrorMessage error={fieldState.error} />
             </View>
-            <ErrorMessage error={fieldState.error} />
           </View>
-        </View>
-      )}
-    />
+        )}
+      />
+    </ScrollView>
   );
 };
 

@@ -1,28 +1,65 @@
-import React from "react";
-import { Image, StyleSheet, View } from "react-native";
-
+import { Alert, Image, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../screens/HomeScreen";
-import Txt from "./Txt";
-import Header from "./Header";
-import Tappable from "./controls/Tappable";
-import { Outsourcers } from "../api/mockData";
+import { RootStackParamList } from "../screens/HomeStack";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Detail from "./Detail";
 import { boxShadowXP } from "../utilities/crossplatform";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+
+import Txt from "./Txt";
+import Header from "./Header";
+import { Outsourcers } from "../api/mockData";
+import Btn from "./controls/Btn";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import { supabase } from "../lib/supabase";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
 
-const ServiceResume = ({ route }: ScreenProps) => {
+const ServiceResume = ({ route, navigation }: ScreenProps) => {
   const getOutsourcer = Outsourcers.find(
     item => item.outsourcerId.toString() == route.params.serviceId,
   );
+
+  const parentNavigation = useNavigation<any>();
+  const createRequest = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error) Alert.alert(error?.message);
+
+    console.log(route.params.selectedDay, route.params.selectedTime);
+
+    const { data, error: insertionError } = await supabase
+      .from("service_requests")
+      .insert({
+        user_id: user?.id ?? "Jose",
+        details: route.params.selectedDetails.join("\n"),
+        outsourcer: route.params.selectedOutsourcer,
+        r_date: route.params.selectedDay,
+        r_time: route.params.selectedTime,
+        note: route.params.note,
+        request_status: 1,
+      });
+
+    if (insertionError) {
+      Alert.alert(insertionError.message);
+      return;
+    }
+
+    Promise.all([
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{ name: "serviceList" }],
+        }),
+      ),
+      parentNavigation.navigate("requests"),
+    ]);
+  };
 
   return (
     <>
@@ -33,19 +70,23 @@ const ServiceResume = ({ route }: ScreenProps) => {
             styles.resumeTableContainer,
             boxShadowXP("black", 0.5, 20, -4, 10, 20),
           ]}>
-          <Image
-            source={getOutsourcer?.outsourcerLogo}
-            style={styles.outsourcerImage}
-          />
           <View style={styles.outsourcerInfoContainer}>
-            <Header title={getOutsourcer?.outsourcerName} />
-            <Txt>{getOutsourcer?.outsourcerBriefDescription}</Txt>
+            <Image
+              style={styles.outsourcerImage}
+              source={getOutsourcer?.outsourcerLogo}
+            />
+            <Header
+              style={styles.outsourcerName}
+              title={getOutsourcer?.outsourcerName}
+            />
+            <Txt style={styles.outsourcerBriefDescription}>
+              {getOutsourcer?.outsourcerBriefDescription}
+            </Txt>
           </View>
 
           <View style={styles.detailsContainer}>
             {route.params.selectedDetails.map((value, index) => (
               <Txt style={styles.detail} key={index}>
-                {/* <FontAwesomeIcon style={styles.dotlist} icon={faCircle} /> */}
                 {value}
               </Txt>
             ))}
@@ -67,9 +108,8 @@ const ServiceResume = ({ route }: ScreenProps) => {
           </View>
         </View>
       </View>
-        <View style={styles.buttonContainer}>
-          <Tappable label="Solicitar" />
-        </View>
+
+      <Btn label="Solicitar" onPress={createRequest} />
     </>
   );
 };
@@ -85,10 +125,20 @@ const styles = StyleSheet.create({
   },
   outsourcerInfoContainer: {
     alignItems: "center",
+    textAlign: "center",
   },
   outsourcerImage: {
     width: horizontalScale(150),
     maxHeight: verticalScale(150),
+    borderRadius: 100,
+  },
+  outsourcerName: {
+    marginTop: verticalScale(10),
+    marginBottom: verticalScale(0),
+  },
+  outsourcerBriefDescription: {
+    color: "gray",
+    marginTop: verticalScale(0),
   },
   appointment: {
     display: "flex",
@@ -101,11 +151,12 @@ const styles = StyleSheet.create({
   row: {
     columnGap: 30,
     flexDirection: "row",
-    // justifyContent: "space-evenly",
+    justifyContent: "space-evenly",
   },
   detailsContainer: {
     marginVertical: verticalScale(10),
   },
+
   detail: {},
   dotlist: {},
   buttonContainer: {

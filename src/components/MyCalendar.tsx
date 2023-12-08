@@ -1,27 +1,15 @@
-import React, {
-  Dispatch,
-  memo,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  Control,
-  FieldValue,
-  FieldValues,
-  UseFormSetValue,
-  useController,
-} from "react-hook-form";
-import { Calendar, CalendarProvider, ExpandableCalendar } from "react-native-calendars";
+import { useEffect, useMemo, useState } from "react";
+import { View } from "react-native";
+import { Control, FieldValue, useController } from "react-hook-form";
+import { Calendar } from "react-native-calendars";
+
 import ErrorMessage from "./ErrorMessage";
-import { horizontalScale } from "../utilities/metrics";
-import { Dimensions } from "react-native";
 
 type Props = {
   name: string;
   control: Control<FieldValue<any>>;
-  onChange: (name: string, value: string) => void;
-  onValueChange: Dispatch<React.SetStateAction<string | undefined>>;
+  onValueChange: any;
+  // onValueChange: Dispatch<React.SetStateAction<string | undefined>>;
 };
 
 const MyCalendar = (props: Props): JSX.Element => {
@@ -32,7 +20,7 @@ const MyCalendar = (props: Props): JSX.Element => {
     name: props.name,
   });
 
-  const [selectedDay, setSelectedDay] = useState<string>((new Date()).toString());
+  const [selectedDay, setSelectedDay] = useState<string>(new Date().toString());
 
   const marked = useMemo(() => {
     return {
@@ -44,33 +32,29 @@ const MyCalendar = (props: Props): JSX.Element => {
     };
   }, [selectedDay]);
 
-  useEffect(() => {
-    props.onValueChange(selectedDay);
-    props.onChange(props.name, selectedDay);
-  }, [selectedDay]);
-
   const maxDate = new Date();
   maxDate.setDate(maxDate.getDate() + 15);
 
   return (
-    <CalendarProvider date={selectedDay}>
-      <ExpandableCalendar
+    <View>
+      <Calendar
         firstDay={1}
-        enableSwipeMonths
         futureScrollRange={1}
+        pastScrollRange={1}
         disableAllTouchEventsForDisabledDays
-        // minDate={new Date().toString()}
-        // maxDate={maxDate.toString()}
-        maxToRenderPerBatch={1}
+        enableSwipeMonths
         markedDates={marked}
-        calendarWidth={Dimensions.get("screen").width - horizontalScale(20)} /* FIXME: */
         onDayPress={day => {
           setSelectedDay(day.dateString);
+          props.onValueChange(props.name, day.dateString)
           if (error) error.message = "";
         }}
+        // maxDate={maxDate.toString()}
+        // maxToRenderPerBatch={1}
+        // calendarWidth={Dimensions.get("screen").width - horizontalScale(20)} /* FIXME: */
       />
-      {/* // <ErrorMessage error={error} /> */}
-    </CalendarProvider>
+      <ErrorMessage error={error} />
+    </View>
   );
 };
 

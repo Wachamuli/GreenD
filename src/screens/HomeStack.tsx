@@ -1,18 +1,14 @@
 import { useEffect, useState } from "react";
-
 import { BackHandler } from "react-native";
-import { NavigationContainer, NavigationProp } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../components/ServiceDetails";
 import ServiceResume from "../components/ServiceResume";
 import Txt from "../components/Txt";
-import { Condominium } from "../api/mockData";
-import LoginScreen from "./LoginScreen";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
-import HeaderBar from "../components/layout/HeaderBar";
 
 export type RootStackParamList = {
   serviceList: undefined;

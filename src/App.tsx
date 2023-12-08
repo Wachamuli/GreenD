@@ -8,16 +8,15 @@ import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 import { supabase } from "./lib/supabase";
-import { calendarSetup } from "./utilities/calendarSetup";
+// import { calendarSetup } from "./utilities/calendarSetup";
 import LoginScreen from "./screens/LoginScreen";
 import IndexTabs from "./screens/IndexTabs";
 import SignUpScreen from "./screens/SignUpScreen";
 import PasswordRecoveryScreen from "./screens/PasswordRecoveryScreen";
 import { View } from "react-native";
-import Txt from "./components/Txt";
 
 dayjs.locale("es");
-calendarSetup("es");
+// calendarSetup("es");
 
 export type RootStackParamList = {
   login: undefined;
