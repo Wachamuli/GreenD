@@ -65,12 +65,11 @@ const styles = StyleSheet.create({
   },
   label: {
     marginBottom: verticalScale(5),
-    // fontWeight: "bold"
   },
   input: {
     color: "black",
     borderWidth: moderateScale(1),
-    // backgroundColor: "#f3f4f6",
+    backgroundColor: "#f9fafb",
     paddingVertical: verticalScale(15),
     paddingHorizontal: horizontalScale(10),
     borderRadius: verticalScale(10),

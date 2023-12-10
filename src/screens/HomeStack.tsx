@@ -9,6 +9,7 @@ import ServiceResume from "../components/ServiceResume";
 import Txt from "../components/Txt";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
+import CustomHeader from "../components/layout/CustomHeader";
 
 export type RootStackParamList = {
   serviceList: undefined;
@@ -71,18 +72,13 @@ const HomeStack = (): JSX.Element => {
   }, []);
 
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerTitleStyle: { fontFamily: "ffBold" },
-      }}>
+    <Stack.Navigator screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="serviceList"
         component={ServiceList}
         options={{
           title: "Inicio",
-          headerRight: () => (
-            <Txt style={{ fontStyle: "italic" }}>{condominium}</Txt>
-          ),
+          headerRight: () => <Txt>{condominium}</Txt>,
         }}
       />
       <Stack.Screen

@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Control, FieldValue, useController } from "react-hook-form";
 
-import { verticalScale } from "../../utilities/metrics";
+import { moderateScale, verticalScale } from "../../utilities/metrics";
 import Txt from "../Txt";
 import ErrorMessage from "../ErrorMessage";
 
@@ -24,34 +24,42 @@ const Menu = (props: Props): JSX.Element => {
   });
 
   return (
-    <View style={styles.pickerContainer}>
+    <View style={styles.fieldContainer}>
       <Txt style={styles.label}>Residencial</Txt>
-      <Picker
-        mode="dialog"
-        style={styles.picker}
-        selectedValue={field.value}
-        onValueChange={field.onChange}>
-        {props.placeholder && (
-          <Picker.Item label={props.placeholder} value="" color="#9ca3af" />
-        )}
-        {props.options?.map((option, index) => {
-          const [key, value] = Object.values(option);
-          return (
-            <Picker.Item key={index} value={key} label={value as string} />
-          );
-        })}
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          mode="dialog"
+          style={styles.picker}
+          selectedValue={field.value}
+          onValueChange={field.onChange}>
+          {props.placeholder && (
+            <Picker.Item label={props.placeholder} value="" color="#9ca3af" />
+          )}
+          {props.options?.map((option, index) => {
+            const [key, value] = Object.values(option);
+            return (
+              <Picker.Item key={index} value={key} label={value as string} />
+            );
+          })}
+        </Picker>
+      </View>
       <ErrorMessage error={error} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  pickerContainer: {
+  fieldContainer: {
     marginBottom: verticalScale(8),
   },
+  pickerContainer: {
+    borderWidth: moderateScale(1),
+    borderRadius: verticalScale(10),
+    borderColor: "#9ca3af",
+    overflow: "hidden",
+  },
   picker: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#f9fafb",
   },
   label: {
     marginVertical: verticalScale(10),

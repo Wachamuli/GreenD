@@ -3,6 +3,7 @@ import { NavigationProp } from "@react-navigation/native";
 import ActiveServicesScreen from "./ActiveServicesScreen";
 
 import ActiveServiceDetailsScreen from "./ActiveServiceDetailsScreen";
+import CustomHeader from "../components/layout/CustomHeader";
 
 export type RootStackParamList = {
   activeServices: undefined;
@@ -14,8 +15,7 @@ export type navigationProps = NavigationProp<RootStackParamList>;
 
 const ServiceRequestsStack = (): JSX.Element => {
   return (
-    <Stack.Navigator
-      screenOptions={{ headerTitleStyle: { fontFamily: "ffBold" } }}>
+    <Stack.Navigator screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="activeServices"
         component={ActiveServicesScreen}

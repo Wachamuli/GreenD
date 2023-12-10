@@ -2,7 +2,7 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Txt from "../Txt";
-import { moderateScale, verticalScale } from "../../utilities/metrics";
+import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
 
 const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (
@@ -53,6 +53,19 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                   color: isFocused ? "#3b82f6" : "#9ca3af",
                   size: 25,
                 })}
+              {options.tabBarBadge && (
+                <View
+                  style={{
+                    backgroundColor: "red",
+                    paddingHorizontal: 5,
+                    borderRadius: moderateScale(50),
+                    position: "absolute",
+                    left: 55,
+                    bottom: 30,
+                  }}>
+                  <Txt style={{ color: "white", fontSize: moderateScale(12) }}>{options.tabBarBadge}</Txt>
+                </View>
+              )}
               <Txt
                 style={{
                   fontSize: moderateScale(12),
