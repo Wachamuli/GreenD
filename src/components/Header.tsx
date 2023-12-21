@@ -17,7 +17,6 @@ const Header = ({
           color: "black",
           fontFamily: "ffBold",
           fontSize: moderateScale(22),
-          alignSelf: "flex-start",
         },
         style,
       ]}>

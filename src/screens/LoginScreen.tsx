@@ -12,9 +12,13 @@ import Checkbox from "../components/controls/Checkbox";
 import { verticalScale } from "../utilities/metrics";
 import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
-import PopUp from "../components/PopUp";
+import Popup from "../components/PopUp";
 import Btn from "../components/controls/Btn";
-import { SignInSchema, signInSchema } from "../utilities/validators/LoginSchema";
+import {
+  SignInSchema,
+  signInSchema,
+} from "../utilities/validators/LoginSchema";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const LoginScreen = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({
@@ -26,12 +30,12 @@ const LoginScreen = () => {
   const [errorDescription, setErrorDescription] = useState("");
 
   // TODO: Show splashscreen when loading and handle specific errors
-  const signIn = async (values: SignInSchema) => {
+  const signIn = async (form: SignInSchema) => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
+      email: form.email,
+      password: form.password,
     });
 
     if (error) {
@@ -69,7 +73,7 @@ const LoginScreen = () => {
           <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
         </Tappable>
         <Btn
-          disabled={loading || openPopup}
+          disabled={loading}
           label="Iniciar Sesión"
           onPress={handleSubmit(signIn)}
         />
@@ -84,14 +88,14 @@ const LoginScreen = () => {
         </View>
       </View>
 
-      {openPopup && (
-        <PopUp
-          setOpen={setOpenPopup}
-          title="¡Ups! Algo salió mal"
-          description={errorDescription}
-          bottonLabel="Entendido"
-        />
-      )}
+      <Popup
+        visible={openPopup}
+        setVisible={setOpenPopup}
+        icon={faTriangleExclamation}
+        title="¡Ups! Algo salió mal"
+        description={errorDescription}
+        buttonLabel="Entendido"
+      />
     </View>
   );
 };
@@ -110,7 +114,6 @@ const styles = StyleSheet.create({
   },
   rememberMe: {
     marginTop: verticalScale(40),
-    // marginBottom: verticalScale(10),
   },
   createAccount: {
     marginTop: verticalScale(40),

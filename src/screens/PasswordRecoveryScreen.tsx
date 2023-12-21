@@ -10,14 +10,8 @@ import Header from "../components/Header";
 import Field from "../components/controls/Field";
 import Btn from "../components/controls/Btn";
 import { navigationProp } from "../App";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../utilities/metrics";
+import { horizontalScale, verticalScale } from "../utilities/metrics";
 import Txt from "../components/Txt";
-import { useState } from "react";
-import PopUp from "../components/PopUp";
 import Tappable from "../components/controls/Tappable";
 import PasswordEnforcer from "../components/controls/PasswordEnforcer";
 import {

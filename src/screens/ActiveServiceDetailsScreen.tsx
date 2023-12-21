@@ -103,7 +103,7 @@ const ActiveServiceDetailsScreen = ({
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* <Txt>{route.params.serviceRequestId}</Txt> */}
       <Header title="Reportar" />
 
@@ -153,7 +153,7 @@ const ActiveServiceDetailsScreen = ({
             <Txt
               style={{
                 color: "#9ca3af",
-                fontSize: moderateScale(14),
+                fontSize: moderateScale(12),
               }}>
               Agregue etiquetas para mejorar su sugerencia
             </Txt>
@@ -181,13 +181,13 @@ const ActiveServiceDetailsScreen = ({
         style={styles.button}
         label="Enviar"
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: horizontalScale(10),
+    paddingHorizontal: horizontalScale(10),
     marginTop: verticalScale(10),
   },
   tagsContainer: {
