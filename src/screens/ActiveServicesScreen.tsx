@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginHorizontal: horizontalScale(10),
     marginVertical: verticalScale(10),
     borderRadius: moderateScale(20),
-    borderWidth: moderateScale(2),
+    borderWidth: moderateScale(1),
   },
   datetimeContainer: {
     flexDirection: "column",
@@ -122,16 +122,17 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   serviceIcon: {
-    backgroundColor: "red",
+    backgroundColor: "blue",
     paddingVertical: moderateScale(20),
     paddingHorizontal: moderateScale(20),
     borderRadius: 100,
   },
   serviceName: {
-    fontFamily: "ffBold",
+    fontFamily: "ffNormal",
     marginLeft: horizontalScale(5),
   },
   state: {
+    fontFamily: "ffBold",
     color: "#FFA33C",
   },
   apponitmentDetailsCard: {

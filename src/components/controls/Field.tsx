@@ -36,7 +36,7 @@ const Field = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <Txt style={styles.label}>{props.label}</Txt>
+      {props.label && <Txt style={styles.label}>{props.label}</Txt>}
       <TextInput
         maxLength={150}
         {...props}
@@ -61,13 +61,13 @@ const Field = (props: Props) => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: verticalScale(8),
-    width: horizontalScale(250),
   },
   label: {
     marginBottom: verticalScale(5),
   },
   input: {
     color: "black",
+    width: horizontalScale(250),
     borderWidth: moderateScale(1),
     backgroundColor: "#f9fafb",
     paddingVertical: verticalScale(15),

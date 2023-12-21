@@ -1,22 +1,22 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
-  GestureResponderEvent,
   Pressable,
+  PressableProps,
   StyleProp,
-  Text,
   TextStyle,
   View,
   ViewStyle,
 } from "react-native";
 import Txt from "../Txt";
 
-type Props = {
+type PressablePropsWithoutStyle = Omit<PressableProps, "style">
+
+type Props = PressablePropsWithoutStyle & {
   label?: string;
   children?: ReactNode;
   disabled?: boolean;
   style?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
-  onPress?: (event: GestureResponderEvent) => void;
 };
 
 const Tappable = (props: Props): JSX.Element => {

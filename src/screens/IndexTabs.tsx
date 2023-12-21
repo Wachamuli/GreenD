@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 
 const IndexTabs = () => {
   const navigation = useNavigation<navigationProp>();
-  const [totalActiveServices, setTotalActiveServices] = useState<number>();
+  const [totalActiveServices, setTotalActiveServices] = useState<string>();
 
   useEffect(() => {
     const getActiveRequests = async () => {
@@ -31,13 +31,12 @@ const IndexTabs = () => {
         error: userError,
       } = await supabase.auth.getUser();
       
-      const { data: totalRequests, error: totalRequestsError } = await supabase
+      const { error: totalRequestsError, count: totalRequests } = await supabase
         .from("service_requests")
         .select("*", { head: true, count: "exact" })
         .eq("user_id", user?.id ?? "");
 
-      console.log(totalRequests);
-      // setTotalActiveServices(data)
+      setTotalActiveServices(totalRequests?.toString())
     };
 
     getActiveRequests();
@@ -76,6 +75,7 @@ const IndexTabs = () => {
           title: "Solicitudes",
           headerShown: false,
           tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
+          tabBarBadge: totalActiveServices
         }}
       />
       <Tab.Screen

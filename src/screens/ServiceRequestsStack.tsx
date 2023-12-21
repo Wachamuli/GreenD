@@ -15,7 +15,9 @@ export type navigationProps = NavigationProp<RootStackParamList>;
 
 const ServiceRequestsStack = (): JSX.Element => {
   return (
-    <Stack.Navigator screenOptions={{ header: CustomHeader }}>
+    <Stack.Navigator
+      initialRouteName="activeServices"
+      screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="activeServices"
         component={ActiveServicesScreen}
@@ -24,6 +26,7 @@ const ServiceRequestsStack = (): JSX.Element => {
       <Stack.Screen
         name="activeServicesDetails"
         component={ActiveServiceDetailsScreen}
+        options={{ title: "Detalles de solicitud" }}
       />
     </Stack.Navigator>
   );
