@@ -19,18 +19,12 @@ import {
 } from "../utilities/utils";
 import Tappable from "../components/controls/Tappable";
 import { navigationProps } from "./ServiceRequestsStack";
+import { ServiceRequest } from "../lib/supabase.type.alias";
 
 const ActiveServicesScreen = (): JSX.Element => {
   const navigation = useNavigation<navigationProps>();
   const [serviceRequests, setServiceRequests] = useState<
-    | {
-        id: string;
-        r_date: string;
-        r_time: string;
-        service: { name: string };
-        request_status: number;
-      }[]
-    | null
+    ServiceRequest[] | null
   >([]);
 
   const getServiceRequests = async () => {
@@ -39,29 +33,35 @@ const ActiveServicesScreen = (): JSX.Element => {
       error: userError,
     } = await supabase.auth.getUser();
 
-    if (userError) console.log(userError.message);
-    if (!user) console.log("No user");
+    if (!user || userError) {
+      console.error(userError?.message || "Could not get user.");
+      return;
+    }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("service_requests")
-      .select("id, r_date, r_time, request_status, service(name)")
-      .eq("user_id", user?.id ?? "No user");
+      .select("*")
+      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+      .eq("user_id", user.id);
 
-    // FIXME: It's just Typescript complaint but it's working
+    if (error) {
+      console.log(error.message);
+      return;
+    }
+
     setServiceRequests(data);
   };
 
   useEffect(() => {
-    getServiceRequests();
-  }, []);
+    const suscription = navigation.addListener("focus", getServiceRequests);
+    return suscription;
+  }, [navigation]);
 
   return (
     <FlatList
       data={serviceRequests}
       keyExtractor={item => item.id}
-      renderItem={({
-        item: { id, r_date, r_time, service, request_status },
-      }) => (
+      renderItem={({ item: { id, r_date, r_time, service, status } }) => (
         <Tappable
           onPress={() => {
             navigation.navigate("activeServicesDetails", {
@@ -77,15 +77,13 @@ const ActiveServicesScreen = (): JSX.Element => {
             </View>
             <View style={styles.apponitmentDetailsCard}>
               <View>
-                <View style={styles.serviceContainer}>
+                {/* <View style={styles.serviceContainer}>
                   <View style={styles.serviceIcon}>
                     <FontAwesomeIcon color="white" icon={faWrench} />
                   </View>
-                  <Txt style={styles.serviceName}>{service.name}</Txt>
-                </View>
-                <Txt style={styles.state}>
-                  {requestStatusFormatter(request_status)}
-                </Txt>
+                  <Txt style={styles.serviceName}>{service}</Txt>
+                </View> */}
+                <Txt style={styles.state}>{status}</Txt>
               </View>
             </View>
           </View>

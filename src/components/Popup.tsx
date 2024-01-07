@@ -1,5 +1,5 @@
-import { Modal, StyleSheet, View } from "react-native";
-import { Dispatch, SetStateAction } from "react";
+import { memo, useEffect, useState } from "react";
+import { GestureResponderEvent, Modal, StyleSheet, View } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
@@ -8,38 +8,59 @@ import Txt from "./Txt";
 import Btn from "./controls/Btn";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 
-type Props = {
+export type PopupProps = {
   title?: string;
   description?: string;
-  buttonLabel?: string;
-  icon?: IconDefinition;
-  setVisible: Dispatch<SetStateAction<boolean>>;
-  visible: boolean;
+  iconProps?: { icon: IconDefinition; color: string };
+  buttonOptions?: {
+    label: string;
+    onPress?: (event: GestureResponderEvent) => void;
+  };
 };
 
-const Popup = (props: Props) => {
+const Popup = (props: PopupProps) => {
+  const [visible, setVisible] = useState(false);
+  const isAnyPropAvailable =
+    props.title || props.description || props.buttonOptions || props.iconProps;
+
+  useEffect(() => {
+    setVisible(true);
+  }, [props]);
+
+  if (!isAnyPropAvailable) return <></>;
+
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={props.visible}
+      visible={visible}
       onRequestClose={() => {
-        props.setVisible(visible => !visible);
+        setVisible(visible => !visible);
       }}>
       <View style={styles.modalContainer}>
         <View style={styles.modalView}>
-          {props.icon && (
-            <FontAwesomeIcon icon={props.icon} color="#FF7D7D" size={80} />
+          {props.iconProps && (
+            <FontAwesomeIcon
+              style={styles.icon}
+              icon={props.iconProps.icon}
+              color={props.iconProps.color}
+              size={80}
+            />
           )}
           {props.title && <Header title={props.title} />}
           {props.description && (
             <Txt style={styles.modalText}>{props.description}</Txt>
           )}
-          {props.buttonLabel && (
+          {props.buttonOptions && (
             <Btn
               style={styles.button}
-              label={props.buttonLabel}
-              onPress={() => props.setVisible(visible => !visible)}
+              label={props.buttonOptions.label}
+              onPress={event => {
+                if (props.buttonOptions?.onPress)
+                  props.buttonOptions.onPress(event);
+
+                setVisible(visible => !visible);
+              }}
             />
           )}
         </View>
@@ -58,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     paddingHorizontal: horizontalScale(25),
-    paddingVertical: verticalScale(35),
+    paddingVertical: verticalScale(15),
     alignItems: "center",
     elevation: 5,
     shadowColor: "#000",
@@ -69,6 +90,9 @@ const styles = StyleSheet.create({
       height: 2,
     },
   },
+  icon: {
+    marginBottom: verticalScale(5)
+  },
   modalText: {
     marginBottom: 15,
   },
@@ -78,4 +102,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Popup;
+export default memo(Popup);

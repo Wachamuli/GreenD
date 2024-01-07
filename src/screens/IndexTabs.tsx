@@ -24,21 +24,27 @@ const IndexTabs = () => {
   const navigation = useNavigation<navigationProp>();
   const [totalActiveServices, setTotalActiveServices] = useState<string>();
 
+  // TODO: This function is also defined and called in ActiveServicesScreen.
+  // There's must be a way to take its value from there and bring it to here
+  // to avoid code duplication and sustained maintainability.
+  const getActiveRequests = async () => {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    const { error: totalRequestsError, count: totalRequests } = await supabase
+      .from("service_requests")
+      .select("*", { head: true, count: "exact" })
+      .eq("user_id", user?.id ?? "")
+      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+
+    const total = totalRequests === 0 ? undefined : totalRequests;
+
+    setTotalActiveServices(total?.toString());
+  };
+
   useEffect(() => {
-    const getActiveRequests = async () => {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      
-      const { error: totalRequestsError, count: totalRequests } = await supabase
-        .from("service_requests")
-        .select("*", { head: true, count: "exact" })
-        .eq("user_id", user?.id ?? "");
-
-      setTotalActiveServices(totalRequests?.toString())
-    };
-
     getActiveRequests();
   }, []);
 
@@ -49,7 +55,7 @@ const IndexTabs = () => {
     });
 
     return subscription;
-  });
+  }, [navigation]);
 
   return (
     <Tab.Navigator
@@ -75,7 +81,7 @@ const IndexTabs = () => {
           title: "Solicitudes",
           headerShown: false,
           tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
-          tabBarBadge: totalActiveServices
+          tabBarBadge: totalActiveServices,
         }}
       />
       <Tab.Screen

@@ -113,7 +113,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
 
       Alert.alert(
         "¿Descartar solicitud?",
-        "Si sales de esta sección se eliminarán los detalles de tu solicitud",
+        "Si sales de esta sección se eliminarán los detalles de tu solicitud.",
         [
           { text: "Continuar", onPress: () => {} },
           {
@@ -169,11 +169,8 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
 
           <Header title="Agendar" />
           <View style={styles.agendaContainer}>
-            <MyCalendar
-              name="calendar"
-              onValueChange={setValue}
-              control={control}
-            />
+            <MyCalendar onValueChange={setValue} name="calendar" control={control}/>
+            {/* <DateDisplayer/> */}
             <TimePicker
               onValueChange={setValue}
               name="timePicker"
@@ -198,6 +195,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
               control={control}
               style={styles.textInput}
               selectTextOnFocus={true}
+              multiline
               placeholder="Escriba una nota aquí"
             />
           </View>
@@ -255,25 +253,20 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(30),
   },
   agendaContainer: {
+    flexDirection: "column",
     marginBottom: verticalScale(30),
-    rowGap: verticalScale(10),
     alignItems: "center",
   },
   bottonAgendaContainer: {
     justifyContent: "center",
-    // rowGap: verticalScale(8),
   },
   textInputContainer: {
     marginBottom: verticalScale(30),
   },
   textInput: {
-    color: "black",
-    borderColor: "black",
     textAlignVertical: "top",
-    borderWidth: 3,
-    borderRadius: moderateScale(10),
     width: "100%",
-    minHeight: verticalScale(150),
+    height: verticalScale(150),
   },
   infoContainer: {
     flexDirection: "row",

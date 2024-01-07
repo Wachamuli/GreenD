@@ -30,13 +30,13 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
       .from("outsourcers")
       .select("name, logo, brief_description")
       .eq("id", route.params.selectedOutsourcer)
-      .single()
-    
-      setOutsourcer(data)
+      .single();
+
+    setOutsourcer(data);
   };
 
   useEffect(() => {
-    getOutsourcer()
+    getOutsourcer();
   }, []);
 
   const createRequest = async () => {
@@ -45,19 +45,21 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
       error,
     } = await supabase.auth.getUser();
 
-    if (error) Alert.alert(error?.message);
+    if (!user || error) {
+      Alert.alert(error?.message || "Could not get user.")
+      return;
+    }
 
     const { error: insertionError } = await supabase
       .from("service_requests")
       .insert({
-        user_id: user?.id ?? "Jose",
+        user_id: user.id,
         details: route.params.selectedDetails.join("\n"),
         outsourcer: route.params.selectedOutsourcer,
         r_date: route.params.selectedDay,
         r_time: route.params.selectedTime,
         service: Number(route.params.serviceId),
         note: route.params.note,
-        request_status: 1,
       });
 
     if (insertionError) {
@@ -90,10 +92,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
               style={styles.outsourcerImage}
               source={{ uri: outsourcer?.logo ?? "Default image" }}
             />
-            <Header
-              style={styles.outsourcerName}
-              title={outsourcer?.name}
-            />
+            <Header style={styles.outsourcerName} title={outsourcer?.name} />
             <Txt style={styles.outsourcerBriefDescription}>
               {outsourcer?.brief_description}
             </Txt>

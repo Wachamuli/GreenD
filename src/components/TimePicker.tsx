@@ -90,7 +90,7 @@ const TimePicker = (props: Props): JSX.Element => {
                   onPress={() => setMeridiem(prevsState => !prevsState)}
                   style={{
                     ...styles.button,
-                    ...styles.buttonA,
+                    ...styles.buttonAM,
                     ...{
                       backgroundColor: meridiem ? "black" : "white",
                       color: meridiem ? "white" : "black",
@@ -103,7 +103,7 @@ const TimePicker = (props: Props): JSX.Element => {
                   onPress={() => setMeridiem(prevsState => !prevsState)}
                   style={{
                     ...styles.button,
-                    ...styles.buttonB,
+                    ...styles.buttonPM,
                     ...{
                       backgroundColor: !meridiem ? "black" : "white",
                       color: !meridiem ? "white" : "black",
@@ -127,10 +127,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: horizontalScale(10),
     flexDirection: "row",
-    // borderWidth: 1,
-    // width: horizontalScale(10),
-    // borderWidth: 2,
-    height: verticalScale(60),
   },
   colon: {
     fontSize: moderateScale(26),
@@ -147,11 +143,11 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(5),
     borderWidth: moderateScale(2),
   },
-  buttonA: {
+  buttonAM: {
     borderTopLeftRadius: moderateScale(10),
     borderTopRightRadius: moderateScale(10),
   },
-  buttonB: {
+  buttonPM: {
     borderBottomRightRadius: moderateScale(10),
     borderBottomLeftRadius: moderateScale(10),
   },

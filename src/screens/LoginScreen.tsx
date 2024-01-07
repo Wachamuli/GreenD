@@ -12,7 +12,7 @@ import Checkbox from "../components/controls/Checkbox";
 import { verticalScale } from "../utilities/metrics";
 import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
-import Popup from "../components/PopUp";
+import Popup, { type PopupProps } from "../components/Popup";
 import Btn from "../components/controls/Btn";
 import {
   SignInSchema,
@@ -26,8 +26,7 @@ const LoginScreen = () => {
   });
   const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(false);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [errorDescription, setErrorDescription] = useState("");
+  const [popupProps, setPopupProps] = useState<PopupProps>();
 
   // TODO: Show splashscreen when loading and handle specific errors
   const signIn = async (form: SignInSchema) => {
@@ -39,14 +38,17 @@ const LoginScreen = () => {
     });
 
     if (error) {
-      setErrorDescription(error.message);
-      setOpenPopup(true);
       setLoading(false);
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: "#FF7D7D" },
+        buttonOptions: { label: "Entendido" },
+      });
       return;
     }
 
     setLoading(false);
-    // Goes to IndexScreen automatically
   };
 
   return (
@@ -88,14 +90,7 @@ const LoginScreen = () => {
         </View>
       </View>
 
-      <Popup
-        visible={openPopup}
-        setVisible={setOpenPopup}
-        icon={faTriangleExclamation}
-        title="¡Ups! Algo salió mal"
-        description={errorDescription}
-        buttonLabel="Entendido"
-      />
+      <Popup {...popupProps} />
     </View>
   );
 };

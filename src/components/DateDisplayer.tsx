@@ -15,7 +15,7 @@ const DateDisplayer = (props: Props) => {
   return (
     <View style={styles.displayerContainer}>
       <View style={styles.calendarIconContainer}>
-        <FontAwesomeIcon icon={faCalendarDays} color="white" />
+        <FontAwesomeIcon size={30} icon={faCalendarDays} color="black" />
       </View>
       <View style={styles.dateContainer}>
         <Txt style={styles.date}>{dayjs(props.date).format("dddd, MMMM D") || "Sin fecha"}</Txt>
@@ -26,21 +26,19 @@ const DateDisplayer = (props: Props) => {
 
 const styles = StyleSheet.create({
   displayerContainer: {
+    flexDirection: "row",
     width: "auto",
     marginVertical: verticalScale(20),
-    borderRadius: moderateScale(20),
-    borderWidth: moderateScale(2),
     backgroundColor: "white",
-    flexDirection: "row",
     overflow: "hidden",
   },
   calendarIconContainer: {
     justifyContent: "center",
-    backgroundColor: "black",
     paddingHorizontal: horizontalScale(10),
   },
   dateContainer: {
     padding: moderateScale(10),
+    borderBottomWidth: moderateScale(2),
   },
   date: {
     color: "black",
