@@ -15,6 +15,7 @@ import {
   verticalScale,
 } from "../../utilities/metrics";
 import ErrorMessage from "../ErrorMessage";
+import { ColorPalette } from "../../styles/colorPalette";
 
 type Props = TextInputProps & {
   name: string;
@@ -48,7 +49,7 @@ const Field = (props: Props) => {
         placeholderTextColor={"#9ca3af"}
         selectTextOnFocus={props.selectTextOnFocus}
         style={[
-          { borderColor: error ? "#FF7D7D" : "#9ca3af" },
+          { borderColor: error ? ColorPalette.error : ColorPalette.tertiary },
           styles.input,
           props.style,
         ]}

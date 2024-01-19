@@ -91,14 +91,14 @@ const styles = StyleSheet.create({
     },
   },
   icon: {
-    marginBottom: verticalScale(5)
+    marginBottom: verticalScale(5),
   },
   modalText: {
     marginBottom: 15,
   },
   button: {
     width: "auto",
-    paddingHorizontal: horizontalScale(20),
+    paddingHorizontal: horizontalScale(50),
   },
 });
 

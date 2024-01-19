@@ -19,6 +19,7 @@ import {
   signUpSchema,
 } from "../utilities/validators/SignUpSchema";
 import Menu from "../components/controls/Menu";
+import Link from "../components/controls/Link";
 
 const SignUpScreen = (): JSX.Element => {
   const { control, handleSubmit } = useForm<SignUpSchema>({
@@ -74,7 +75,7 @@ const SignUpScreen = (): JSX.Element => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={{ marginTop: verticalScale(20) }}>
+      <View style={styles.headerContainer}>
         <Header title="Solicitar una cuenta" />
       </View>
 
@@ -145,8 +146,8 @@ const SignUpScreen = (): JSX.Element => {
       />
 
       <Checkbox name="terms" control={control}>
-        <Txt>He leído y acepto las </Txt>
-        <Tappable style={{ color: "blue" }} label="Políticas de Privacidad" />
+        He leído y acepto las
+        <Link onPress={() => {}}>Políticas de Privacidad</Link>
       </Checkbox>
 
       <Btn
@@ -164,9 +165,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     display: "flex",
     justifyContent: "center",
-    // alignItems: "center",
     paddingRight: horizontalScale(60),
     paddingLeft: horizontalScale(60),
+  },
+  headerContainer: {
+    marginTop: verticalScale(20),
   },
 });
 

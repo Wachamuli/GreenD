@@ -10,6 +10,7 @@ import Txt from "../components/Txt";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
 import CustomHeader from "../components/layout/CustomHeader";
+import { ColorPalette } from "../styles/colorPalette";
 
 export type RootStackParamList = {
   serviceList: undefined;
@@ -78,7 +79,12 @@ const HomeStack = (): JSX.Element => {
         component={ServiceList}
         options={{
           title: "Inicio",
-          headerRight: () => <Txt>{condominium}</Txt>,
+          headerRight: () => (
+            <Txt
+              style={{ color: ColorPalette.secondary }}>
+              {condominium}
+            </Txt>
+          ),
         }}
       />
       <Stack.Screen

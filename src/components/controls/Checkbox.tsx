@@ -54,15 +54,13 @@ const styles = StyleSheet.create({
   detailContainer: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
     marginBottom: verticalScale(5),
   },
   checkbox: {
     marginRight: horizontalScale(10),
     borderRadius: moderateScale(20),
     padding: moderateScale(10),
-  },
-  error: {
-    color: "red",
   },
 });
 

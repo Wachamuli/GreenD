@@ -2,18 +2,15 @@ import { Alert, StyleSheet, View } from "react-native";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 
-import { supabase } from "../lib/supabase";
-import Header from "../components/Header";
-import Field from "../components/controls/Field";
 import Btn from "../components/controls/Btn";
-import { navigationProp } from "../App";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
-import Txt from "../components/Txt";
-import Tappable from "../components/controls/Tappable";
+import Field from "../components/controls/Field";
+import Header from "../components/Header";
+import Link from "../components/controls/Link";
 import PasswordEnforcer from "../components/controls/PasswordEnforcer";
+import { supabase } from "../lib/supabase";
+import { navigationProp } from "../App";
+import { verticalScale } from "../utilities/metrics";
 import {
   PasswordRecoverySchema,
   passwordRecoverySchema,
@@ -50,6 +47,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
     <View style={styles.loginScreenContainer}>
       <View>
         <Header title="Recuperar Contraseña" />
+
         <Field
           name="email"
           control={control}
@@ -59,24 +57,9 @@ const PasswordRecoveryScreen = (): JSX.Element => {
           placeholder="janedoe@domain.tls"
         />
 
-        <Tappable
-          onPress={sendRecoveryEmail}
-          containerStyle={{ flexDirection: "row", alignItems: "center" }}>
-          <Txt
-            style={{
-              color: "blue",
-              marginRight: horizontalScale(4),
-              marginVertical: verticalScale(10),
-              textAlign: "center",
-            }}>
-            Enviar correo de recuperación
-          </Txt>
-          <FontAwesomeIcon
-            style={{ marginTop: verticalScale(4) }}
-            icon={faEnvelope}
-            color="blue"
-          />
-        </Tappable>
+        <Link style={styles.link} onPress={sendRecoveryEmail}>
+          Enviar correo de recuperación
+        </Link>
 
         <PasswordEnforcer
           name="newPassword"
@@ -92,6 +75,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
           autoCapitalize="none"
           placeholder="********"
         />
+
         <Btn onPress={handleSubmit(recovery)} label="Aceptar" />
       </View>
     </View>
@@ -107,5 +91,9 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  link: {
+    textAlign: "center",
+    marginVertical: verticalScale(10),
   },
 });

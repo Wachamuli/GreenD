@@ -5,6 +5,8 @@ import {
   TextStyle,
   ViewStyle,
 } from "react-native";
+
+import { ColorPalette } from "../../styles/colorPalette";
 import Tappable from "./Tappable";
 import {
   horizontalScale,
@@ -26,15 +28,15 @@ const Btn = (props: Props) => {
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: verticalScale(20),
-    borderRadius: moderateScale(40),
-    width: horizontalScale(250),
-    backgroundColor: "blue",
-    textTransform: "uppercase",
     fontFamily: "ffBold",
+    width: horizontalScale(250),
     color: "white",
     textAlign: "center",
+    paddingVertical: verticalScale(20),
     marginVertical: verticalScale(10),
+    borderRadius: moderateScale(40),
+    backgroundColor: ColorPalette.primary,
+    textTransform: "capitalize",
   },
 });
 

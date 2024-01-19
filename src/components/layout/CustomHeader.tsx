@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import Txt from "../Txt";
 import Tappable from "../controls/Tappable";
-import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import { ColorPalette } from "../../styles/colorPalette";
 
 const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {
   const headerButtonProps: HeaderButtonProps = {
@@ -15,6 +16,7 @@ const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {
   };
 
   const Title = () => <Txt style={styles.label}>{options.title}</Txt>;
+
   const Left = () => (
     <View style={styles.left}>
       {navigation.canGoBack() ? (
@@ -26,6 +28,7 @@ const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {
       )}
     </View>
   );
+
   const Right = () => (
     <View style={styles.right}>
       <>{options.headerRight && options.headerRight(headerButtonProps)}</>
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
     paddingTop: verticalScale(45),
     paddingBottom: verticalScale(20),
 
-    borderColor: "#9ca3af",
+    borderColor: ColorPalette.tertiary,
     borderBottomWidth: verticalScale(2),
     borderLeftWidth: verticalScale(2),
     borderRightWidth: verticalScale(2),

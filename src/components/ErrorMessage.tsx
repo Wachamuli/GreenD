@@ -9,6 +9,7 @@ import {
 } from "../utilities/metrics";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { ColorPalette } from "../styles/colorPalette";
 
 const ErrorMessage = ({
   error,
@@ -18,19 +19,18 @@ const ErrorMessage = ({
   style?: StyleProp<TextStyle>;
 }): JSX.Element => {
   return (
-    <>
+    <View>
       {error?.message && (
-        <Txt style={{ marginTop: verticalScale(2)}}>
+        <Txt style={{ marginTop: verticalScale(2) }}>
           <FontAwesomeIcon
-            style={{ color: "#FF7D7D"}}
+            style={{ color: ColorPalette.error }}
             icon={faTriangleExclamation}
-          />
-          {" "}
+          />{" "}
           <Txt
             style={[
               {
-                color: "#FF7D7D",
-                marginTop: verticalScale(10),
+                color: ColorPalette.error,
+                // marginTop: verticalScale(10),
                 paddingHorizontal: horizontalScale(10),
                 paddingVertical: verticalScale(10),
                 borderRadius: moderateScale(10),
@@ -41,7 +41,7 @@ const ErrorMessage = ({
           </Txt>
         </Txt>
       )}
-    </>
+    </View>
   );
 };
 

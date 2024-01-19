@@ -37,7 +37,7 @@ const IndexTabs = () => {
       .from("service_requests")
       .select("*", { head: true, count: "exact" })
       .eq("user_id", user?.id ?? "")
-      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress");
 
     const total = totalRequests === 0 ? undefined : totalRequests;
 

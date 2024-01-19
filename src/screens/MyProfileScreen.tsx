@@ -19,7 +19,13 @@ const MyProfileScreen = (): JSX.Element => {
         justifyContent: "center",
       }}>
       <Text style={{ color: "gray" }}>My Profile</Text>
-      <Btn onPress={logout} label="Logout" />
+      <Btn onPress={logout} label="Cerrar sesión" />
+      <View>
+        <Txt>Idioma</Txt>
+        <Txt>Cambiar numero telefónico</Txt>
+        <Txt></Txt>
+        <Txt></Txt>
+      </View>
     </View>
   );
 };

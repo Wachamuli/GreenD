@@ -2,7 +2,8 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Txt from "../Txt";
-import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import { moderateScale, verticalScale } from "../../utilities/metrics";
+import { ColorPalette } from "../../styles/colorPalette";
 
 const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (
@@ -39,19 +40,21 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
         return (
           <TouchableOpacity
             key={index}
+            style={{ flex: 1 }}
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
             testID={options.tabBarTestID}
             onPress={onPress}
-            onLongPress={onLongPress}
-            style={{ flex: 1 }}>
+            onLongPress={onLongPress}>
             <View style={styles.bottomTabItemContainer}>
               {options.tabBarIcon &&
                 options.tabBarIcon({
                   focused: isFocused,
-                  color: isFocused ? "#3b82f6" : "#9ca3af",
                   size: 25,
+                  color: isFocused
+                    ? ColorPalette.primary
+                    : ColorPalette.tertiary,
                 })}
               {options.tabBarBadge && (
                 <View
@@ -63,13 +66,17 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
                     left: 55,
                     bottom: 30,
                   }}>
-                  <Txt style={{ color: "white", fontSize: moderateScale(12) }}>{options.tabBarBadge}</Txt>
+                  <Txt style={{ color: "white", fontSize: moderateScale(12) }}>
+                    {options.tabBarBadge}
+                  </Txt>
                 </View>
               )}
               <Txt
                 style={{
                   fontSize: moderateScale(12),
-                  color: isFocused ? "#3b82f6" : "#9ca3af",
+                  color: isFocused
+                    ? ColorPalette.primary
+                    : ColorPalette.tertiary,
                 }}>
                 {label.toString()}
               </Txt>
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
     borderTopWidth: verticalScale(1),
     borderRightWidth: verticalScale(1),
     borderLeftWidth: verticalScale(1),
-    borderColor: "#9ca3af",
+    borderColor: ColorPalette.tertiary,
     borderTopStartRadius: moderateScale(20),
     borderTopEndRadius: moderateScale(20),
   },

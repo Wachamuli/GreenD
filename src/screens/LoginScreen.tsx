@@ -7,8 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Header from "../components/Header";
 import Field from "../components/controls/Field";
 import Txt from "../components/Txt";
-import Tappable from "../components/controls/Tappable";
-import Checkbox from "../components/controls/Checkbox";
 import { verticalScale } from "../utilities/metrics";
 import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
@@ -19,6 +17,8 @@ import {
   signInSchema,
 } from "../utilities/validators/LoginSchema";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import Link from "../components/controls/Link";
+import { ColorPalette } from "../styles/colorPalette";
 
 const LoginScreen = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({
@@ -42,7 +42,7 @@ const LoginScreen = () => {
       setPopupProps({
         title: "¡Ups! Algo salió mal",
         description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: "#FF7D7D" },
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
         buttonOptions: { label: "Entendido" },
       });
       return;
@@ -71,9 +71,11 @@ const LoginScreen = () => {
           autoCapitalize="none"
           secureTextEntry={true}
         />
-        <Tappable onPress={() => navigation.navigate("passwordRecovery")}>
-          <Txt style={styles.forgotPassword}>¿Olvidaste tu contraseña?</Txt>
-        </Tappable>
+        <Link
+          style={styles.forgotPassword}
+          onPress={() => navigation.navigate("passwordRecovery")}>
+          ¿Olvidaste tu contraseña?
+        </Link>
         <Btn
           disabled={loading}
           label="Iniciar Sesión"
@@ -82,11 +84,7 @@ const LoginScreen = () => {
 
         <View style={styles.createAccount}>
           <Txt>¿No tienes cuenta? </Txt>
-          <Tappable
-            label="Regístrate"
-            style={{ color: "blue" }}
-            onPress={() => navigation.navigate("signUp")}
-          />
+          <Link onPress={() => navigation.navigate("signUp")}>Regístrate</Link>
         </View>
       </View>
 
@@ -103,7 +101,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   forgotPassword: {
-    color: "blue",
     textAlign: "right",
     marginBottom: verticalScale(40),
   },
