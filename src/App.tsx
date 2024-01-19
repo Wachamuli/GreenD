@@ -18,6 +18,7 @@ import IndexTabs from "./screens/IndexTabs";
 import SignUpScreen from "./screens/SignUpScreen";
 import PasswordRecoveryScreen from "./screens/PasswordRecoveryScreen";
 import { View } from "react-native";
+import CustomHeader from "./components/layout/CustomHeader";
 
 dayjs.locale("es");
 // calendarSetup("es");
@@ -82,7 +83,7 @@ const App = (): JSX.Element => {
         <Stack.Navigator
           initialRouteName="login"
           screenOptions={{
-            headerTitleStyle: { fontFamily: "ffBold" },
+            header: CustomHeader,
           }}>
           {isSignedIn ? (
             <Stack.Screen

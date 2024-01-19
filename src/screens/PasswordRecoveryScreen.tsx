@@ -10,7 +10,7 @@ import Link from "../components/controls/Link";
 import PasswordEnforcer from "../components/controls/PasswordEnforcer";
 import { supabase } from "../lib/supabase";
 import { navigationProp } from "../App";
-import { verticalScale } from "../utilities/metrics";
+import { horizontalScale, verticalScale } from "../utilities/metrics";
 import {
   PasswordRecoverySchema,
   passwordRecoverySchema,
@@ -45,39 +45,37 @@ const PasswordRecoveryScreen = (): JSX.Element => {
 
   return (
     <View style={styles.loginScreenContainer}>
-      <View>
-        <Header title="Recuperar Contraseña" />
+      <Header title="Recuperar Contraseña" />
 
-        <Field
-          name="email"
-          control={control}
-          label="Correo electrónico"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          placeholder="janedoe@domain.tls"
-        />
+      <Field
+        name="email"
+        control={control}
+        label="Correo electrónico"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        placeholder="janedoe@domain.tls"
+      />
 
-        <Link style={styles.link} onPress={sendRecoveryEmail}>
-          Enviar correo de recuperación
-        </Link>
+      <Link style={styles.link} onPress={sendRecoveryEmail}>
+        Enviar correo de recuperación
+      </Link>
 
-        <PasswordEnforcer
-          name="newPassword"
-          label="Nueva contraseña"
-          control={control}
-        />
-        <Field
-          name="confirmPassword"
-          label="Confirmar nueva contraseña"
-          control={control}
-          secureTextEntry={true}
-          maxLength={16}
-          autoCapitalize="none"
-          placeholder="********"
-        />
+      <PasswordEnforcer
+        name="newPassword"
+        label="Nueva contraseña"
+        control={control}
+      />
+      <Field
+        name="confirmPassword"
+        label="Confirmar nueva contraseña"
+        control={control}
+        secureTextEntry={true}
+        maxLength={16}
+        autoCapitalize="none"
+        placeholder="********"
+      />
 
-        <Btn onPress={handleSubmit(recovery)} label="Aceptar" />
-      </View>
+      <Btn onPress={handleSubmit(recovery)} label="Aceptar" />
     </View>
   );
 };
@@ -91,6 +89,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    paddingRight: horizontalScale(60),
+    paddingLeft: horizontalScale(60),
   },
   link: {
     textAlign: "center",

@@ -4,7 +4,11 @@ import { Control, FieldValue } from "react-hook-form";
 import Field from "./Field";
 import Txt from "../Txt";
 import { useState } from "react";
-import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../../utilities/metrics";
 
 type Props = {
   name: string;
@@ -14,28 +18,41 @@ type Props = {
 
 const PasswordEnforcer = (props: Props): JSX.Element => {
   const [status, setStatus] = useState({
-    status: "Status",
-    color: "#9ca3af",
+    statusName: "Status",
+    colors: ["#9ca3af", "#9ca3af", "#9ca3af"],
   });
 
   const handleOnChangeText = (text: string) => {
     let status;
     if (text.length > 0) status = "weak";
     if (text.match(/^(?=.*[a-zA-Z])(.{8,16})$/)) status = "moderate";
-    if (text.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$/)) status = "strong";
+    if (text.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,16}$/))
+      status = "strong";
 
     switch (status) {
-      case "weak":
-        setStatus({ status: "Débil", color: "red" });
+      case "strong":
+        setStatus({
+          statusName: "Fuerte",
+          colors: ["#5cb85c", "#5cb85c", "#5cb85c"],
+        });
         break;
       case "moderate":
-        setStatus({ status: "Moderado", color: "#FFC107" });
+        setStatus({
+          statusName: "Moderate",
+          colors: ["#FFC107", "#FFC107", "#9ca3af"],
+        });
         break;
-      case "strong":
-        setStatus({ status: "Fuerte", color: "#5cb85c" });
+      case "weak":
+        setStatus({
+          statusName: "Débil",
+          colors: ["red", "#9ca3af", "#9ca3af"],
+        });
         break;
       default:
-        setStatus({ status: "Status", color: "#9ca3af" });
+        setStatus({
+          statusName: "Status",
+          colors: ["#9ca3af", "#9ca3af", "#9ca3af"],
+        });
         break;
     }
   };
@@ -53,32 +70,14 @@ const PasswordEnforcer = (props: Props): JSX.Element => {
         maxLength={16}
       />
 
-      <View style={styles.stren}>
+      <View>
         <View style={styles.barContainer}>
-          <View style={[{ backgroundColor: status?.color }, styles.bar]} />
-          <View
-            style={[
-              {
-                backgroundColor:
-                  status.status === "Moderado" || status.status === "Fuerte"
-                    ? status?.color
-                    : "#9ca3af",
-              },
-              styles.bar,
-            ]}
-          />
-          <View
-            style={[
-              {
-                backgroundColor:
-                  status.status === "Fuerte" ? status?.color : "#9ca3af",
-              },
-              styles.bar,
-            ]}
-          />
+          <View style={[{ backgroundColor: status.colors[0] }, styles.bar]} />
+          <View style={[{ backgroundColor: status.colors[1] }, styles.bar]} />
+          <View style={[{ backgroundColor: status.colors[2] }, styles.bar]} />
         </View>
-        <Txt style={[{ color: status?.color }, styles.status]}>
-          {status?.status}
+        <Txt style={[{ color: status?.colors[0] }, styles.status]}>
+          {status?.statusName}
         </Txt>
       </View>
     </View>
@@ -86,7 +85,6 @@ const PasswordEnforcer = (props: Props): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  stren: {},
   barContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",

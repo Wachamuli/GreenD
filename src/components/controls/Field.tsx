@@ -42,10 +42,6 @@ const Field = (props: Props) => {
         maxLength={150}
         {...props}
         value={field.value}
-        onChangeText={e => {
-          props.onChangeText && props.onChangeText(e);
-          field.onChange(e);
-        }}
         placeholderTextColor={"#9ca3af"}
         selectTextOnFocus={props.selectTextOnFocus}
         style={[
@@ -53,6 +49,10 @@ const Field = (props: Props) => {
           styles.input,
           props.style,
         ]}
+        onChangeText={e => {
+          props.onChangeText && props.onChangeText(e);
+          field.onChange(e);
+        }}
       />
       <ErrorMessage style={styles.errorMessageContainer} error={error} />
     </View>

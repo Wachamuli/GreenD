@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import Txt from "../Txt";
 import Tappable from "../controls/Tappable";
-import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import { horizontalScale, verticalScale } from "../../utilities/metrics";
 import { ColorPalette } from "../../styles/colorPalette";
 
 const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {

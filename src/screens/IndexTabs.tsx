@@ -12,7 +12,7 @@ import {
 
 import { supabase } from "../lib/supabase";
 import HomeStack from "./HomeStack";
-import MyProfileScreen from "./MyProfileScreen";
+import MyProfileStack from "./MyProfileStack";
 import HistorialScreen from "./HistorialScreen";
 import { navigationProp } from "../App";
 import ServiceRequestsStack from "./ServiceRequestsStack";
@@ -64,13 +64,13 @@ const IndexTabs = () => {
       tabBar={CustomTabs}
       screenOptions={{
         tabBarHideOnKeyboard: true,
+        headerShown: false,
       }}>
       <Tab.Screen
         name="home"
         component={HomeStack}
         options={{
           title: "Inicio",
-          headerShown: false,
           tabBarIcon: props => <FontAwesomeIcon icon={faHome} {...props} />,
         }}
       />
@@ -79,7 +79,6 @@ const IndexTabs = () => {
         component={ServiceRequestsStack}
         options={{
           title: "Solicitudes",
-          headerShown: false,
           tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
           tabBarBadge: totalActiveServices,
         }}
@@ -96,7 +95,7 @@ const IndexTabs = () => {
       />
       <Tab.Screen
         name="myProfile"
-        component={MyProfileScreen}
+        component={MyProfileStack}
         options={{
           title: "Mi Perfil",
           tabBarIcon: props => <FontAwesomeIcon icon={faUser} {...props} />,
