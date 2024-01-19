@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import Txt from "../components/Txt";
 import Tappable from "../components/controls/Tappable";
 import Card from "../components/Card";
-import { boxShadowXP } from "../utilities/crossplatform";
 import { RootStackParamList } from "./ServiceRequestsStack";
 import Header from "../components/Header";
 import {
@@ -25,6 +24,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faNewspaper } from "@fortawesome/free-regular-svg-icons";
 import { capitalize, timeFormatter } from "../utilities/utils";
+import Grid from "../components/grid/Grid";
+import Hidden from "../components/Hidden";
 
 type ScreenProps = NativeStackScreenProps<
   RootStackParamList,
@@ -139,15 +140,29 @@ const ActiveServiceDetailsScreen = ({
         </View>
 
         <View style={styles.appointment}>
-          <View style={styles.row}>
-            <Txt style={styles.key}>Día</Txt>
-            <Txt>{serviceDetails?.r_date}</Txt>
-          </View>
-          <View style={styles.row}>
-            <Txt style={styles.key}>Hora</Txt>
-            <Txt>{serviceDetails?.r_time}</Txt>
-          </View>
-          <View style={styles.row}>
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Día</Txt>
+            </Grid.Col>
+            <Grid.Col colNumber={2}>
+              <Txt>{serviceDetails?.r_date}</Txt>
+            </Grid.Col>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Hora</Txt>
+            </Grid.Col>
+            <Grid.Col colNumber={2}>
+              <Txt>{serviceDetails?.r_time}</Txt>
+            </Grid.Col>
+          </Grid.Row>
+
+          <View
+            style={{
+              paddingBottom: verticalScale(50),
+              marginTop: verticalScale(50),
+              alignItems: "center",
+            }}>
             <Txt style={styles.key}>Nota</Txt>
             <Txt> {serviceDetails?.note || "Sin anotaciones"}</Txt>
           </View>
@@ -192,7 +207,7 @@ const ActiveServiceDetailsScreen = ({
         ¡Cuidado!{" "}
         <Txt style={{ color: "red" }}>Esta acción no es reversible.</Txt>
       </Txt>
-      <Card style={{ backgroundColor: "red" }}>
+      <Card style={{ backgroundColor: "red", marginBottom: verticalScale(60) }}>
         <Tappable onPress={showCancelConfirmationModal}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
@@ -253,11 +268,6 @@ const styles = StyleSheet.create({
   },
   key: {
     fontWeight: "bold",
-  },
-  row: {
-    columnGap: 30,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
   },
   detailsContainer: {
     marginVertical: verticalScale(10),

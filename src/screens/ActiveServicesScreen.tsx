@@ -17,6 +17,7 @@ import {
   requestStatusFormatter,
   timeFormatter,
 } from "../utilities/utils";
+import Card from "../components/Card";
 import Tappable from "../components/controls/Tappable";
 import { navigationProps } from "./ServiceRequestsStack";
 import { ServiceRequest } from "../lib/supabase.type.alias";
@@ -57,18 +58,33 @@ const ActiveServicesScreen = (): JSX.Element => {
     return suscription;
   }, [navigation]);
 
+  if (serviceRequests && serviceRequests?.length < 1) {
+    return (
+      <View
+        style={{
+          display: "flex",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+        <Txt>Sin solicitudes por el momento</Txt>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={serviceRequests}
       keyExtractor={item => item.id}
       renderItem={({ item: { id, r_date, r_time, service, status } }) => (
-        <Tappable
-          onPress={() => {
-            navigation.navigate("activeServicesDetails", {
-              serviceRequestId: id,
-            });
-          }}>
-          <View style={styles.container}>
+        <Card>
+          <Tappable
+            onPress={() => {
+              navigation.navigate("activeServicesDetails", {
+                serviceRequestId: id,
+              });
+            }}>
+            {/* <View style={styles.container}> */}
             <View style={styles.datetimeContainer}>
               <Txt style={styles.dateLabel}>
                 {capitalize(dayjs(r_date).format("dddd, MMMM D"))}{" "}
@@ -86,8 +102,9 @@ const ActiveServicesScreen = (): JSX.Element => {
                 <Txt style={styles.state}>{status}</Txt>
               </View>
             </View>
-          </View>
-        </Tappable>
+            {/* </View>  */}
+          </Tappable>
+        </Card>
       )}
     />
   );

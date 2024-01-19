@@ -9,11 +9,17 @@ import {
 } from "../utilities/metrics";
 import { boxShadowXP } from "../utilities/crossplatform";
 
+import Grid from "./grid/Grid";
+import Card from "./Card";
 import Txt from "./Txt";
 import Header from "./Header";
 import Btn from "./controls/Btn";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import dayjs from "dayjs";
+import { timeFormatter } from "../utilities/utils";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
 
@@ -46,7 +52,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
     } = await supabase.auth.getUser();
 
     if (!user || error) {
-      Alert.alert(error?.message || "Could not get user.")
+      Alert.alert(error?.message || "Could not get user.");
       return;
     }
 
@@ -79,14 +85,10 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
   };
 
   return (
-    <>
+    <View>
       <View>
         <Header title="Resumen" />
-        <View
-          style={[
-            styles.resumeTableContainer,
-            boxShadowXP("black", 0.5, 20, -4, 10, 20),
-          ]}>
+        <Card>
           <View style={styles.outsourcerInfoContainer}>
             <Image
               style={styles.outsourcerImage}
@@ -107,24 +109,43 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
           </View>
 
           <View style={styles.appointment}>
-            <View style={styles.row}>
-              <Txt style={styles.key}>Día</Txt>
-              <Txt>{route.params.selectedDay}</Txt>
-            </View>
-            <View style={styles.row}>
-              <Txt style={styles.key}>Hora</Txt>
-              <Txt>{route.params.selectedTime}</Txt>
-            </View>
-            <View style={styles.row}>
-              <Txt style={styles.key}>Nota</Txt>
-              <Txt> {route.params.note || "Sin anotaciones"}</Txt>
-            </View>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Día</Txt>
+              </Grid.Col>
+
+              <Grid.Col colNumber={2}>
+                <Txt>
+                  {dayjs(route.params.selectedDay).format("dddd, MMMM D")}
+                </Txt>
+              </Grid.Col>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Hora</Txt>
+              </Grid.Col>
+
+              <Grid.Col colNumber={2}>
+                <Txt>{timeFormatter(route.params.selectedTime)}</Txt>
+              </Grid.Col>
+            </Grid.Row>
+
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Nota</Txt>
+              </Grid.Col>
+
+              <Grid.Col colNumber={2}>
+                <Txt>{route.params.note}</Txt>
+              </Grid.Col>
+            </Grid.Row>
           </View>
-        </View>
+        </Card>
       </View>
 
       <Btn label="Solicitar" onPress={createRequest} />
-    </>
+    </View>
   );
 };
 
@@ -155,9 +176,8 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(0),
   },
   appointment: {
-    display: "flex",
     paddingVertical: verticalScale(10),
-    paddingHorizontal: horizontalScale(10),
+    marginHorizontal: horizontalScale(20),
   },
   key: {
     fontWeight: "bold",
@@ -169,6 +189,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     marginVertical: verticalScale(10),
+    alignItems: "center",
   },
 
   detail: {},
