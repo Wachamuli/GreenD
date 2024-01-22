@@ -6,10 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { supabase } from "../lib/supabase";
 import { navigationProp } from "../App";
-import Txt from "../components/Txt";
 import Field from "../components/controls/Field";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
-import Tappable from "../components/controls/Tappable";
 import Btn from "../components/controls/Btn";
 import Checkbox from "../components/controls/Checkbox";
 import Header from "../components/Header";
@@ -35,9 +33,11 @@ const SignUpScreen = (): JSX.Element => {
     const { data, error } = await supabase
       .from("condominiums")
       .select("id, name");
+
     if (error) {
       /* Handle error */
     }
+
     setCondomiums(data);
   };
 
@@ -70,7 +70,7 @@ const SignUpScreen = (): JSX.Element => {
     }
 
     setLoading(false);
-    navigation.navigate("login");
+    navigation.navigate("emailConfirmation", { email: values.email });
   };
 
   return (

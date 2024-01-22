@@ -89,8 +89,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    paddingRight: horizontalScale(60),
-    paddingLeft: horizontalScale(60),
+    paddingHorizontal: horizontalScale(60),
   },
   link: {
     textAlign: "center",

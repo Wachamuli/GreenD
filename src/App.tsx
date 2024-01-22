@@ -19,6 +19,7 @@ import SignUpScreen from "./screens/SignUpScreen";
 import PasswordRecoveryScreen from "./screens/PasswordRecoveryScreen";
 import { View } from "react-native";
 import CustomHeader from "./components/layout/CustomHeader";
+import EmailConfirmationScreen from "./screens/EmailConfirmationScreen";
 
 dayjs.locale("es");
 // calendarSetup("es");
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   login: undefined;
   index: undefined;
   signUp: undefined;
+  emailConfirmation: { email: string, password: string };
   passwordRecovery: undefined;
 };
 
@@ -53,8 +55,6 @@ const App = (): JSX.Element => {
         break;
       case "SIGNED_OUT":
         setSignedIn(false);
-        break;
-      case "PASSWORD_RECOVERY":
         break;
     }
   });
@@ -102,6 +102,12 @@ const App = (): JSX.Element => {
                 options={{ title: "Regístrate" }}
                 name="signUp"
                 component={SignUpScreen}
+              />
+              <Stack.Screen
+                // options={{ headerShown: false }}
+                options={{ title: "Confirmar Correo" }}
+                name="emailConfirmation"
+                component={EmailConfirmationScreen}
               />
               <Stack.Screen
                 options={{ title: "Recuperar contraseña" }}

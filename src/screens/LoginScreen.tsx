@@ -38,14 +38,19 @@ const LoginScreen = () => {
     });
 
     if (error) {
-      setLoading(false);
-      setPopupProps({
-        title: "¡Ups! Algo salió mal",
-        description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: { label: "Entendido" },
-      });
-      return;
+      if (error.message === "Email not confirmed") {
+        navigation.navigate("emailConfirmation", {
+          email: form.email,
+          password: form.password,
+        });
+      } else {
+        setPopupProps({
+          title: "¡Ups! Algo salió mal",
+          description: error.message,
+          iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+          buttonOptions: { label: "Entendido" },
+        });
+      }
     }
 
     setLoading(false);
