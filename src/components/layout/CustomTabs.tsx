@@ -1,9 +1,10 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 
 import Txt from "../Txt";
 import { moderateScale, verticalScale } from "../../utilities/metrics";
 import { ColorPalette } from "../../styles/colorPalette";
+import { StyleProp } from "react-native";
 
 const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (

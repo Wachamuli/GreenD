@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
 
     borderColor: ColorPalette.tertiary,
     borderBottomWidth: verticalScale(2),
-    borderLeftWidth: verticalScale(2),
-    borderRightWidth: verticalScale(2),
+    // borderLeftWidth: verticalScale(2),
+    // borderRightWidth: verticalScale(2),
 
     // borderBottomLeftRadius: moderateScale(20),
     // borderBottomRightRadius: moderateScale(20),

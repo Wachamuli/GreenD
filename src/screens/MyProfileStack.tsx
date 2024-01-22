@@ -12,15 +12,12 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export type navigationProps = NavigationProp<RootStackParamList>;
 
 const MyProfileStack = (): JSX.Element => {
-
   return (
     <Stack.Navigator screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="myProfileScreen"
         component={MyProfileScreen}
-        options={{
-          title: "Mi Perfil",
-        }}
+        options={{ title: "Mi Perfil" }}
       />
     </Stack.Navigator>
   );
