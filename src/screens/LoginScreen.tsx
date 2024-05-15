@@ -19,6 +19,7 @@ import {
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import Link from "../components/controls/Link";
 import { ColorPalette } from "../styles/colorPalette";
+import PasswordField from "../components/controls/PasswordField";
 
 const LoginScreen = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({
@@ -68,13 +69,10 @@ const LoginScreen = () => {
           autoCapitalize="none"
           placeholder="janedoe@domain.tls"
         />
-        <Field
+        <PasswordField
           name="password"
           control={control}
           label="Contraseña"
-          placeholder="********"
-          autoCapitalize="none"
-          secureTextEntry={true}
         />
         <Link
           style={styles.forgotPassword}

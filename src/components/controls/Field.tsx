@@ -17,7 +17,7 @@ import {
 import ErrorMessage from "../ErrorMessage";
 import { ColorPalette } from "../../styles/colorPalette";
 
-type Props = TextInputProps & {
+export type FieldProps = TextInputProps & {
   name: string;
   style?: StyleProp<TextStyle>;
   control: Control<FieldValue<any>>;
@@ -25,7 +25,7 @@ type Props = TextInputProps & {
   label?: string;
 };
 
-const Field = (props: Props) => {
+const Field = (props: FieldProps) => {
   const {
     field,
     fieldState: { error },

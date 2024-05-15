@@ -9,6 +9,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
+import PasswordField from "./PasswordField";
 
 type Props = {
   name: string;
@@ -59,15 +60,11 @@ const PasswordEnforcer = (props: Props): JSX.Element => {
 
   return (
     <View>
-      <Field
+      <PasswordField
         onChangeText={handleOnChangeText}
         name={props.name}
         label={props.label}
         control={props.control}
-        secureTextEntry={true}
-        autoCapitalize="none"
-        placeholder="********"
-        maxLength={16}
       />
 
       <View>
