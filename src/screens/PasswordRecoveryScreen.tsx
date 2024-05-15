@@ -65,6 +65,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
         label="Nueva contraseña"
         control={control}
       />
+
       <Field
         name="confirmPassword"
         label="Confirmar nueva contraseña"
