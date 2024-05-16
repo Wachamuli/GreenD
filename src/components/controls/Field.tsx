@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import {
   StyleSheet,
   TextInputProps,
@@ -23,6 +24,7 @@ export type FieldProps = TextInputProps & {
   control: Control<FieldValue<any>>;
   onChangeText?: (text: string) => void;
   label?: string;
+  children?: ReactNode;
 };
 
 const Field = (props: FieldProps) => {
@@ -38,22 +40,26 @@ const Field = (props: FieldProps) => {
   return (
     <View style={styles.container}>
       {props.label && <Txt style={styles.label}>{props.label}</Txt>}
-      <TextInput
-        maxLength={150}
-        {...props}
-        value={field.value}
-        placeholderTextColor={"#9ca3af"}
-        selectTextOnFocus={props.selectTextOnFocus}
-        style={[
-          { borderColor: error ? ColorPalette.error : ColorPalette.tertiary },
-          styles.input,
-          props.style,
-        ]}
-        onChangeText={e => {
-          props.onChangeText && props.onChangeText(e);
-          field.onChange(e);
-        }}
-      />
+      <View>
+        <TextInput
+          {...props}
+          children={null}
+          maxLength={150}
+          value={field.value}
+          placeholderTextColor={"#9ca3af"}
+          selectTextOnFocus={props.selectTextOnFocus}
+          style={[
+            { borderColor: error ? ColorPalette.error : ColorPalette.tertiary },
+            styles.input,
+            props.style,
+          ]}
+          onChangeText={e => {
+            props.onChangeText && props.onChangeText(e);
+            field.onChange(e);
+          }}
+        />
+        {props.children}
+      </View>
       <ErrorMessage style={styles.errorMessageContainer} error={error} />
     </View>
   );

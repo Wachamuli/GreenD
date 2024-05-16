@@ -23,6 +23,7 @@ const Tappable = (props: Props): JSX.Element => {
   const [pressed, setPressed] = useState(false);
   return (
     <Pressable
+      hitSlop={props.hitSlop}
       onPressIn={() => setPressed(true)}
       onPressOut={() => setPressed(false)}
       onPress={props.onPress}
