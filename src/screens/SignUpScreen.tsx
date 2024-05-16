@@ -18,9 +18,12 @@ import {
 } from "../utilities/validators/SignUpSchema";
 import Menu from "../components/controls/Menu";
 import Link from "../components/controls/Link";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { ColorPalette } from "../styles/colorPalette";
+import Popup, { PopupProps } from "../components/Popup";
 
 const SignUpScreen = (): JSX.Element => {
-  const { control, handleSubmit } = useForm<SignUpSchema>({
+  const { control, handleSubmit, setError } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
   const [loading, setLoading] = useState(false);
@@ -28,6 +31,7 @@ const SignUpScreen = (): JSX.Element => {
   const [condominiums, setCondomiums] = useState<
     { id: string; name: string }[] | null
   >();
+  const [popupProps, setPopupProps] = useState<PopupProps>();
 
   const getCondomiums = async () => {
     const { data, error } = await supabase
@@ -41,12 +45,28 @@ const SignUpScreen = (): JSX.Element => {
     setCondomiums(data);
   };
 
-  useEffect(() => {
-    getCondomiums();
-  }, []);
+  // FIXME: This is not working because of the Row Level Security of the Auth schema.
+  const checkEmailExists = async (email: string): Promise<boolean | null> => {
+    const { data, error } = await supabase.rpc("check_email_exists", {
+      email_to_check: email,
+    });
+
+    if (error) {
+      // TODO: Handle error
+    }
+
+    return data;
+  };
 
   const onSubmit = async (values: SignUpSchema) => {
     setLoading(true);
+
+    // const emailExits = await checkEmailExists(values.email);
+
+    // if (emailExits) {
+    //   setError("email", { message: "Este correo ya está en uso" });
+    //   return;
+    // }
 
     const { error } = await supabase.auth.signUp({
       email: values.email,
@@ -63,15 +83,27 @@ const SignUpScreen = (): JSX.Element => {
       },
     });
 
+    setLoading(false);
+
     if (error) {
-      Alert.alert(`${error.name} (${error.status}): ${error.message}\n`);
-      setLoading(false);
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: { label: "Entendido" },
+      });
       return;
     }
 
-    setLoading(false);
-    navigation.navigate("emailConfirmation", { email: values.email });
+    navigation.navigate("emailConfirmation", {
+      email: values.email,
+      password: values.password,
+    });
   };
+
+  useEffect(() => {
+    getCondomiums();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -155,6 +187,8 @@ const SignUpScreen = (): JSX.Element => {
         onPress={handleSubmit(onSubmit)}
         label="Registrarse"
       />
+
+      <Popup {...popupProps} />
     </ScrollView>
   );
 };

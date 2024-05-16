@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -8,7 +9,6 @@ import { supabase } from "../lib/supabase";
 import { RootStackParamList } from "../App";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
-import { useState } from "react";
 import Popup, { PopupProps } from "../components/Popup";
 import {
   faCircleInfo,
@@ -21,18 +21,34 @@ type ScreenProps = NativeStackScreenProps<
 >;
 
 const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
+  let time = 30; // In seconds
+  const [counter, setCounter] = useState(time);
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
 
   const resendConfirmationEmail = async () => {
-    const { data, error } = await supabase.auth.resend({
-      type: "signup",
+    setCounter(time);
+    // Maybe this is not the function that I need for this purpose.
+    const { error } = await supabase.auth.signInWithOtp({
       email: route.params.email,
+      options: {
+        shouldCreateUser: false,
+        // emailRedirectTo: 'https://example.com/welcome',
+      },
     });
+
+    if (error) {
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: { label: "Entendido" },
+      });
+    }
   };
 
   // TODO: Instead of going directly to index, first redirect to Login
-  // Screen. 
+  // Screen.
   const attemptSingIn = async () => {
     setLoading(true);
 
@@ -62,6 +78,23 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    const timer = setInterval(
+      () =>
+        setCounter(prevCounter => {
+          if (prevCounter <= 0) {
+            clearInterval(timer);
+            return prevCounter;
+          }
+
+          return prevCounter - 1;
+        }),
+      1000,
+    );
+
+    return () => clearInterval(timer);
+  }, [counter]);
+
   return (
     <View
       style={{
@@ -70,12 +103,12 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
       }}>
       <View style={{ alignItems: "center" }}>
         <Image
+          source={require("../assets/greenrlogo.png")}
           style={{
             width: horizontalScale(220),
             height: verticalScale(90),
             marginBottom: verticalScale(40),
           }}
-          source={require("../assets/greenrlogo.png")}
         />
       </View>
 
@@ -83,7 +116,13 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
         Revise su bandeja de entrada en{" "}
         <Txt style={{ fontFamily: "ffBold" }}>{route.params.email}</Txt>
       </Txt>
-      <Link onPress={resendConfirmationEmail}>
+
+      {counter > 0 && <Txt>Espere {counter} seg. para volver a reenviar.</Txt>}
+      <Link
+        disabled={loading || counter > 0}
+        onPress={() => {
+          resendConfirmationEmail();
+        }}>
         Reenviar correo de confirmación
       </Link>
 

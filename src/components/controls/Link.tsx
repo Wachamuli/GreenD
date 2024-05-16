@@ -3,7 +3,7 @@ import {
   GestureResponderEvent,
   StyleProp,
   TextStyle,
-  View,
+  PressableProps,
 } from "react-native";
 
 import Txt from "../Txt";
@@ -12,14 +12,21 @@ import { ColorPalette } from "../../styles/colorPalette";
 
 type Props = {
   onPress: (event?: GestureResponderEvent) => any;
+  disabled?: boolean;
   style?: StyleProp<TextStyle>;
   children: ReactNode;
-};
+} & PressableProps;
 
-const Link = ({ onPress, style, children }: Props) => {
+const Link = (props: Props) => {
   return (
-    <Tappable onPress={onPress}>
-      <Txt style={[{ color: ColorPalette.primary }, style]}>{children}</Txt>
+    <Tappable onPress={props.onPress} disabled={props.disabled}>
+      <Txt
+        style={[
+          { color: ColorPalette.primary, opacity: props.disabled ? 0.5 : 1 },
+          props.style,
+        ]}>
+        {props.children}
+      </Txt>
     </Tappable>
   );
 };

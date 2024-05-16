@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Txt from "../Txt";
 
-type PressablePropsWithoutStyle = Omit<PressableProps, "style">
+type PressablePropsWithoutStyle = Omit<PressableProps, "style">;
 
 type Props = PressablePropsWithoutStyle & {
   label?: string;
