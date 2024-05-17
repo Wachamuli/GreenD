@@ -36,7 +36,7 @@ export type RootStackParamList = {
   login: undefined;
   index: undefined;
   signUp: undefined;
-  emailConfirmation: { email: string, password: string };
+  emailConfirmation: { email: string; password: string };
   passwordRecovery: undefined;
 };
 
@@ -104,7 +104,6 @@ const App = (): JSX.Element => {
                 component={SignUpScreen}
               />
               <Stack.Screen
-                // options={{ headerShown: false }}
                 options={{ title: "Confirmar Correo" }}
                 name="emailConfirmation"
                 component={EmailConfirmationScreen}

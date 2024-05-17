@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9fafb",
     paddingVertical: verticalScale(15),
     paddingHorizontal: horizontalScale(10),
-    borderRadius: verticalScale(10),
+    borderRadius: moderateScale(10),
   },
   errorMessageContainer: {
     marginBottom: verticalScale(10),
