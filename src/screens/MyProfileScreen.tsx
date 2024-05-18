@@ -42,8 +42,6 @@ const MyProfileScreen = (): JSX.Element => {
       .eq("id", data.user?.user_metadata.condominium)
       .single();
 
-    console.log(condominiumData?.name);
-
     if (condominiumError) {
     }
 

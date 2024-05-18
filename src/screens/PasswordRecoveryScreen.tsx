@@ -45,7 +45,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
 
   return (
     <View style={styles.loginScreenContainer}>
-      <Header title="Recuperar Contraseña" />
+      {/* <Header title="Recuperar Contraseña" /> */}
 
       <Field
         name="email"
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     display: "flex",
-    justifyContent: "center",
+    // justifyContent: "center",
+    marginTop: horizontalScale(30),
     alignItems: "center",
     paddingHorizontal: horizontalScale(60),
   },

@@ -24,7 +24,7 @@ const PasswordField = (props: FieldProps): JSX.Element => {
           top: "35%",
           right: "10%",
         }}>
-        <Tappable hitSlop={30} onPress={() => setSecureEntry(toggle => !toggle)}>
+        <Tappable hitSlop={20} onPress={() => setSecureEntry(toggle => !toggle)}>
           <FontAwesomeIcon
             icon={secureTextEntryToggle ? faEye : faEyeSlash}
             size={moderateScale(20)}

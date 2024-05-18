@@ -1,12 +1,20 @@
 import { StyleSheet, View } from "react-native";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { HeaderButtonProps } from "@react-navigation/native-stack/lib/typescript/src/types";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faArrowLeftLong,
+  faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import Txt from "../Txt";
 import Tappable from "../controls/Tappable";
-import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../../utilities/metrics";
 import { ColorPalette } from "../../styles/colorPalette";
 
 const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {
@@ -20,8 +28,11 @@ const CustomHeader = ({ options, navigation }: NativeStackHeaderProps) => {
   const Left = () => (
     <View style={styles.left}>
       {navigation.canGoBack() ? (
-        <Tappable onPress={() => navigation.goBack()}>
-          <FontAwesomeIcon size={20} icon={faChevronLeft} />
+        <Tappable hitSlop={20} onPress={() => navigation.goBack()}>
+          <FontAwesomeIcon
+            size={20}
+            icon={faArrowLeftLong}
+          />
         </Tappable>
       ) : (
         <>{options.headerLeft && options.headerLeft(headerButtonProps)}</>
@@ -49,15 +60,16 @@ const styles = StyleSheet.create({
     // top: 25,
     flexDirection: "row",
     backgroundColor: "white",
-    justifyContent: "center",
+
+    justifyContent: "space-between",
     alignItems: "center",
 
-    paddingHorizontal: horizontalScale(40),
+    paddingHorizontal: horizontalScale(20),
     paddingTop: verticalScale(45),
     paddingBottom: verticalScale(20),
 
-    borderColor: ColorPalette.tertiary,
-    borderBottomWidth: verticalScale(2),
+    // borderColor: ColorPalette.tertiary,
+    // borderBottomWidth: verticalScale(2),
     // borderLeftWidth: verticalScale(2),
     // borderRightWidth: verticalScale(2),
 
@@ -66,21 +78,22 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: "ffBold",
+    fontSize: moderateScale(22),
   },
   title: {
-    flex: 2,
+    // flex: 2,
   },
   left: {
-    position: "absolute",
-    left: 0,
-    bottom: verticalScale(20),
-    marginLeft: horizontalScale(15),
+    // position: "absolute",
+    // left: 0,
+    // bottom: verticalScale(20),
+    // marginLeft: horizontalScale(15),
   },
   right: {
-    position: "absolute",
-    right: 0,
-    bottom: verticalScale(20),
-    marginRight: horizontalScale(15),
+    // position: "absolute",
+    // right: 0,
+    // bottom: verticalScale(20),
+    // marginRight: horizontalScale(15),
   },
 });
 
