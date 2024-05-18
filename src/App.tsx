@@ -99,7 +99,7 @@ const App = (): JSX.Element => {
                 component={LoginScreen}
               />
               <Stack.Screen
-                options={{ title: "Regístrate" }}
+                options={{ title: "Crea una cuenta" }}
                 name="signUp"
                 component={SignUpScreen}
               />

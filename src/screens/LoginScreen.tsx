@@ -69,16 +69,14 @@ const LoginScreen = () => {
           autoCapitalize="none"
           placeholder="janedoe@domain.tls"
         />
-        <PasswordField
-          name="password"
-          control={control}
-          label="Contraseña"
-        />
-        <Link
-          style={styles.forgotPassword}
-          onPress={() => navigation.navigate("passwordRecovery")}>
-          ¿Olvidaste tu contraseña?
-        </Link>
+        <PasswordField name="password" control={control} label="Contraseña" />
+        <View style={styles.forgotPasswordContainer}>
+          <Link
+            style={styles.forgotPassword}
+            onPress={() => navigation.navigate("passwordRecovery")}>
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </View>
         <Btn
           disabled={loading}
           label="Iniciar Sesión"
@@ -103,9 +101,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  forgotPasswordContainer: {
+    marginBottom: verticalScale(40),
+  },
   forgotPassword: {
     textAlign: "right",
-    marginBottom: verticalScale(40),
   },
   rememberMe: {
     marginTop: verticalScale(40),

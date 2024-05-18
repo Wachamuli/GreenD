@@ -142,9 +142,9 @@ const SignUpScreen = (): JSX.Element => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
+      {/* <View style={styles.headerContainer}>
         <Header title="Solicitar una cuenta" />
-      </View>
+      </View> */}
 
       {/* TODO: Move to its own component */}
       <View
