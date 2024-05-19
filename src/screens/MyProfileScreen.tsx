@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import Txt from "../components/Txt";
-import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
 import { ColorPalette } from "../styles/colorPalette";
 import {
@@ -12,14 +11,54 @@ import {
 } from "../utilities/metrics";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
+  IconDefinition,
   faBell,
-  faCamera,
+  faChevronRight,
   faCircleQuestion,
   faLanguage,
   faPerson,
+  faRightFromBracket,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "../components/controls/Link";
+import Tappable from "../components/controls/Tappable";
+import ProfileImagePicker from "../components/controls/ProfileImagePicker";
+
+const Option = (props: {
+  onPress: () => void;
+  fontColor: string;
+  icon: IconDefinition;
+  iconSize: number;
+  label: string;
+}): JSX.Element => {
+  return (
+    <Tappable onPress={props.onPress}>
+      <View
+        style={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+        }}>
+        <View style={styles.optionContainer}>
+          <FontAwesomeIcon
+            style={{ maxWidth: horizontalScale(20) }}
+            icon={props.icon}
+            color={props.fontColor}
+            size={props.iconSize}
+          />
+          <Txt style={[styles.option, { color: props.fontColor }]}>
+            {props.label}
+          </Txt>
+        </View>
+        <FontAwesomeIcon
+          icon={faChevronRight}
+          color={props.fontColor}
+          // size={props.iconSize}
+        />
+      </View>
+    </Tappable>
+  );
+};
 
 const MyProfileScreen = (): JSX.Element => {
   const [fullname, setFullname] = useState("");
@@ -58,71 +97,59 @@ const MyProfileScreen = (): JSX.Element => {
   return (
     <>
       <ScrollView>
-        <View style={styles.container}>
-          {/* Image: maybe? */}
-          <View style={styles.profilePic}>
-            <FontAwesomeIcon
-              icon={faCamera}
-              color="white"
-              size={moderateScale(25)}
-            />
-          </View>
-        </View>
+        <ProfileImagePicker />
+
         <View style={styles.subContainer}>
           <Txt style={styles.fullname}>{fullname}</Txt>
-          <Txt style={{ color: ColorPalette.secondary }}>
-            {condominium?.name}
-          </Txt>
-          <Btn
-            containerStyle={styles.btn}
+          <Txt style={styles.condominium}>{condominium?.name}</Txt>
+
+          <Option
             onPress={logout}
             label="Cerrar sesión"
+            fontColor={ColorPalette.primary}
+            icon={faRightFromBracket}
+            iconSize={moderateScale(21)}
           />
 
-          <View style={styles.optionContainer}>
-            <FontAwesomeIcon
-              icon={faPerson}
-              color={ColorPalette.primary}
-              size={moderateScale(25)}
-            />
-            <Txt style={styles.option}>Modificar información personal</Txt>
-          </View>
+          <Option
+            onPress={() => {}}
+            label="Editar perfil"
+            fontColor={ColorPalette.primary}
+            icon={faPerson}
+            iconSize={moderateScale(25)}
+          />
 
-          <View style={styles.optionContainer}>
-            <FontAwesomeIcon
-              icon={faLanguage}
-              color={ColorPalette.primary}
-              size={moderateScale(25)}
-            />
-            <Txt style={styles.option}>Cambiar Idioma</Txt>
-          </View>
+          <Option
+            onPress={() => {}}
+            label="Cambiar idioma"
+            fontColor={ColorPalette.primary}
+            icon={faLanguage}
+            iconSize={moderateScale(25)}
+          />
 
-          <View style={styles.optionContainer}>
-            <FontAwesomeIcon
-              icon={faBell}
-              color={ColorPalette.primary}
-              size={moderateScale(21)}
-            />
-            <Txt style={styles.option}>Gestionar notificaciones</Txt>
-          </View>
+          <Option
+            onPress={() => {}}
+            label="Gestionar notificaciones"
+            fontColor={ColorPalette.primary}
+            icon={faBell}
+            iconSize={moderateScale(21)}
+          />
 
-          <View style={styles.optionContainer}>
-            <FontAwesomeIcon
-              icon={faCircleQuestion}
-              color={ColorPalette.primary}
-              size={moderateScale(20)}
-            />
-            <Txt style={styles.option}>Ayuda</Txt>
-          </View>
+          <Option
+            onPress={() => {}}
+            label="Ayuda"
+            fontColor={ColorPalette.primary}
+            icon={faCircleQuestion}
+            iconSize={moderateScale(20)}
+          />
 
-          <View style={styles.optionContainer}>
-            <FontAwesomeIcon
-              icon={faTrash}
-              color={ColorPalette.primary}
-              size={moderateScale(18)}
-            />
-            <Txt style={styles.option}>Eliminar cuenta</Txt>
-          </View>
+          <Option
+            onPress={() => {}}
+            label="Eliminar cuenta"
+            fontColor={ColorPalette.error}
+            icon={faTrash}
+            iconSize={moderateScale(21)}
+          />
         </View>
 
         <View style={styles.footer}>
@@ -143,6 +170,12 @@ const styles = StyleSheet.create({
   fullname: {
     fontFamily: "ffBold",
     fontSize: moderateScale(20),
+  },
+  condominium: {
+    color: ColorPalette.secondary,
+    borderBottomWidth: moderateScale(0.5),
+    borderBottomColor: ColorPalette.tertiary,
+    paddingBottom: verticalScale(20),
   },
   subContainer: {
     width: "100%",
@@ -172,11 +205,9 @@ const styles = StyleSheet.create({
     fontFamily: "ffBold",
     marginLeft: horizontalScale(10),
     paddingVertical: verticalScale(10),
-    color: ColorPalette.primary,
   },
   footer: {
     width: "100%",
-    backgroundColor: "#f3f4f6",
     alignItems: "center",
     paddingVertical: verticalScale(35),
     alignContent: "space-between",
