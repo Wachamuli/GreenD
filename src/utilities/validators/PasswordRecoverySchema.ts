@@ -1,12 +1,16 @@
 import z from "zod";
 import { passwordRegex } from "../utils";
 
-export const passwordRecoverySchema = z
+export const passwordRecoverySchema = z.object({
+  email: z
+    .string()
+    .min(1, "Correo electrónico requerido")
+    .email("Correo electrónico no válido"),
+  cellphone: z.string().min(1, "Número celular es requerido"),
+});
+
+export const newPasswordSchema = z
   .object({
-    email: z
-      .string()
-      .min(1, "Correo electrónico requerido")
-      .email("Correo electrónico no válido"),
     newPassword: z
       .string()
       .min(1, "Una nueva contraseña es requerida")
@@ -21,4 +25,5 @@ export const passwordRecoverySchema = z
     path: ["confirmPassword"],
   });
 
-export type PasswordRecoverySchema = z.infer<typeof passwordRecoverySchema>
+export type PasswordRecoverySchema = z.infer<typeof passwordRecoverySchema>;
+export type NewPasswordSchema = z.infer<typeof newPasswordSchema>;

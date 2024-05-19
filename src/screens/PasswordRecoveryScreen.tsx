@@ -1,82 +1,104 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useForm } from "react-hook-form";
-import { useNavigation } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Btn from "../components/controls/Btn";
 import Field from "../components/controls/Field";
-import Header from "../components/Header";
-import Link from "../components/controls/Link";
-import PasswordEnforcer from "../components/controls/PasswordEnforcer";
 import { supabase } from "../lib/supabase";
-import { navigationProp } from "../App";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../utilities/metrics";
 import {
   PasswordRecoverySchema,
   passwordRecoverySchema,
 } from "../utilities/validators/PasswordRecoverySchema";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  faTriangleExclamation,
+  faUserLock,
+} from "@fortawesome/free-solid-svg-icons";
+import { ColorPalette } from "../styles/colorPalette";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "./PasswordRecoveryStack";
+import { useState } from "react";
+import Popup, { PopupProps } from "../components/Popup";
+import Txt from "../components/Txt";
 
-const PasswordRecoveryScreen = (): JSX.Element => {
-  const { control, handleSubmit, getValues } = useForm<PasswordRecoverySchema>({
+type ScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "passwordRecoveryScreen"
+>;
+
+const PasswordRecoveryScreen = ({ navigation }: ScreenProps): JSX.Element => {
+  const [loading, setLoading] = useState(false);
+  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const { control, handleSubmit } = useForm<PasswordRecoverySchema>({
     resolver: zodResolver(passwordRecoverySchema),
   });
-  const navigation = useNavigation<navigationProp>();
 
-  const sendRecoveryEmail = async () => {
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      getValues("email"),
-    );
-
-    if (error) Alert.alert(error.message);
-  };
-
-  const recovery = async (values: PasswordRecoverySchema) => {
-    const { error } = await supabase.auth.updateUser({
-      password: values.newPassword,
-    });
+  const sendRecoveryEmail = async (data: PasswordRecoverySchema) => {
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(data.email);
 
     if (error) {
-      Alert.alert(error.message);
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: { label: "Entendido" },
+      });
+      setLoading(false);
       return;
     }
 
-    navigation.navigate("login");
+    navigation.navigate("passwordEmailScreen", { email: data.email });
+    setLoading(false);
   };
 
   return (
     <View style={styles.loginScreenContainer}>
-      {/* <Header title="Recuperar Contraseña" /> */}
+      <View style={{ alignItems: "center" }}>
+        <FontAwesomeIcon
+          icon={faUserLock}
+          color={ColorPalette.primary}
+          size={moderateScale(150)}
+        />
+      </View>
 
-      <Field
-        name="email"
-        control={control}
-        label="Correo electrónico"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        placeholder="janedoe@domain.tls"
-      />
+      <Txt style={styles.description}>
+        Enviaremos un correo de recuperación al correo asociado.
+      </Txt>
 
-      <Link style={styles.link} onPress={sendRecoveryEmail}>
-        Enviar correo de recuperación
-      </Link>
+      <View style={{ alignItems: "center" }}>
+        <Field
+          name="email"
+          control={control}
+          label="Correo electrónico"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholder="janedoe@domain.tls"
+        />
 
-      <PasswordEnforcer
-        name="newPassword"
-        label="Nueva contraseña"
-        control={control}
-      />
+        <Field
+          name="cellphone"
+          control={control}
+          label="Número celular"
+          keyboardType="phone-pad"
+          placeholder="829-000-0000"
+          maxLength={50}
+        />
 
-      <Field
-        name="confirmPassword"
-        label="Confirmar nueva contraseña"
-        control={control}
-        secureTextEntry={true}
-        maxLength={16}
-        autoCapitalize="none"
-        placeholder="********"
-      />
+        <Btn
+          disabled={loading}
+          style={styles.btn}
+          onPress={handleSubmit(sendRecoveryEmail)}
+          label="Continuar"
+        />
 
-      <Btn onPress={handleSubmit(recovery)} label="Aceptar" />
+        <Popup {...popupProps} />
+      </View>
     </View>
   );
 };
@@ -88,13 +110,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     display: "flex",
-    // justifyContent: "center",
-    marginTop: horizontalScale(30),
-    alignItems: "center",
     paddingHorizontal: horizontalScale(60),
   },
-  link: {
-    textAlign: "center",
-    marginVertical: verticalScale(10),
+  description: {
+    borderBottomWidth: moderateScale(0.5),
+    borderBottomColor: ColorPalette.tertiary,
+    paddingBottom: verticalScale(15),
+    marginTop: verticalScale(25),
+    marginBottom: verticalScale(40),
+  },
+  btn: {
+    marginTop: verticalScale(35),
   },
 });

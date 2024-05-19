@@ -16,10 +16,10 @@ import { supabase } from "./lib/supabase";
 import LoginScreen from "./screens/LoginScreen";
 import IndexTabs from "./screens/IndexTabs";
 import SignUpScreen from "./screens/SignUpScreen";
-import PasswordRecoveryScreen from "./screens/PasswordRecoveryScreen";
 import { View } from "react-native";
 import CustomHeader from "./components/layout/CustomHeader";
 import EmailConfirmationScreen from "./screens/EmailConfirmationScreen";
+import PasswordRecoveryStack from "./screens/PasswordRecoveryStack";
 
 dayjs.locale("es");
 // calendarSetup("es");
@@ -111,7 +111,7 @@ const App = (): JSX.Element => {
               <Stack.Screen
                 options={{ title: "Recuperar contraseña" }}
                 name="passwordRecovery"
-                component={PasswordRecoveryScreen}
+                component={PasswordRecoveryStack}
               />
             </>
           )}
