@@ -4,11 +4,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  faFileInvoice,
-  faHome,
-  faSpinner,
-  faUser,
+  faHome, // as faHomeSolid
+  faClipboard as faClipboardSolid,
+  faBookmark as faBookmarkSolid,
+  faNewspaper as faNewspaperSolid,
+  faUser as faUserSolid,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  // faHome as faHomeRegular,
+  faClipboard as faClipboardRegular,
+  faBookmark as faBookmarkRegular,
+  faNewspaper as faNewspaperRegular,
+  faUser as faUserRegular,
+} from "@fortawesome/free-regular-svg-icons";
 
 import { supabase } from "../lib/supabase";
 import HomeStack from "./HomeStack";
@@ -79,8 +87,26 @@ const IndexTabs = () => {
         component={ServiceRequestsStack}
         options={{
           title: "Solicitudes",
-          tabBarIcon: props => <FontAwesomeIcon icon={faSpinner} {...props} />,
+          tabBarIcon: props => (
+            <FontAwesomeIcon
+              icon={props.focused ? faClipboardSolid : faClipboardRegular}
+              {...props}
+            />
+          ),
           tabBarBadge: totalActiveServices,
+        }}
+      />
+      <Tab.Screen
+        name="bookings"
+        component={HistorialScreen}
+        options={{
+          title: "Favoritos",
+          tabBarIcon: props => (
+            <FontAwesomeIcon
+              icon={props.focused ? faBookmarkSolid : faBookmarkRegular}
+              {...props}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -89,7 +115,10 @@ const IndexTabs = () => {
         options={{
           title: "Historial",
           tabBarIcon: props => (
-            <FontAwesomeIcon icon={faFileInvoice} {...props} />
+            <FontAwesomeIcon
+              icon={props.focused ? faNewspaperSolid : faNewspaperRegular}
+              {...props}
+            />
           ),
         }}
       />
@@ -97,8 +126,13 @@ const IndexTabs = () => {
         name="myProfile"
         component={MyProfileStack}
         options={{
-          title: "Mi Perfil",
-          tabBarIcon: props => <FontAwesomeIcon icon={faUser} {...props} />,
+          title: "Perfil",
+          tabBarIcon: props => (
+            <FontAwesomeIcon
+              icon={props.focused ? faUserSolid : faUserRegular}
+              {...props}
+            />
+          ),
         }}
       />
     </Tab.Navigator>

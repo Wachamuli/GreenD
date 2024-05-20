@@ -1,10 +1,9 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Txt from "../Txt";
 import { moderateScale, verticalScale } from "../../utilities/metrics";
 import { ColorPalette } from "../../styles/colorPalette";
-import { StyleProp } from "react-native";
 
 const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
   return (
@@ -52,32 +51,26 @@ const BottomTab = ({ state, descriptors, navigation }: BottomTabBarProps) => {
               {options.tabBarIcon &&
                 options.tabBarIcon({
                   focused: isFocused,
-                  size: 25,
-                  color: isFocused
-                    ? ColorPalette.primary
-                    : ColorPalette.tertiary,
+                  size: moderateScale(20),
+                  color: isFocused ? ColorPalette.primary : "#9ca3af",
                 })}
               {options.tabBarBadge && (
-                <View
-                  style={{
-                    backgroundColor: "red",
-                    paddingHorizontal: 5,
-                    borderRadius: moderateScale(50),
-                    position: "absolute",
-                    left: 55,
-                    bottom: 30,
-                  }}>
-                  <Txt style={{ color: "white", fontSize: moderateScale(12) }}>
+                <View style={styles.badge}>
+                  <Txt
+                    style={{
+                      color: "white",
+                      fontSize: moderateScale(10),
+                      fontFamily: "ffBold",
+                    }}>
                     {options.tabBarBadge}
                   </Txt>
                 </View>
               )}
               <Txt
                 style={{
-                  fontSize: moderateScale(12),
-                  color: isFocused
-                    ? ColorPalette.primary
-                    : ColorPalette.tertiary,
+                  fontFamily: "ffBold",
+                  fontSize: moderateScale(10),
+                  color: isFocused ? ColorPalette.primary : "#9ca3af",
                 }}>
                 {label.toString()}
               </Txt>
@@ -96,13 +89,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     backgroundColor: "white",
     bottom: 0,
-    paddingVertical: verticalScale(20),
-    borderTopWidth: verticalScale(1),
-    borderRightWidth: verticalScale(1),
-    borderLeftWidth: verticalScale(1),
+    paddingVertical: verticalScale(10),
     borderColor: ColorPalette.tertiary,
-    borderTopStartRadius: moderateScale(20),
-    borderTopEndRadius: moderateScale(20),
+    borderTopWidth: verticalScale(0.5),
+  },
+  badge: {
+    position: "absolute",
+    left: 45,
+    bottom: 25,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: moderateScale(17),
+    height: moderateScale(17),
+    borderRadius: moderateScale(17) / 2,
+    backgroundColor: "red",
   },
   bottomTabItemContainer: {
     alignItems: "center",
