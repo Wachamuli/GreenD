@@ -6,8 +6,6 @@ import {
   View,
   Alert,
   ActivityIndicator,
-  TextInput,
-  ScrollView,
 } from "react-native";
 
 import ServiceCard from "./serviceCard";
@@ -29,6 +27,8 @@ import Txt from "./Txt";
 import Tappable from "./controls/Tappable";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { Picker } from "@react-native-picker/picker";
+import SearchBar from "../components/controls/SearchBar";
+import HomeOutsourcerCard from "./HomeOutsourcerCard";
 
 const ServiceList = (): JSX.Element => {
   const [loading, setLoading] = useState(true);
@@ -119,7 +119,7 @@ const ServiceList = (): JSX.Element => {
     {
       title: "Más Populares",
       data: outsourcers,
-      Component: OutsourcerCard,
+      Component: HomeOutsourcerCard,
       horizontal: false,
     },
   ];
@@ -274,99 +274,6 @@ const ServiceList = (): JSX.Element => {
         ListHeaderComponent={() => <Header title="Servicios" />}
         renderItem={({ item: data }) => <OutsourcerCard {...data} />}
       /> */}
-    </View>
-  );
-};
-
-const OutsourcerCard = (item: any) => {
-  return (
-    <Tappable>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          height: verticalScale(150),
-          marginVertical: verticalScale(5),
-          borderWidth: moderateScale(0.5),
-          borderColor: ColorPalette.tertiary,
-          borderRadius: moderateScale(10),
-          padding: moderateScale(20),
-        }}>
-        <Image
-          source={{ uri: item.logo }}
-          style={{
-            width: "30%",
-            height: "100%",
-            borderRadius: moderateScale(10),
-            marginRight: horizontalScale(10),
-          }}
-        />
-
-        <View style={{ width: "67%" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}>
-            <Txt
-              style={{
-                fontSize: moderateScale(14),
-              }}>
-              {item.service.name}
-            </Txt>
-
-            <Tappable onPress={() => {}} hitSlop={moderateScale(20)}>
-              <FontAwesomeIcon icon={faBookmark} size={moderateScale(20)} />
-            </Tappable>
-          </View>
-
-          <Txt
-            style={{
-              fontFamily: "ffBold",
-              marginTop: verticalScale(10),
-            }}>
-            {item.name}
-          </Txt>
-          <Txt
-            style={{
-              fontFamily: "ffBold",
-              color: ColorPalette.lighterSecondary,
-            }}>
-            $250
-          </Txt>
-        </View>
-      </View>
-    </Tappable>
-  );
-};
-
-const SearchBar = () => {
-  return (
-    <View
-      style={{
-        // marginBottom: verticalScale(25),
-        width: "100%",
-      }}>
-      <View>
-        <TextInput
-          placeholder="Buscar"
-          placeholderTextColor={"#9ca3af"}
-          style={{
-            backgroundColor: "#f3f4f6",
-            borderRadius: moderateScale(10),
-            borderColor: ColorPalette.tertiary,
-            paddingVertical: verticalScale(15),
-            paddingHorizontal: horizontalScale(50),
-
-            fontSize: moderateScale(16),
-            width: "100%",
-          }}
-        />
-        <View style={{ position: "absolute", left: "5%", top: "30%" }}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} size={20} color="#9ca3af" />
-        </View>
-      </View>
     </View>
   );
 };
