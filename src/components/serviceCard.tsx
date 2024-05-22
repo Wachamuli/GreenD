@@ -3,6 +3,7 @@ import { View, Image, StyleSheet, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import {
+  height,
   horizontalScale,
   moderateScale,
   verticalScale,
@@ -12,11 +13,15 @@ import { Services } from "../api/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Txt from "./Txt";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
-import { faUser, faCalendarDays } from "@fortawesome/free-regular-svg-icons";
+import { faCalendarDays } from "@fortawesome/free-regular-svg-icons";
+import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";
 import dayjs from "dayjs";
 import Tappable from "./controls/Tappable";
 import Header from "./Header";
+import { supabase } from "../lib/supabase";
+import { useEffect, useState } from "react";
+import { capitalize } from "../utilities/utils";
 
 type Props = {
   id: string;
@@ -27,6 +32,23 @@ type Props = {
 
 const ServiceCard = (props: Props): JSX.Element => {
   const navigation = useNavigation<navigationProp>();
+  const [availableOutsourcers, setAvailableOutsourcers] = useState<
+    number | null
+  >();
+
+  const getAvailableOutsourcers = async () => {
+    const { count, error } = await supabase
+      .from("condominium_services")
+      .select("*", { head: true, count: "exact" })
+      // .eq("condominium_id", props.id)
+      .eq("service_id", props.id);
+
+    setAvailableOutsourcers(count || 0);
+  };
+
+  useEffect(() => {
+    getAvailableOutsourcers();
+  }, []);
 
   // TODO: Remove this, it is a mockup
   const {
@@ -46,38 +68,46 @@ const ServiceCard = (props: Props): JSX.Element => {
     <Tappable
       containerStyle={[
         styles.serviceCardContainer,
-        boxShadowXP("black", 0.5, 20, -4, 5, 5),
+        // boxShadowXP("black", 0.5, 20, -4, 5, 5),
       ]}
       onPress={() => {
         navigation.navigate("serviceDetails", {
           serviceId: props.id,
         });
       }}>
-      <Image style={styles.serviceCardImage} source={{ uri: props.image }} />
+      <View>
+        <Image style={styles.serviceCardImage} source={{ uri: props.image }} />
+        <View
+          style={[
+            styles.availableUsers,
+            boxShadowXP("black", 0.5, 20, -4, 5, 5),
+          ]}>
+          <FontAwesomeIcon icon={faUser} color={setColor} size={moderateScale(13)} />
+          <Txt style={[styles.infoContent, { color: setColor }]}>
+            {availableOutsourcers}
+          </Txt>
+        </View>
+      </View>
+
       <View style={styles.serviceTextContainer}>
-        <Txt style={styles.serviceCardName}>{props.name}</Txt>
-        <Txt style={styles.serviceCardDescription} numberOfLines={1}>
-          {props.description}
-        </Txt>
+        <Txt style={styles.serviceCardName} numberOfLines={1}>{props.name}</Txt>
 
         <View style={styles.infoContainer}>
           <View style={styles.infoItemContainer}>
             <FontAwesomeIcon icon={faCalendarDays} color="#9ca3af" />
             <Txt style={styles.infoContent}>
-              {dayjs(serviceMinimumDate.toString()).format("dddd, MMMM D")}
+              {capitalize(
+                dayjs(serviceMinimumDate.toString()).format("dddd, D"),
+              )}
             </Txt>
           </View>
           <View style={styles.infoItemContainer}>
-            <FontAwesomeIcon icon={faDollarSign} color="#9ca3af" />
-            <Txt style={styles.infoContent}>
-              Desde {serviceMinimumPrice} DOP
-            </Txt>
-          </View>
-          <View style={styles.infoItemContainer}>
-            <FontAwesomeIcon icon={faUser} color={setColor} />
-            <Txt style={[styles.infoContent, { color: setColor }]}>
-              {serviceAvailableOutsourcers} disponibles
-            </Txt>
+            <FontAwesomeIcon
+              icon={faDollarSign}
+              color="#9ca3af"
+              size={moderateScale(10)}
+            />
+            <Txt style={styles.infoContent}>{serviceMinimumPrice} Min.</Txt>
           </View>
         </View>
       </View>
@@ -86,42 +116,55 @@ const ServiceCard = (props: Props): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-  // TODO: Fix the minimium width when the phone is rotated
   serviceCardContainer: {
     backgroundColor: "white",
-    borderRadius: moderateScale(10),
-    marginHorizontal: horizontalScale(10),
-    marginVertical: verticalScale(10),
-    maxHeight: verticalScale(270),
-    overflow: "hidden",
+    width: moderateScale(100),
+    justifyContent: "center",
+    marginBottom: verticalScale(20),
+    alignItems: "center",
   },
   serviceCardImage: {
-    width: "100%",
-    height: verticalScale(130),
+    width: moderateScale(80),
+    height: moderateScale(80),
+    borderRadius: moderateScale(80) / 2,
   },
   serviceTextContainer: {
-    paddingHorizontal: horizontalScale(8),
-    paddingVertical: horizontalScale(8),
+    // paddingHorizontal: horizontalScale(8),
+    // paddingVertical: horizontalScale(8),
   },
   serviceCardName: {
-    fontSize: moderateScale(18),
+    fontSize: moderateScale(12),
+    textAlign: "center",
     fontFamily: "ffBold",
     color: "black",
   },
   serviceCardDescription: {
-    fontSize: moderateScale(16),
     color: "gray",
   },
   infoContainer: {
     marginTop: verticalScale(10),
+    alignItems: "center",
+  },
+  availableUsers: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: moderateScale(30),
+    height: moderateScale(30),
+    borderRadius: moderateScale(30) / 2,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
   },
   infoItemContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
   infoContent: {
-    marginLeft: horizontalScale(10),
+    marginLeft: horizontalScale(2),
     color: "#9ca3af",
+    fontSize: moderateScale(12),
   },
 });
 

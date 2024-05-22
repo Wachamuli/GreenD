@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BackHandler } from "react-native";
+import { BackHandler, View } from "react-native";
 import { NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -11,6 +11,10 @@ import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
 import CustomHeader from "../components/layout/CustomHeader";
 import { ColorPalette } from "../styles/colorPalette";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { horizontalScale, moderateScale } from "../utilities/metrics";
+import { faBell } from "@fortawesome/free-regular-svg-icons";
 
 export type RootStackParamList = {
   serviceList: undefined;
@@ -78,13 +82,27 @@ const HomeStack = (): JSX.Element => {
         name="serviceList"
         component={ServiceList}
         options={{
-          title: "Inicio",
-          headerRight: () => (
-            <Txt
-              style={{ color: ColorPalette.secondary }}>
-              {condominium}
-            </Txt>
+          headerLeft: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}>
+              <FontAwesomeIcon
+                icon={faLocationDot}
+                color={ColorPalette.secondary}
+                style={{ marginRight: horizontalScale(5) }}
+              />
+              <Txt
+                style={{ color: ColorPalette.secondary, fontFamily: "ffBold" }}>
+                {condominium}
+              </Txt>
+            </View>
           ),
+          headerRight: () => (
+            <FontAwesomeIcon icon={faBell} size={moderateScale(25)} />
+          )
         }}
       />
       <Stack.Screen
