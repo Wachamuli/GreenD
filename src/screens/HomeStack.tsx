@@ -15,9 +15,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { horizontalScale, moderateScale } from "../utilities/metrics";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
+import AllServicesScreen from "./AllServicesScreen";
 
 export type RootStackParamList = {
   serviceList: undefined;
+  allServices: undefined;
   serviceDetails: { serviceId: string };
   serviceResume: {
     serviceId: string;
@@ -102,8 +104,13 @@ const HomeStack = (): JSX.Element => {
           ),
           headerRight: () => (
             <FontAwesomeIcon icon={faBell} size={moderateScale(25)} />
-          )
+          ),
         }}
+      />
+      <Stack.Screen
+        name="allServices"
+        component={AllServicesScreen}
+        options={{ title: "Servicios" }}
       />
       <Stack.Screen
         name="serviceDetails"

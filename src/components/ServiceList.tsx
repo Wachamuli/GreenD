@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
-import {
-  FlatList,
-  SectionList,
-  Image,
-  View,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, View, Alert, ActivityIndicator, Image } from "react-native";
 
+import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from "@react-navigation/native";
+import { navigationProp } from "../screens/HomeStack";
 import ServiceCard from "./serviceCard";
 import { supabase } from "../lib/supabase";
 import {
@@ -19,18 +15,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faCircle,
   faCircleDot,
-  faMagnifyingGlass,
+  faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "./Header";
 import { ColorPalette } from "../styles/colorPalette";
 import Txt from "./Txt";
 import Tappable from "./controls/Tappable";
-import { faBookmark } from "@fortawesome/free-regular-svg-icons";
-import { Picker } from "@react-native-picker/picker";
 import SearchBar from "../components/controls/SearchBar";
 import HomeOutsourcerCard from "./HomeOutsourcerCard";
 
 const ServiceList = (): JSX.Element => {
+  const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(true);
   const [outsourcers, setOutsourcers] = useState<
     | {
@@ -109,171 +104,159 @@ const ServiceList = (): JSX.Element => {
     );
   }
 
-  const DATA = [
-    {
-      title: "Servicios",
-      data: services,
-      Component: ServiceCard,
-      horizontal: true,
-    },
-    {
-      title: "Más Populares",
-      data: outsourcers,
-      Component: HomeOutsourcerCard,
-      horizontal: false,
-    },
-  ];
-
   return (
-    <View style={{ width: "100%", paddingHorizontal: horizontalScale(20) }}>
+    <View
+      style={{
+        width: "100%",
+        paddingHorizontal: horizontalScale(20),
+        paddingBottom: verticalScale(70),
+      }}>
       <SearchBar />
-
-      {/* I can't believe this is the correct way to handle lists in RN. */}
-      <SectionList
-        sections={DATA}
-        style={{ width: "100%" }}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: verticalScale(100) }}
-        renderSectionHeader={({ section: { title, data, horizontal } }) => {
-          if (!horizontal) {
-            return <></>;
-          }
-
-          return (
-            <>
-              {/* <Header title="Ofertas" style={{ fontSize: moderateScale(18) }} />
-
-              <View
-                style={{
-                  width: "100%",
-                  height: verticalScale(80),
-                  borderWidth: 1,
-                  borderRadius: moderateScale(10),
-                }}>
-                <Txt style={{ fontFamily: "ffBold" }}>30%</Txt>
-              </View>
-
-              <View
-                style={{ alignItems: "center", marginTop: verticalScale(4) }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "10%",
-                  }}>
-                  <FontAwesomeIcon
-                    icon={faCircleDot}
-                    size={moderateScale(10)}
-                    color={ColorPalette.primary}
-                  />
-                  <FontAwesomeIcon
-                    icon={faCircle}
-                    size={moderateScale(10)}
-                    color={ColorPalette.tertiary}
-                  />
-                  <FontAwesomeIcon
-                    icon={faCircle}
-                    size={moderateScale(10)}
-                    color={ColorPalette.tertiary}
-                  />
-                </View>
-              </View> */}
-
-              <View style={{ paddingVertical: verticalScale(10) }}>
-                <FlatList
-                  data={data}
-                  keyExtractor={item => item.id}
-                  showsVerticalScrollIndicator={false}
-                  numColumns={3}
-                  contentContainerStyle={{
-                    flexDirection: "column",
-                    rowGap: verticalScale(15),
-                    paddingVertical: verticalScale(10),
-                  }}
-                  columnWrapperStyle={{
-                    justifyContent: "space-between",
-                  }}
-                  ListHeaderComponent={() => (
-                    <Header
-                      style={{ fontSize: moderateScale(18) }}
-                      title={"Servicios"}
-                    />
-                  )}
-                  renderItem={({ item: data }) => <ServiceCard {...data} />}
-                />
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}>
-                <Header
-                  style={{ fontSize: moderateScale(18) }}
-                  title="Más Populares"
-                />
-                <View
-                  style={{
-                    position: "relative",
-                    borderColor: ColorPalette.tertiary,
-                    borderWidth: moderateScale(0.5),
-                    borderRadius: verticalScale(40),
-                    width: horizontalScale(135),
-                    height: verticalScale(30),
-                    overflow: "hidden",
-                  }}>
-                  <Picker
-                    mode="dropdown"
-                    style={{
-                      bottom: 13,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "100%",
-                    }}
-                    // selectedValue={field.value}
-                  >
-                    <Picker.Item key={0} value={""} label={"Filtros"} />
-                  </Picker>
-                </View>
-              </View>
-            </>
-          );
-        }}
-        renderItem={({ item, section: { Component, horizontal } }) => {
-          if (horizontal) {
-            return <></>;
-          }
-          return <Component {...item} />;
-        }}
-      />
-
-      {/* <FlatList
-        data={services}
-        keyExtractor={item => item.id}
-        showsVerticalScrollIndicator={false}
-        numColumns={3}
-        // contentContainerStyle={{
-        //   flexDirection: "column",
-        //   rowGap: verticalScale(15),
-        //   paddingVertical: verticalScale(10),
-        // }}
-        // columnWrapperStyle={{
-        //   justifyContent: "space-between",
-        // }}
-        ListHeaderComponent={() => <Header title="Servicios" />}
-        renderItem={({ item: data }) => <ServiceCard {...data} />}
-      />
 
       <FlatList
         data={outsourcers}
-        keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => <Header title="Servicios" />}
-        renderItem={({ item: data }) => <OutsourcerCard {...data} />}
-      /> */}
+        ListHeaderComponent={() => (
+          <View>
+            <Header title="Ofertas" style={{ fontSize: moderateScale(18) }} />
+
+            <View
+              style={{
+                width: "100%",
+                height: verticalScale(80),
+                borderRadius: moderateScale(10),
+                overflow: "hidden",
+                marginBottom: verticalScale(20),
+              }}>
+              <Image
+                source={{
+                  uri: "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+                }}
+                style={{
+                  height: verticalScale(80),
+                  width: "100%",
+                }}
+              />
+            </View>
+
+            {/* <View style={{ alignItems: "center", marginTop: verticalScale(4) }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "10%",
+                }}>
+                <FontAwesomeIcon
+                  icon={faCircleDot}
+                  size={moderateScale(10)}
+                  color={ColorPalette.primary}
+                />
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  size={moderateScale(10)}
+                  color={ColorPalette.tertiary}
+                />
+                <FontAwesomeIcon
+                  icon={faCircle}
+                  size={moderateScale(10)}
+                  color={ColorPalette.tertiary}
+                />
+              </View>
+            </View> */}
+
+            <FlatList
+              data={services}
+              keyExtractor={item => item.id}
+              showsVerticalScrollIndicator={false}
+              numColumns={3}
+              columnWrapperStyle={{
+                justifyContent: "space-between",
+              }}
+              ListHeaderComponent={() => (
+                <Header
+                  style={{ fontSize: moderateScale(18) }}
+                  title={"Servicios"}
+                />
+              )}
+              renderItem={({ item: data, index }) => {
+                if (index <= 4) return <ServiceCard {...data} />;
+
+                return (
+                  <Tappable onPress={() => navigation.navigate("allServices")}>
+                    <View
+                      style={{
+                        width: moderateScale(100),
+                        height: moderateScale(80),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                      }}>
+                      <FontAwesomeIcon
+                        icon={faEllipsis}
+                        size={moderateScale(42)}
+                      />
+                    </View>
+                    <View>
+                      <Txt
+                        style={{
+                          fontSize: moderateScale(12),
+                          textAlign: "center",
+                          fontFamily: "ffBold",
+                          color: "black",
+                        }}>
+                        Ver más
+                      </Txt>
+                    </View>
+                  </Tappable>
+                );
+              }}
+            />
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}>
+              <Header
+                style={{ fontSize: moderateScale(18) }}
+                title="Más Populares"
+              />
+              <Filter />
+            </View>
+          </View>
+        )}
+        renderItem={({ item: outsourcer }) => (
+          <HomeOutsourcerCard {...outsourcer} />
+        )}
+      />
+    </View>
+  );
+};
+
+const Filter = () => {
+  return (
+    <View
+      style={{
+        position: "relative",
+        borderColor: ColorPalette.tertiary,
+        borderWidth: moderateScale(0.5),
+        borderRadius: verticalScale(40),
+        width: horizontalScale(135),
+        height: verticalScale(30),
+        overflow: "hidden",
+      }}>
+      <Picker
+        mode="dropdown"
+        style={{
+          bottom: 13,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}>
+        <Picker.Item key={0} value={""} label={"Filtros"} />
+      </Picker>
     </View>
   );
 };
