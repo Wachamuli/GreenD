@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationProp } from "@react-navigation/native";
-import ActiveServicesScreen from "./ActiveServicesScreen";
+import ServiceRequestsScreen from "./ActiveServicesScreen";
 
 import ActiveServiceDetailsScreen from "./ActiveServiceDetailsScreen";
 import CustomHeader from "../components/layout/CustomHeader";
@@ -22,7 +22,7 @@ const ServiceRequestsStack = (): JSX.Element => {
       screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="activeServices"
-        component={ActiveServicesScreen}
+        component={ServiceRequestsScreen}
         options={{ title: "Solicitudes" }}
       />
       <Stack.Screen

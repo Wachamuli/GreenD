@@ -104,6 +104,51 @@ const ServiceList = (): JSX.Element => {
     );
   }
 
+  const Filter = () => {
+    const [selectedValue, setSelectedValue] = useState();
+
+    // TODO:
+    // useEffect(() => {
+    //   setServices((prevServices) => {
+    //     const oldServices = [...prevServices];
+    //   })
+    // }, [selectedValue])
+
+    return (
+      <View
+        style={{
+          position: "relative",
+          borderColor: ColorPalette.tertiary,
+          borderWidth: moderateScale(0.5),
+          borderRadius: verticalScale(40),
+          width: horizontalScale(135),
+          height: verticalScale(30),
+          overflow: "hidden",
+        }}>
+        <Picker
+          mode="dropdown"
+          selectedValue={selectedValue}
+          onValueChange={setSelectedValue}
+          style={{
+            bottom: 13,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}>
+          <Picker.Item key={0} value={""} label={"Filtros"} />
+          {services?.map((service, index) => (
+            <Picker.Item
+              key={index + 1}
+              value={service.id}
+              label={service.name}
+            />
+          ))}
+        </Picker>
+      </View>
+    );
+  };
+
   return (
     <View
       style={{
@@ -189,12 +234,22 @@ const ServiceList = (): JSX.Element => {
                         height: moderateScale(80),
                         justifyContent: "center",
                         alignItems: "center",
-                        backgroundColor: "white",
                       }}>
-                      <FontAwesomeIcon
-                        icon={faEllipsis}
-                        size={moderateScale(42)}
-                      />
+                      <View
+                        style={{
+                          width: moderateScale(80),
+                          height: moderateScale(80),
+                          borderRadius: moderateScale(80) / 2,
+                          justifyContent: "center",
+                          alignItems: "center",
+                          backgroundColor: "#f3f4f6",
+                        }}>
+                        <FontAwesomeIcon
+                          icon={faEllipsis}
+                          size={moderateScale(42)}
+                          color={ColorPalette.tertiary}
+                        />
+                      </View>
                     </View>
                     <View>
                       <Txt
@@ -202,9 +257,9 @@ const ServiceList = (): JSX.Element => {
                           fontSize: moderateScale(12),
                           textAlign: "center",
                           fontFamily: "ffBold",
-                          color: "black",
+                          color: ColorPalette.tertiary,
                         }}>
-                        Ver más
+                        Ver todos
                       </Txt>
                     </View>
                   </Tappable>
@@ -230,33 +285,6 @@ const ServiceList = (): JSX.Element => {
           <HomeOutsourcerCard {...outsourcer} />
         )}
       />
-    </View>
-  );
-};
-
-const Filter = () => {
-  return (
-    <View
-      style={{
-        position: "relative",
-        borderColor: ColorPalette.tertiary,
-        borderWidth: moderateScale(0.5),
-        borderRadius: verticalScale(40),
-        width: horizontalScale(135),
-        height: verticalScale(30),
-        overflow: "hidden",
-      }}>
-      <Picker
-        mode="dropdown"
-        style={{
-          bottom: 13,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-        }}>
-        <Picker.Item key={0} value={""} label={"Filtros"} />
-      </Picker>
     </View>
   );
 };
