@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationProp } from "@react-navigation/native";
-import ServiceRequestsScreen from "./ActiveServicesScreen";
+import ServiceRequestsScreen from "./ServiceRequestsScreen";
 
 import ActiveServiceDetailsScreen from "./ActiveServiceDetailsScreen";
 import CustomHeader from "../components/layout/CustomHeader";

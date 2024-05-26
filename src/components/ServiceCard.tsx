@@ -128,10 +128,6 @@ const styles = StyleSheet.create({
     height: moderateScale(80),
     borderRadius: moderateScale(80) / 2,
   },
-  serviceTextContainer: {
-    // paddingHorizontal: horizontalScale(8),
-    // paddingVertical: horizontalScale(8),
-  },
   serviceCardName: {
     fontSize: moderateScale(12),
     textAlign: "center",

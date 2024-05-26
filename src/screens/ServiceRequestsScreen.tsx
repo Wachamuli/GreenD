@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  IconDefinition,
   faBan,
   faCheck,
+  faCheckDouble,
   faPhone,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
@@ -28,11 +29,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import {
-  capitalize,
-  requestStatusFormatter,
-  timeFormatter,
-} from "../utilities/utils";
+import { capitalize, timeFormatter } from "../utilities/utils";
 
 function ServiceRequestsScreen() {
   const [index, setIndex] = useState(0);
@@ -232,35 +229,50 @@ const ActiveServicesScreen = (): JSX.Element => {
 const ServiceRequestCard = (item: any) => {
   const navigation = useNavigation<navigationProps>();
 
-  const statusColor = (status: ServiceRequestStatus): string => {
-    switch (status) {
-      case "Pending":
-        return ColorPalette.lighterSecondary;
-      // case "Confirmed":
-      case "InProgress":
-        return ColorPalette.accent;
-      case "Completed":
-        return ColorPalette.secondary;
-      case "Canceled":
-        return ColorPalette.error;
-      default:
-        return ColorPalette.error;
-    }
-  };
+  const StatusLabel = ({
+    status,
+  }: {
+    status: ServiceRequestStatus;
+  }): JSX.Element => {
+    let statusBarStyle = { icon: faBan, color: "" };
 
-  const statusIcon = (status: ServiceRequestStatus): IconDefinition => {
     switch (status) {
       case "Pending":
-        return faClock;
-      // case "Confirmed":
-      // case "InProgress":
+        statusBarStyle.icon = faClock;
+        statusBarStyle.color = ColorPalette.lighterSecondary;
+        break;
+      case "Confirmed":
+        statusBarStyle.icon = faCheck;
+        statusBarStyle.color = ColorPalette.lighterSecondary;
+        break;
+      case "InProgress":
+        statusBarStyle.icon = faSpinner;
+        statusBarStyle.color = ColorPalette.accent;
+        break;
       case "Completed":
-        return faCheck;
+        statusBarStyle.icon = faCheckDouble;
+        statusBarStyle.color = ColorPalette.secondary;
+        break;
       case "Canceled":
-        return faBan;
-      default:
-        return faBan;
+        statusBarStyle.icon = faBan;
+        statusBarStyle.color = ColorPalette.error;
+        break;
     }
+
+    return (
+      <View
+        style={[
+          styles.statusContainer,
+          { backgroundColor: statusBarStyle.color },
+        ]}>
+        <FontAwesomeIcon
+          icon={statusBarStyle.icon}
+          color="white"
+          size={moderateScale(12)}
+        />
+        <Txt style={styles.status}>{item.status}</Txt>
+      </View>
+    );
   };
 
   return (
@@ -282,18 +294,7 @@ const ServiceRequestCard = (item: any) => {
 
           <Txt style={styles.outsourcerName}>{item.outsourcer.name}</Txt>
 
-          <View
-            style={[
-              styles.statusContainer,
-              { backgroundColor: statusColor(item.status) },
-            ]}>
-            <FontAwesomeIcon
-              icon={statusIcon(item.status)}
-              color="white"
-              size={moderateScale(12)}
-            />
-            <Txt style={styles.status}>{item.status}</Txt>
-          </View>
+          <StatusLabel status={item.status} />
 
           <View style={styles.scheduleContainer}>
             <View>
@@ -305,7 +306,11 @@ const ServiceRequestCard = (item: any) => {
               </Txt>
             </View>
 
-            <Tappable onPress={() => {}} hitSlop={moderateScale(15)}>
+            <Tappable
+              onPress={() => {
+                Linking.openURL(`tel:${8090001111}`);
+              }}
+              hitSlop={moderateScale(15)}>
               <View style={styles.phoneIconContainer}>
                 <FontAwesomeIcon icon={faPhone} />
               </View>
@@ -355,7 +360,6 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     paddingVertical: verticalScale(5),
     paddingHorizontal: verticalScale(10),
-    // backgroundColor: ColorPalette.lighterSecondary,
     alignItems: "center",
   },
   status: {
