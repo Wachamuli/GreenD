@@ -3,26 +3,23 @@ import { FlatList, View, Alert, ActivityIndicator, Image } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+
+import Txt from "./Txt";
+import Header from "./Header";
+import ServiceCard from "./ServiceCard";
+import Tappable from "./controls/Tappable";
+import SearchBar from "../components/controls/SearchBar";
 import { navigationProp } from "../screens/HomeStack";
-import ServiceCard from "./serviceCard";
+import HomeOutsourcerCard from "./HomeOutsourcerCard";
 import { supabase } from "../lib/supabase";
+import { ColorPalette } from "../styles/colorPalette";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCircle,
-  faCircleDot,
-  faEllipsis,
-} from "@fortawesome/free-solid-svg-icons";
-import Header from "./Header";
-import { ColorPalette } from "../styles/colorPalette";
-import Txt from "./Txt";
-import Tappable from "./controls/Tappable";
-import SearchBar from "../components/controls/SearchBar";
-import HomeOutsourcerCard from "./HomeOutsourcerCard";
 
 const ServiceList = (): JSX.Element => {
   const navigation = useNavigation<navigationProp>();

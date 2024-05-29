@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { ActivityIndicator, Alert, FlatList, View } from "react-native";
-import ServiceCard from "../components/serviceCard";
+import ServiceCard from "../components/ServiceCard";
 import { horizontalScale } from "../utilities/metrics";
 
 const AllServicesScreen = () => {
