@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Image, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/HomeStack";
 import {
@@ -7,7 +7,6 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { boxShadowXP } from "../utilities/crossplatform";
 
 import Grid from "./grid/Grid";
 import Card from "./Card";
@@ -17,24 +16,32 @@ import Btn from "./controls/Btn";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { supabase } from "../lib/supabase";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretDown,
+  faCaretRight,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
-import { timeFormatter } from "../utilities/utils";
+import { capitalize } from "../utilities/utils";
+import { ColorPalette } from "../styles/colorPalette";
+import Link from "./controls/Link";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
 
 const ServiceResume = ({ route, navigation }: ScreenProps) => {
+  const [seeNote, setSeeNote] = useState(true);
   const [outsourcer, setOutsourcer] = useState<{
     name: string;
     logo: string | null;
     brief_description: string;
+    service: any;
   } | null>();
   const parentNavigation = useNavigation<any>();
 
   const getOutsourcer = async () => {
     const { data } = await supabase
       .from("outsourcers")
-      .select("name, logo, brief_description")
+      .select("name, logo, brief_description, service (name)")
       .eq("id", route.params.selectedOutsourcer)
       .single();
 
@@ -85,67 +92,111 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
   };
 
   return (
-    <View>
-      <View>
-        <Header title="Resumen" />
-        <Card>
-          <View style={styles.outsourcerInfoContainer}>
-            <Image
-              style={styles.outsourcerImage}
-              source={{ uri: outsourcer?.logo ?? "Default image" }}
-            />
-            <Header style={styles.outsourcerName} title={outsourcer?.name} />
-            <Txt style={styles.outsourcerBriefDescription}>
-              {outsourcer?.brief_description}
-            </Txt>
-          </View>
+    <ScrollView>
+      <View style={{ paddingHorizontal: horizontalScale(20) }}>
+        <Card style={styles.card}>
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Servicio</Txt>
+            </Grid.Col>
 
-          <View style={styles.detailsContainer}>
-            {route.params.selectedDetails.map((value, index) => (
-              <Txt style={styles.detail} key={index}>
-                {value}
+            <Grid.Col colNumber={2}>
+              <Txt style={styles.item}>{outsourcer?.service.name}</Txt>
+            </Grid.Col>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Contratista</Txt>
+            </Grid.Col>
+
+            <Grid.Col colNumber={2}>
+              <Txt style={styles.item}>{outsourcer?.name}</Txt>
+            </Grid.Col>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Día</Txt>
+            </Grid.Col>
+
+            <Grid.Col colNumber={2}>
+              <Txt style={styles.item}>
+                {capitalize(
+                  dayjs(route.params.selectedDay).format("dddd, MMMM D"),
+                )}
               </Txt>
-            ))}
-          </View>
+            </Grid.Col>
+          </Grid.Row>
 
-          <View style={styles.appointment}>
-            <Grid.Row>
-              <Grid.Col colNumber={1}>
-                <Txt style={styles.key}>Día</Txt>
-              </Grid.Col>
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Hora</Txt>
+            </Grid.Col>
 
-              <Grid.Col colNumber={2}>
-                <Txt>
-                  {dayjs(route.params.selectedDay).format("dddd, MMMM D")}
+            <Grid.Col colNumber={2}>
+              <Txt style={styles.item}>{route.params.selectedTime}</Txt>
+            </Grid.Col>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Col colNumber={1}>
+              <Txt style={styles.key}>Nota</Txt>
+            </Grid.Col>
+
+            <Grid.Col colNumber={2}>
+              {route.params.note && route.params.note?.length > 0 ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}>
+                  <Link onPress={() => setSeeNote(toggle => !toggle)}>Ver</Link>
+                  <FontAwesomeIcon
+                    icon={seeNote ? faCaretDown : faCaretRight}
+                    color={ColorPalette.primary}
+                  />
+                </View>
+              ) : (
+                <Txt
+                  style={[
+                    styles.item,
+                    { color: ColorPalette.tertiary, fontFamily: "ffItalic" },
+                  ]}>
+                  Sin nota
                 </Txt>
-              </Grid.Col>
-            </Grid.Row>
+              )}
+            </Grid.Col>
+          </Grid.Row>
 
-            <Grid.Row>
-              <Grid.Col colNumber={1}>
-                <Txt style={styles.key}>Hora</Txt>
-              </Grid.Col>
-
-              <Grid.Col colNumber={2}>
-                <Txt>{timeFormatter(route.params.selectedTime)}</Txt>
-              </Grid.Col>
-            </Grid.Row>
-
-            <Grid.Row>
-              <Grid.Col colNumber={1}>
-                <Txt style={styles.key}>Nota</Txt>
-              </Grid.Col>
-
-              <Grid.Col colNumber={2}>
-                <Txt>{route.params.note}</Txt>
-              </Grid.Col>
-            </Grid.Row>
-          </View>
+          {seeNote && route.params.note && route.params.note?.length > 0 ? (
+            <View style={styles.noteContainer}>
+              <Txt>{route.params.note}</Txt>
+            </View>
+          ) : (
+            <></>
+          )}
         </Card>
-      </View>
 
-      <Btn label="Solicitar" onPress={createRequest} />
-    </View>
+        <Header title="A Realizar..." style={styles.subHeader} />
+
+        <Card>
+          {route.params.selectedDetails.map((value, index) => (
+            <View key={index} style={styles.detailContainer}>
+              <FontAwesomeIcon
+                style={{ marginRight: horizontalScale(5) }}
+                icon={faCheck}
+                size={moderateScale(20)}
+              />
+              <Txt>{value}</Txt>
+            </View>
+          ))}
+        </Card>
+
+        <Btn label="Solicitar" onPress={createRequest} style={styles.button} />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -161,6 +212,7 @@ const styles = StyleSheet.create({
   outsourcerInfoContainer: {
     alignItems: "center",
     textAlign: "center",
+    marginBottom: verticalScale(10),
   },
   outsourcerImage: {
     width: horizontalScale(150),
@@ -171,34 +223,34 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(10),
     marginBottom: verticalScale(0),
   },
-  outsourcerBriefDescription: {
-    color: "gray",
-    marginTop: verticalScale(0),
-  },
-  appointment: {
-    paddingVertical: verticalScale(10),
-    marginHorizontal: horizontalScale(20),
+  card: {
+    marginVertical: verticalScale(5),
   },
   key: {
-    fontWeight: "bold",
+    fontFamily: "ffItalic",
+    opacity: 0.5,
   },
-  row: {
-    columnGap: 30,
+  item: {
+    textAlign: "right",
+  },
+  noteContainer: {
+    justifyContent: "flex-start",
+    padding: moderateScale(10),
+    borderRadius: moderateScale(10),
+    backgroundColor: "#f3f5ff",
+  },
+  subHeader: {
+    fontSize: moderateScale(16),
+    marginTop: verticalScale(10),
+  },
+  detailContainer: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  detailsContainer: {
-    marginVertical: verticalScale(10),
     alignItems: "center",
+    width: "99%", // weird
   },
-
-  detail: {},
-  dotlist: {},
-  buttonContainer: {
-    top: "auto",
-    position: "absolute",
+  button: {
+    borderRadius: moderateScale(10),
     width: "100%",
-    bottom: 0,
   },
 });
 

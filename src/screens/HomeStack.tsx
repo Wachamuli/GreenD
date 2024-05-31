@@ -16,11 +16,18 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { horizontalScale, moderateScale } from "../utilities/metrics";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import AllServicesScreen from "./AllServicesScreen";
+import ServiceBookingScreen from "./ServiceBooking";
 
 export type RootStackParamList = {
   serviceList: undefined;
   allServices: undefined;
   serviceDetails: { serviceId: string };
+  serviceBooking: {
+    serviceId: string;
+    selectedDetails: string[];
+    selectedOutsourcer: string;
+    note: string | undefined;
+  };
   serviceResume: {
     serviceId: string;
     selectedDetails: string[];
@@ -112,16 +119,19 @@ const HomeStack = (): JSX.Element => {
         component={AllServicesScreen}
         options={{ title: "Servicios" }}
       />
-      <Stack.Screen
-        name="serviceDetails"
-        component={ServiceDetails}
-        options={{ title: "Detalles del servicio" }}
-      />
-      <Stack.Screen
-        name="serviceResume"
-        component={ServiceResume}
-        options={{ title: "Resumen del servicio" }}
-      />
+      <Stack.Group>
+        <Stack.Screen name="serviceDetails" component={ServiceDetails} />
+        <Stack.Screen
+          name="serviceBooking"
+          component={ServiceBookingScreen}
+          options={{ title: "Agendar" }}
+        />
+        <Stack.Screen
+          name="serviceResume"
+          component={ServiceResume}
+          options={{ title: "Resumen" }}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

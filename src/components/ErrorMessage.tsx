@@ -30,7 +30,6 @@ const ErrorMessage = ({
             style={[
               {
                 color: ColorPalette.error,
-                // marginTop: verticalScale(10),
                 paddingHorizontal: horizontalScale(10),
                 paddingVertical: verticalScale(10),
                 borderRadius: moderateScale(10),

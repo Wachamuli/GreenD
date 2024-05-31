@@ -1,35 +1,14 @@
-import { StyleSheet, View } from "react-native";
-import Tappable from "./Tappable";
-import {
-  Control,
-  Controller,
-  FieldValue,
-  useController,
-} from "react-hook-form";
-import ErrorMessage from "../ErrorMessage";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../utilities/metrics";
-import Txt from "../Txt";
 import { useEffect, useState } from "react";
-import WheelTimePicker from "./WheelTimePicker";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-let hours = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10",
-  "11",
-  "12",
-];
+import { Control, Controller, FieldValue } from "react-hook-form";
+
+import Txt from "../Txt";
+import ErrorMessage from "../ErrorMessage";
+import WheelTimePicker from "../WheelTimePicker";
+import { horizontalScale, moderateScale } from "../../utilities/metrics";
+
+let hours = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
 let minutes = [
   "00",
@@ -46,31 +25,37 @@ let minutes = [
   "55",
 ];
 
+let meridiems = ["AM", "PM"];
+
 type Props = {
   name: string;
   control: Control<FieldValue<any>>;
-  onValueChange: (name: string, value: string) => void;
+  onValueChange: any;
+  value: string;
 };
 
 const TimePicker = (props: Props): JSX.Element => {
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
-  const [meridiem, setMeridiem] = useState(true);
+  const [hour, setHour] = useState(9);
+  const [minute, setMinute] = useState(6);
+  const [meridiem, setMeridiem] = useState(0);
 
   useEffect(() => {
-    const meridiemString = meridiem ? "AM" : "PM";
-    props.onValueChange(
-      props.name,
-      hours[hour] + ":" + minutes[minute] + " " + meridiemString,
-    );
+    props.onValueChange(props.name, props.value);
+  }, [props.value]);
+
+  useEffect(() => {
+    const time =
+      hours[hour] + ":" + minutes[minute] + " " + meridiems[meridiem];
+    props.onValueChange(props.name, time);
   }, [hour, minute, meridiem]);
 
   return (
-    <Controller
-      name={props.name}
-      control={props.control}
-      render={({ fieldState }) => (
-        <View>
+    // FIXME: This scrollview is a workaround, get rid of it
+    <ScrollView horizontal>
+      <Controller
+        name={props.name}
+        control={props.control}
+        render={({ fieldState }) => (
           <View style={styles.timePickerContainer}>
             <WheelTimePicker
               value={hour}
@@ -83,74 +68,27 @@ const TimePicker = (props: Props): JSX.Element => {
               onValueChange={setMinute}
               options={minutes}
             />
-            <View style={styles.buttonContainer}>
-              <Tappable
-                onPress={() => setMeridiem(prevsState => !prevsState)}
-                style={{
-                  ...styles.button,
-                  ...styles.buttonA,
-                  ...{
-                    backgroundColor: meridiem ? "black" : "white",
-                    color: meridiem ? "white" : "black",
-                  },
-                }}
-                label="AM"
-              />
-
-              <Tappable
-                onPress={() => setMeridiem(prevsState => !prevsState)}
-                style={{
-                  ...styles.button,
-                  ...styles.buttonB,
-                  ...{
-                    backgroundColor: !meridiem ? "black" : "white",
-                    color: !meridiem ? "white" : "black",
-                  },
-                }}
-                label="PM"
-              />
-            </View>
+            <WheelTimePicker
+              value={meridiem}
+              onValueChange={setMeridiem}
+              options={meridiems}
+            />
             <ErrorMessage error={fieldState.error} />
           </View>
-        </View>
-      )}
-    />
+        )}
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   timePickerContainer: {
-    display: "flex",
     alignItems: "center",
     gap: horizontalScale(10),
     flexDirection: "row",
-    // borderWidth: 1,
-    // width: horizontalScale(10),
-    // borderWidth: 2,
-    height: verticalScale(60),
   },
   colon: {
     fontSize: moderateScale(26),
-  },
-  buttonContainer: {
-    flexDirection: "column",
-    marginLeft: horizontalScale(10),
-  },
-  button: {
-    fontWeight: "bold",
-    fontSize: moderateScale(12),
-    textAlign: "center",
-    width: horizontalScale(50),
-    paddingVertical: verticalScale(5),
-    borderWidth: moderateScale(2),
-  },
-  buttonA: {
-    borderTopLeftRadius: moderateScale(10),
-    borderTopRightRadius: moderateScale(10),
-  },
-  buttonB: {
-    borderBottomRightRadius: moderateScale(10),
-    borderBottomLeftRadius: moderateScale(10),
   },
 });
 

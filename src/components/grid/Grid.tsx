@@ -1,5 +1,6 @@
 import { PropsWithChildren } from "react";
 import { View } from "react-native";
+import { verticalScale } from "../../utilities/metrics";
 
 const Table = ({
   children,
@@ -9,7 +10,11 @@ const Table = ({
 };
 
 const Row = ({ children }: PropsWithChildren): JSX.Element => {
-  return <View style={{ flexDirection: "row" }}>{children}</View>;
+  return (
+    <View style={{ flexDirection: "row", marginBottom: verticalScale(10), alignItems: "center" }}>
+      {children}
+    </View>
+  );
 };
 
 const Col = ({

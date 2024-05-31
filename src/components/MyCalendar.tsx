@@ -51,6 +51,7 @@ const MyCalendar = (props: Props): JSX.Element => {
         onDayPress={day => {
           setSelectedDay(day.dateString);
           props.onValueChange(props.name, day.dateString);
+          // props.onValueChange(new Date(day.dateString));
           if (error) error.message = "";
         }}
         renderHeader={date => (

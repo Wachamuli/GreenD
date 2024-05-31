@@ -10,8 +10,6 @@ import {
 import { useForm } from "react-hook-form";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 import { supabase } from "../lib/supabase";
 import Header from "./Header";
@@ -22,19 +20,14 @@ import {
   verticalScale,
 } from "../utilities/metrics";
 import { RootStackParamList } from "../screens/HomeStack";
-import OutsourcerCard from "./OutsourcerCard";
-import MyCalendar from "./MyCalendar";
 import Field from "./controls/Field";
 import Details from "./DetailList";
-import TimePicker from "./TimePicker";
-import DateDisplayer from "./DateDisplayer";
 import Btn from "./controls/Btn";
 import {
   ServiceDetailsSchema,
   serviceDetailsSchema,
 } from "../utilities/validators/ServiceDetailsSchema";
-import { boxShadowXP } from "../utilities/crossplatform";
-import { Calendar } from "react-native-calendars";
+import OutsourcerCard from "./OutsourcerCard";
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
 
@@ -107,6 +100,10 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
   }, []);
 
   useEffect(() => {
+    navigation.setOptions({ title: service?.name });
+  }, [service]);
+
+  useEffect(() => {
     const handleBeforeRemove = (event: any) => {
       if (!hasUnsavedChanges) return;
       event.preventDefault();
@@ -141,96 +138,73 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
   }, [navigation, hasUnsavedChanges]);
 
   return (
-    <>
-      <ScrollView
-        keyboardDismissMode="on-drag"
-        contentContainerStyle={{ backgroundColor: "white" }}
-        style={styles.serviceDetailsContainer}>
-        <Image source={{ uri: service?.image }} style={styles.serviceImage} />
-        <View style={styles.textContainer}>
-          <Header title={service?.name} />
-          <View style={styles.serviceDescriptionContainer}>
-            <Txt>{service?.description}</Txt>
-          </View>
+    <ScrollView
+      keyboardDismissMode="on-drag"
+      contentContainerStyle={{ backgroundColor: "white" }}
+      style={styles.serviceDetailsContainer}>
+      {/* <Image source={{ uri: service?.image }} style={styles.serviceImage} /> */}
 
-          <Header title="Solicitar" />
-          <View style={styles.detailsContainer}>
-            {details ? (
-              <Details
-                name="details"
-                data={details}
-                onValueChange={setValue}
-                control={control}
-              />
-            ) : (
-              <ActivityIndicator size={40} />
-            )}
-          </View>
-
-          <Header title="Agendar" />
-          <View style={styles.agendaContainer}>
-            <MyCalendar onValueChange={setValue} name="calendar" control={control}/>
-            {/* <DateDisplayer/> */}
-            <TimePicker
-              onValueChange={setValue}
-              name="timePicker"
-              control={control}
-            />
-          </View>
-
-          <Header title="Contratar" />
-          <View>
-            <OutsourcerCard
-              name="outsourcer"
-              data={outsourcers}
-              control={control}
-              onValueChange={setValue}
-            />
-          </View>
-
-          <Header title="Nota" />
-          <View style={styles.textInputContainer}>
-            <Field
-              name="note"
-              control={control}
-              style={styles.textInput}
-              selectTextOnFocus={true}
-              multiline
-              placeholder="Escriba una nota aquí"
-            />
-          </View>
-
-          <View style={styles.infoContainer}>
-            <FontAwesomeIcon style={styles.infoIcon} icon={faCircleInfo} />
-            <Txt>
-              <Txt style={styles.infoLabel}>info: </Txt>
-              <Txt style={styles.infoContent}>
-                es recomendable dar detalles en la nota ¡ayuda con la
-                cotización!
-              </Txt>
-            </Txt>
-          </View>
-
-          <Btn
-            label="Solicitar"
-            style={styles.button}
-            onPress={handleSubmit(values =>
-              navigation.navigate("serviceResume", {
-                serviceId: route.params.serviceId,
-                selectedDetails: values.details,
-                selectedDay: values.calendar.toUTCString(),
-                selectedTime: values.timePicker,
-                selectedOutsourcer: values.outsourcer,
-                note: values.note,
-              }),
-            )}
+      <View style={styles.mainContainer}>
+        <Header title="Contratar" />
+        <View>
+          <OutsourcerCard
+            name="outsourcer"
+            data={outsourcers}
+            control={control}
+            onValueChange={setValue}
           />
         </View>
-      </ScrollView>
 
-      {/* <View style={styles.buttonContainer}> */}
-      {/* </View> */}
-    </>
+        <View style={styles.serviceDescriptionContainer}>
+          <Txt>{service?.description}</Txt>
+        </View>
+
+        <View style={styles.detailsContainer}>
+          {details ? (
+            <Details
+              name="details"
+              data={details}
+              onValueChange={setValue}
+              control={control}
+            />
+          ) : (
+            <ActivityIndicator size={40} />
+          )}
+        </View>
+
+        <Header
+          title="Nota"
+          style={{
+            fontSize: moderateScale(18),
+            marginTop: verticalScale(5),
+          }}
+        />
+
+        <View style={styles.textInputContainer}>
+          <Field
+            name="note"
+            control={control}
+            style={styles.textInput}
+            selectTextOnFocus={true}
+            multiline
+            placeholder="Escriba una nota aquí"
+          />
+        </View>
+
+        <Btn
+          label="Continuar"
+          style={styles.button}
+          onPress={handleSubmit(values =>
+            navigation.navigate("serviceBooking", {
+              serviceId: route.params.serviceId,
+              selectedDetails: values.details,
+              selectedOutsourcer: values.outsourcer,
+              note: values.note,
+            }),
+          )}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -242,26 +216,25 @@ const styles = StyleSheet.create({
     width: "100%",
     height: verticalScale(200),
   },
-  textContainer: {
-    marginHorizontal: horizontalScale(10),
+  mainContainer: {
+    paddingHorizontal: horizontalScale(20),
     paddingVertical: verticalScale(10),
   },
   serviceDescriptionContainer: {
-    marginBottom: verticalScale(30),
+    marginBottom: verticalScale(20),
   },
   detailsContainer: {
-    marginBottom: verticalScale(30),
+    // marginBottom: verticalScale(30),
   },
   agendaContainer: {
     flexDirection: "column",
     marginBottom: verticalScale(30),
-    alignItems: "center",
   },
   bottonAgendaContainer: {
     justifyContent: "center",
   },
   textInputContainer: {
-    marginBottom: verticalScale(30),
+    // marginBottom: verticalScale(30),
   },
   textInput: {
     textAlignVertical: "top",
@@ -293,7 +266,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: moderateScale(10),
     marginRight: horizontalScale(10),
-    width: horizontalScale(150),
+    width: "100%",
   },
 });
 

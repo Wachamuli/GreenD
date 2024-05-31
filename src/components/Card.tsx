@@ -18,8 +18,6 @@ const Card = ({ children, style }: Props): JSX.Element => {
         {
           backgroundColor: "white",
           borderRadius: moderateScale(10),
-          marginVertical: horizontalScale(5),
-          marginHorizontal: horizontalScale(10),
           paddingVertical: verticalScale(20),
           paddingHorizontal: horizontalScale(20),
         },

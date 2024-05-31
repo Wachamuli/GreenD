@@ -1,15 +1,16 @@
-import React from "react";
+import { StyleSheet, View } from "react-native";
+
+import CheckBox from "expo-checkbox";
+import { Control, useController } from "react-hook-form";
+
 import Txt from "./Txt";
 import Checkbox from "./controls/Checkbox";
-import { Control, useController } from "react-hook-form";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { StyleSheet, View } from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { ColorPalette } from "../styles/colorPalette";
 
 type Props = {
   name: string;
@@ -17,39 +18,64 @@ type Props = {
   key: number;
   label: string;
   onChange: (isChecked: boolean) => void;
+  disabled?: boolean;
 };
 
 const Detail = (props: Props): JSX.Element => {
   const { field } = useController({ control: props.control, name: props.name });
 
   return (
-    <Checkbox
-      style={[
-        styles.checkbox,
-        {
-          backgroundColor: field.value ? "#F2FFE9" : "white",
-          borderColor:  "#28A745" ,
-          borderWidth: field.value ? 1 : 0,
-        },
-      ]}
-      {...props}>
-      <Txt
-        style={{
-          fontFamily: field.value ? "ffBold" : "ffItalic",
-          color: field.value ? "#28A745" : "#9ca3af",
-        }}>
-        {props.label}
-      </Txt>
-    </Checkbox>
+    <View style={styles.container}>
+      <View style={styles.textContainer}>
+        <Txt style={styles.label}>{props.label}</Txt>
+      </View>
+      <CheckBox
+        hitSlop={{
+          top: verticalScale(25),
+          bottom: verticalScale(25),
+          left: horizontalScale(310),
+          right: horizontalScale(15),
+        }}
+        style={styles.checkbox}
+        color={ColorPalette.primary}
+        disabled={props.disabled}
+        value={field.value}
+        onValueChange={event => {
+          if (props.onChange) props.onChange(event.valueOf());
+          field.onChange(event);
+        }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  checkbox: {
-    paddingVertical: verticalScale(10),
-    paddingHorizontal: horizontalScale(10),
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+
+    paddingVertical: moderateScale(10),
+    paddingHorizontal: moderateScale(10),
+
+    borderWidth: moderateScale(0.5),
     borderRadius: moderateScale(10),
-    borderWidth: moderateScale(1),
+    marginBottom: verticalScale(15),
+  },
+  textContainer: {
+    width: "90%",
+  },
+  checkbox: {
+    // paddingVertical: verticalScale(10),
+    // paddingHorizontal: horizontalScale(10),
+
+    borderColor: ColorPalette.primary,
+    borderWidth: moderateScale(1.5),
+    borderRadius: moderateScale(5),
+  },
+  label: {
+    fontSize: moderateScale(16),
+    marginRight: "auto",
   },
 });
 

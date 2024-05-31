@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(5),
   },
   input: {
+    fontFamily: "ffNormal",
     color: "black",
     width: horizontalScale(250),
     borderWidth: moderateScale(1),
