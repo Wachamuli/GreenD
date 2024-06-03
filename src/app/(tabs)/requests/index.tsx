@@ -14,24 +14,22 @@ import {
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
 
-import Txt from "../components/Txt";
-import Tappable from "../components/controls/Tappable";
-import { navigationProps } from "./ServiceRequestsStack";
-import { ColorPalette } from "../styles/colorPalette";
-import { supabase } from "../lib/supabase";
-import { Database } from "../lib/supabase.types";
-import {
-  ServiceRequest,
-  ServiceRequestStatus,
-} from "../lib/supabase.type.alias";
+import Txt from "../../../components/Txt";
+import Tappable from "../../../components/controls/Tappable";
+import { navigationProps } from "../../../screens/ServiceRequestsStack";
+import { ColorPalette } from "../../../styles/colorPalette";
+import { supabase } from "../../../lib/supabase";
+import { Database } from "../../../lib/supabase.types";
+import { ServiceRequestStatus } from "../../../lib/supabase.type.alias";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
-import { capitalize, timeFormatter } from "../utilities/utils";
+} from "../../../utilities/metrics";
+import { capitalize, timeFormatter } from "../../../utilities/utils";
+import { router } from "expo-router";
 
-function ServiceRequestsScreen() {
+function ServiceRequest() {
   const [index, setIndex] = useState(0);
 
   const [routes] = useState([
@@ -278,8 +276,9 @@ const ServiceRequestCard = (item: any) => {
   return (
     <Tappable
       onPress={() => {
-        navigation.navigate("activeServicesDetails", {
-          serviceRequestId: item.id,
+        router.push({
+          pathname: "/requests/details",
+          params: { serviceRequestId: item.id },
         });
       }}>
       <View style={styles.container}>
@@ -385,4 +384,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ServiceRequestsScreen;
+export default ServiceRequest;

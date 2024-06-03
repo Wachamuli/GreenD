@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CustomHeader from "../components/layout/CustomHeader";
 import NewPasswordScreen from "./NewPasswordScreen";
-import PasswordRecoveryScreen from "./PasswordRecoveryScreen";
+import PasswordRecoveryScreen from "../app/password-recovery";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { supabase } from "../lib/supabase";
 import { useState } from "react";
-import PasswordEmailScreen from "./PasswordEmailScreen";
+import PasswordEmailScreen from "../app/password-recovery-email";
 
 export type RootStackParamList = {
   passwordRecoveryScreen: undefined;

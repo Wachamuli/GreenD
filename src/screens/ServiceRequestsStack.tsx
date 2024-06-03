@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationProp } from "@react-navigation/native";
-import ServiceRequestsScreen from "./ServiceRequestsScreen";
+import ServiceRequest from "../app/(tabs)/requests";
 
-import ActiveServiceDetailsScreen from "./ActiveServiceDetailsScreen";
+import ServiceDetails from "../app/(tabs)/requests/details";
 import CustomHeader from "../components/layout/CustomHeader";
-import ReportScreen from "./ReportScreen";
+import Report from "../app/(tabs)/requests/report";
 
 export type RootStackParamList = {
   activeServices: undefined;
@@ -22,22 +22,22 @@ const ServiceRequestsStack = (): JSX.Element => {
       screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="activeServices"
-        component={ServiceRequestsScreen}
+        component={ServiceRequest}
         options={{ title: "Solicitudes" }}
       />
       <Stack.Screen
         name="activeServicesDetails"
-        component={ActiveServiceDetailsScreen}
+        component={ServiceDetails}
         options={{ title: "Detalles de solicitud" }}
       />
       {/* <Stack.Screen
-        name="payment"
+        name="payment
         component={ReportScreen}
         options={{ title: "El pago" }}
       /> */}
       <Stack.Screen
         name="report"
-        component={ReportScreen}
+        component={Report}
         options={{ title: "Reporte sobre la solicitud" }}
       />
     </Stack.Navigator>

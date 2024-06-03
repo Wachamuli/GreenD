@@ -1,14 +1,10 @@
 import { View, Image, StyleSheet, Text } from "react-native";
 
-import { useNavigation } from "@react-navigation/native";
-
 import {
-  height,
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import { navigationProp } from "../screens/HomeStack";
 import { Services } from "../api/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Txt from "./Txt";
@@ -18,10 +14,10 @@ import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { boxShadowXP } from "../utilities/crossplatform";
 import dayjs from "dayjs";
 import Tappable from "./controls/Tappable";
-import Header from "./Header";
 import { supabase } from "../lib/supabase";
 import { useEffect, useState } from "react";
 import { capitalize } from "../utilities/utils";
+import { router } from "expo-router";
 
 type Props = {
   id: string;
@@ -31,7 +27,6 @@ type Props = {
 };
 
 const ServiceCard = (props: Props): JSX.Element => {
-  const navigation = useNavigation<navigationProp>();
   const [availableOutsourcers, setAvailableOutsourcers] = useState<
     number | null
   >();
@@ -66,13 +61,11 @@ const ServiceCard = (props: Props): JSX.Element => {
 
   return (
     <Tappable
-      containerStyle={[
-        styles.serviceCardContainer,
-        // boxShadowXP("black", 0.5, 20, -4, 5, 5),
-      ]}
+      containerStyle={[styles.serviceCardContainer]}
       onPress={() => {
-        navigation.navigate("serviceDetails", {
-          serviceId: props.id,
+        router.push({
+          pathname: "/home/details",
+          params: { serviceId: props.id },
         });
       }}>
       <View>
@@ -82,15 +75,21 @@ const ServiceCard = (props: Props): JSX.Element => {
             styles.availableUsers,
             boxShadowXP("black", 0.5, 20, -4, 5, 5),
           ]}>
-          <FontAwesomeIcon icon={faUser} color={setColor} size={moderateScale(13)} />
+          <FontAwesomeIcon
+            icon={faUser}
+            color={setColor}
+            size={moderateScale(13)}
+          />
           <Txt style={[styles.infoContent, { color: setColor }]}>
             {availableOutsourcers}
           </Txt>
         </View>
       </View>
 
-      <View style={styles.serviceTextContainer}>
-        <Txt style={styles.serviceCardName} numberOfLines={1}>{props.name}</Txt>
+      <View>
+        <Txt style={styles.serviceCardName} numberOfLines={1}>
+          {props.name}
+        </Txt>
 
         <View style={styles.infoContainer}>
           <View style={styles.infoItemContainer}>

@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import Txt from "../components/Txt";
 import Link from "../components/controls/Link";
 import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
-import { RootStackParamList } from "../App";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
 import Popup, { PopupProps } from "../components/Popup";
@@ -14,14 +12,11 @@ import {
   faCircleInfo,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
+import { useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "emailConfirmation"
->;
-
-const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
+const EmailConfirmationScreen = (): JSX.Element => {
   let time = 30; // In seconds
+  const params = useLocalSearchParams();
   const [counter, setCounter] = useState(time);
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
@@ -30,7 +25,7 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
     setCounter(time);
     // Maybe this is not the function that I need for this purpose.
     const { error } = await supabase.auth.signInWithOtp({
-      email: route.params.email,
+      email: params.email,
       options: {
         shouldCreateUser: false,
         // emailRedirectTo: 'https://example.com/welcome',
@@ -53,8 +48,8 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: route.params.email,
-      password: route.params.password,
+      email: params.email,
+      password: params.password,
     });
 
     if (error) {
@@ -102,6 +97,7 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
         paddingHorizontal: horizontalScale(60),
       }}>
       <View style={{ alignItems: "center" }}>
+        {/* FIXME: Image not showing */}
         <Image
           source={require("../assets/greenrlogo.png")}
           style={{
@@ -114,7 +110,7 @@ const EmailConfirmationScreen = ({ route }: ScreenProps): JSX.Element => {
 
       <Txt style={{ marginBottom: verticalScale(20) }}>
         Revise su bandeja de entrada en{" "}
-        <Txt style={{ fontFamily: "ffBold" }}>{route.params.email}</Txt>
+        <Txt style={{ fontFamily: "ffBold" }}>{params.email}</Txt>
       </Txt>
 
       {counter > 0 && <Txt>Espere {counter} seg. para volver a reenviar.</Txt>}

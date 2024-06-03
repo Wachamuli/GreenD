@@ -1,30 +1,27 @@
-import { FlatList, StyleSheet, View } from "react-native";
-import Header from "../components/Header";
-import MyCalendar from "../components/MyCalendar";
+import { FlatList, ScrollView, StyleSheet, View } from "react-native";
+import MyCalendar from "../../../components/MyCalendar";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
-import Txt from "../components/Txt";
-import Tappable from "../components/controls/Tappable";
-import { ColorPalette } from "../styles/colorPalette";
+} from "../../../utilities/metrics";
+import Txt from "../../../components/Txt";
+import Tappable from "../../../components/controls/Tappable";
+import { ColorPalette } from "../../../styles/colorPalette";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   type ServiceBookingSchema,
   serviceBookingSchema,
-} from "../utilities/validators/ServiceDetailsSchema";
-import DateTimeDisplayer from "../components/controls/DateTimeDisplayer";
-import TimePicker from "../components/controls/TimePicker";
-import Btn from "../components/controls/Btn";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./HomeStack";
+} from "../../../utilities/validators/ServiceDetailsSchema";
+import DateTimeDisplayer from "../../../components/controls/DateTimeDisplayer";
+import TimePicker from "../../../components/controls/TimePicker";
+import Btn from "../../../components/controls/Btn";
+import { router, useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceBooking">;
-
-const ServiceBookingScreen = ({ navigation, route }: ScreenProps) => {
+const ServiceBookingScreen = () => {
+  const params = useLocalSearchParams();
   const [time, setTime] = useState("");
   const [date, setDate] = useState(new Date());
   const { handleSubmit, control, setValue } = useForm<ServiceBookingSchema>({
@@ -32,7 +29,7 @@ const ServiceBookingScreen = ({ navigation, route }: ScreenProps) => {
   });
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <MyCalendar
         // onValueChange={setDate}
         onValueChange={setValue}
@@ -84,23 +81,28 @@ const ServiceBookingScreen = ({ navigation, route }: ScreenProps) => {
         label="Continuar"
         style={styles.button}
         onPress={handleSubmit(values =>
-          navigation.navigate("serviceResume", {
-            serviceId: route.params.serviceId,
-            note: route.params.note,
-            selectedDetails: route.params.selectedDetails,
-            selectedOutsourcer: route.params.selectedOutsourcer,
-            selectedDay: values.calendar.toDateString(),
-            selectedTime: values.timePicker,
+          router.navigate({
+            pathname: "/home/resume",
+            params: {
+              serviceId: params.serviceId,
+              note: params.note,
+              selectedDetails: params.selectedDetails,
+              selectedOutsourcer: params.selectedOutsourcer,
+              selectedDay: values.calendar.toDateString(),
+              selectedTime: values.timePicker,
+            },
           }),
         )}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: verticalScale(5),
     paddingHorizontal: horizontalScale(20),
+    backgroundColor: "white",
   },
   timeContainer: {
     justifyContent: "center",

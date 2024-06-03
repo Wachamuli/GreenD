@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../screens/HomeStack";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
+} from "../../../utilities/metrics";
 
-import Grid from "./grid/Grid";
-import Card from "./Card";
-import Txt from "./Txt";
-import Header from "./Header";
-import Btn from "./controls/Btn";
-import { CommonActions, useNavigation } from "@react-navigation/native";
-import { supabase } from "../lib/supabase";
+import Grid from "../../../components/grid/Grid";
+import Card from "../../../components/Card";
+import Txt from "../../../components/Txt";
+import Header from "../../../components/Header";
+import Btn from "../../../components/controls/Btn";
+import { useNavigation } from "@react-navigation/native";
+import { supabase } from "../../../lib/supabase";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faCaretDown,
@@ -22,13 +20,13 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
-import { capitalize } from "../utilities/utils";
-import { ColorPalette } from "../styles/colorPalette";
-import Link from "./controls/Link";
+import { capitalize } from "../../../utilities/utils";
+import { ColorPalette } from "../../../styles/colorPalette";
+import Link from "../../../components/controls/Link";
+import { router, useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceResume">;
-
-const ServiceResume = ({ route, navigation }: ScreenProps) => {
+const ServiceResume = () => {
+  const params = useLocalSearchParams();
   const [seeNote, setSeeNote] = useState(true);
   const [outsourcer, setOutsourcer] = useState<{
     name: string;
@@ -42,7 +40,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
     const { data } = await supabase
       .from("outsourcers")
       .select("name, logo, brief_description, service (name)")
-      .eq("id", route.params.selectedOutsourcer)
+      .eq("id", params.selectedOutsourcer)
       .single();
 
     setOutsourcer(data);
@@ -67,12 +65,12 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
       .from("service_requests")
       .insert({
         user_id: user.id,
-        details: route.params.selectedDetails.join("\n"),
-        outsourcer: route.params.selectedOutsourcer,
-        r_date: route.params.selectedDay,
-        r_time: route.params.selectedTime,
-        service: Number(route.params.serviceId),
-        note: route.params.note,
+        details: params.selectedDetails,
+        outsourcer: params.selectedOutsourcer,
+        r_date: params.selectedDay,
+        r_time: params.selectedTime,
+        service: Number(params.serviceId),
+        note: params.note,
       });
 
     if (insertionError) {
@@ -80,15 +78,8 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
       return;
     }
 
-    Promise.all([
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 1,
-          routes: [{ name: "serviceList" }],
-        }),
-      ),
-      parentNavigation.navigate("requests"),
-    ]);
+    router.dismissAll();
+    router.replace("/requests");
   };
 
   return (
@@ -122,9 +113,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
 
             <Grid.Col colNumber={2}>
               <Txt style={styles.item}>
-                {capitalize(
-                  dayjs(route.params.selectedDay).format("dddd, MMMM D"),
-                )}
+                {capitalize(dayjs(params.selectedDay).format("dddd, MMMM D"))}
               </Txt>
             </Grid.Col>
           </Grid.Row>
@@ -135,7 +124,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
             </Grid.Col>
 
             <Grid.Col colNumber={2}>
-              <Txt style={styles.item}>{route.params.selectedTime}</Txt>
+              <Txt style={styles.item}>{params.selectedTime}</Txt>
             </Grid.Col>
           </Grid.Row>
 
@@ -145,7 +134,7 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
             </Grid.Col>
 
             <Grid.Col colNumber={2}>
-              {route.params.note && route.params.note?.length > 0 ? (
+              {params.note && params.note?.length > 0 ? (
                 <View
                   style={{
                     flexDirection: "row",
@@ -170,9 +159,9 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
             </Grid.Col>
           </Grid.Row>
 
-          {seeNote && route.params.note && route.params.note?.length > 0 ? (
+          {seeNote && params.note && params.note?.length > 0 ? (
             <View style={styles.noteContainer}>
-              <Txt>{route.params.note}</Txt>
+              <Txt>{params.note}</Txt>
             </View>
           ) : (
             <></>
@@ -182,16 +171,30 @@ const ServiceResume = ({ route, navigation }: ScreenProps) => {
         <Header title="A Realizar..." style={styles.subHeader} />
 
         <Card>
-          {route.params.selectedDetails.map((value, index) => (
-            <View key={index} style={styles.detailContainer}>
+          {/* TODO: Refactorize this sloppy code */}
+          {params.selectedDetail?.split(",").length <= 1 ? (
+            <View style={styles.detailContainer}>
               <FontAwesomeIcon
                 style={{ marginRight: horizontalScale(5) }}
                 icon={faCheck}
                 size={moderateScale(20)}
               />
-              <Txt>{value}</Txt>
+              <Txt>{params.selectedDetails}</Txt>
             </View>
-          ))}
+          ) : (
+            <>
+              {params.selectedDetails.split(",").map((value, index) => (
+                <View key={index} style={styles.detailContainer}>
+                  <FontAwesomeIcon
+                    style={{ marginRight: horizontalScale(5) }}
+                    icon={faCheck}
+                    size={moderateScale(20)}
+                  />
+                  <Txt>{value}</Txt>
+                </View>
+              ))}
+            </>
+          )}
         </Card>
 
         <Btn label="Solicitar" onPress={createRequest} style={styles.button} />

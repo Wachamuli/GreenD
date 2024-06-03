@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
+import { router } from "expo-router";
 
-import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
-import { navigationProp } from "../App";
 import Field from "../components/controls/Field";
 import Btn from "../components/controls/Btn";
 import Menu from "../components/controls/Menu";
@@ -23,12 +22,11 @@ import {
   signUpSchema,
 } from "../utilities/validators/SignUpSchema";
 
-const SignUpScreen = (): JSX.Element => {
+const Signup = (): JSX.Element => {
   const { control, handleSubmit, setError } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation<navigationProp>();
   const [condominiums, setCondomiums] = useState<
     { id: string; name: string }[] | null
   >();
@@ -97,9 +95,9 @@ const SignUpScreen = (): JSX.Element => {
       return;
     }
 
-    navigation.navigate("emailConfirmation", {
-      email: values.email,
-      password: values.password,
+    router.replace({
+      pathname: "/confirmation",
+      params: { email: values.email, password: values.password },
     });
   };
 
@@ -207,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignUpScreen;
+export default Signup;

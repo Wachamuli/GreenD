@@ -21,17 +21,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./PasswordRecoveryStack";
+import { RootStackParamList } from "../screens/PasswordRecoveryStack";
 import { useState } from "react";
 import Popup, { PopupProps } from "../components/Popup";
 import Txt from "../components/Txt";
+import { router } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "passwordRecoveryScreen"
->;
-
-const PasswordRecoveryScreen = ({ navigation }: ScreenProps): JSX.Element => {
+const PasswordRecoveryScreen = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
   const { control, handleSubmit } = useForm<PasswordRecoverySchema>({
@@ -53,7 +49,10 @@ const PasswordRecoveryScreen = ({ navigation }: ScreenProps): JSX.Element => {
       return;
     }
 
-    navigation.navigate("passwordEmailScreen", { email: data.email });
+    router.push({
+      pathname: "/password-recovery-email",
+      params: { email: data.email },
+    });
     setLoading(false);
   };
 

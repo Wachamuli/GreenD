@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../../../lib/supabase";
 import { ActivityIndicator, Alert, FlatList, View } from "react-native";
-import ServiceCard from "../components/ServiceCard";
-import { horizontalScale } from "../utilities/metrics";
+import ServiceCard from "../../../components/ServiceCard";
+import { horizontalScale } from "../../../utilities/metrics";
 
 const AllServicesScreen = () => {
   const [services, setServices] = useState<
@@ -16,7 +16,6 @@ const AllServicesScreen = () => {
   >(null);
 
   const getServices = async () => {
-
     const {
       data: { user },
       error: userError,
@@ -52,17 +51,19 @@ const AllServicesScreen = () => {
     );
 
   return (
-    <FlatList
-      data={services}
-      keyExtractor={item => item.id}
-      showsVerticalScrollIndicator={false}
-      numColumns={3}
-      contentContainerStyle={{ paddingHorizontal: horizontalScale(20) }}
-      columnWrapperStyle={{
-        justifyContent: "space-between",
-      }}
-      renderItem={({ item: data, index }) => <ServiceCard {...data} />}
-    />
+    <View style={{ backgroundColor: "white", flex: 1 }}>
+      <FlatList
+        data={services}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+        numColumns={3}
+        contentContainerStyle={{ paddingHorizontal: horizontalScale(20) }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+        }}
+        renderItem={({ item: data, index }) => <ServiceCard {...data} />}
+      />
+    </View>
   );
 };
 

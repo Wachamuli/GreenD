@@ -8,7 +8,6 @@ import Header from "../components/Header";
 import Field from "../components/controls/Field";
 import Txt from "../components/Txt";
 import { verticalScale } from "../utilities/metrics";
-import { navigationProp } from "../App";
 import { supabase } from "../lib/supabase";
 import Popup, { type PopupProps } from "../components/Popup";
 import Btn from "../components/controls/Btn";
@@ -20,12 +19,12 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import Link from "../components/controls/Link";
 import { ColorPalette } from "../styles/colorPalette";
 import PasswordField from "../components/controls/PasswordField";
+import { Link as Lonk, router } from "expo-router";
 
-const LoginScreen = () => {
+const Login = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-  const navigation = useNavigation<navigationProp>();
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
 
@@ -40,9 +39,9 @@ const LoginScreen = () => {
 
     if (error) {
       if (error.message === "Email not confirmed") {
-        navigation.navigate("emailConfirmation", {
-          email: form.email,
-          password: form.password,
+        router.push({
+          pathname: "/confirmation",
+          params: { email: form.email, password: form.password },
         });
       } else {
         setPopupProps({
@@ -73,7 +72,7 @@ const LoginScreen = () => {
         <View style={styles.forgotPasswordContainer}>
           <Link
             style={styles.forgotPassword}
-            onPress={() => navigation.navigate("passwordRecovery")}>
+            onPress={() => router.navigate("/password-recovery")}>
             ¿Olvidaste tu contraseña?
           </Link>
         </View>
@@ -85,7 +84,7 @@ const LoginScreen = () => {
 
         <View style={styles.createAccount}>
           <Txt>¿No tienes cuenta? </Txt>
-          <Link onPress={() => navigation.navigate("signUp")}>Regístrate</Link>
+          <Link onPress={() => router.push("/signup")}>Regístrate</Link>
         </View>
       </View>
 
@@ -100,6 +99,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   forgotPasswordContainer: {
     marginBottom: verticalScale(40),
@@ -117,4 +117,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default Login;

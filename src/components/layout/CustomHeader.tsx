@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { NativeStackHeaderProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 import { HeaderButtonProps } from "@react-navigation/native-stack/lib/typescript/src/types";
 import {
   faArrowLeft,

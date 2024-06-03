@@ -3,19 +3,19 @@ import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import dayjs from "dayjs";
 
-import Txt from "../components/Txt";
-import Tappable from "../components/controls/Tappable";
-import Card from "../components/Card";
-import { RootStackParamList } from "./ServiceRequestsStack";
-import Header from "../components/Header";
+import Txt from "../../../components/Txt";
+import Tappable from "../../../components/controls/Tappable";
+import Card from "../../../components/Card";
+import { RootStackParamList } from "../../../screens/ServiceRequestsStack";
+import Header from "../../../components/Header";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
-import { supabase } from "../lib/supabase";
-import Popup, { PopupProps } from "../components/Popup";
-import { type ServiceRequest } from "../lib/supabase.type.alias";
+} from "../../../utilities/metrics";
+import { supabase } from "../../../lib/supabase";
+import Popup, { PopupProps } from "../../../components/Popup";
+import { type ServiceRequest } from "../../../lib/supabase.type.alias";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faChevronRight,
@@ -23,19 +23,12 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faNewspaper } from "@fortawesome/free-regular-svg-icons";
-import { capitalize, timeFormatter } from "../utilities/utils";
-import Grid from "../components/grid/Grid";
-import Hidden from "../components/Hidden";
+import { capitalize, timeFormatter } from "../../../utilities/utils";
+import Grid from "../../../components/grid/Grid";
+import { router, useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "activeServicesDetails"
->;
-
-const ActiveServiceDetailsScreen = ({
-  route,
-  navigation,
-}: ScreenProps): JSX.Element => {
+const ServiceDetails = (): JSX.Element => {
+  const params = useLocalSearchParams();
   const [serviceDetails, setServiceDetails] = useState<ServiceRequest>();
   const [popupProps, setPopupProps] = useState<PopupProps>();
 
@@ -44,7 +37,7 @@ const ActiveServiceDetailsScreen = ({
       .from("service_requests")
       // TODO: Also I'm gonna need the agent details
       .select("*, outsourcer(*), service(*)")
-      .eq("id", route.params.serviceRequestId)
+      .eq("id", params.serviceRequestId)
       .single();
 
     if (error) {
@@ -59,10 +52,10 @@ const ActiveServiceDetailsScreen = ({
     const { error } = await supabase
       .from("service_requests")
       .update({ status: "Canceled" })
-      .eq("id", route.params.serviceRequestId);
+      .eq("id", params.serviceRequestId);
 
     // TODO: Instead of goBack go to the Suggestions screen
-    navigation.goBack();
+    router.dismiss();
   };
 
   const showCancelConfirmationModal = () => {
@@ -172,8 +165,9 @@ const ActiveServiceDetailsScreen = ({
       <Card style={{ backgroundColor: "blue" }}>
         <Tappable
           onPress={() => {
-            navigation.push("report", {
-              serviceRequestId: route.params.serviceRequestId,
+            router.push({
+              pathname: "/requests/report",
+              params: { serviceRequestId: params.serviceRequestId },
             });
           }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -282,4 +276,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ActiveServiceDetailsScreen;
+export default ServiceDetails;

@@ -8,30 +8,29 @@ import {
   Image,
 } from "react-native";
 import { useForm } from "react-hook-form";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { supabase } from "../lib/supabase";
-import Header from "./Header";
-import Txt from "./Txt";
+import { supabase } from "../../../lib/supabase";
+import Header from "../../../components/Header";
+import Txt from "../../../components/Txt";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
-import { RootStackParamList } from "../screens/HomeStack";
-import Field from "./controls/Field";
-import Details from "./DetailList";
-import Btn from "./controls/Btn";
+} from "../../../utilities/metrics";
+import Field from "../../../components/controls/Field";
+import Details from "../../../components/DetailList";
+import Btn from "../../../components/controls/Btn";
 import {
   ServiceDetailsSchema,
   serviceDetailsSchema,
-} from "../utilities/validators/ServiceDetailsSchema";
-import OutsourcerCard from "./OutsourcerCard";
+} from "../../../utilities/validators/ServiceDetailsSchema";
+import OutsourcerCard from "../../../components/OutsourcerCard";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<RootStackParamList, "serviceDetails">;
-
-const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
+const ServiceDetails = (): JSX.Element => {
+  const navigation = useNavigation();
+  const params = useLocalSearchParams();
   const [service, setService] = useState<{
     name: string;
     image: string;
@@ -62,7 +61,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     const { data, error } = await supabase
       .from("services")
       .select("name, image, description")
-      .eq("id", route.params.serviceId)
+      .eq("id", params.serviceId)
       .single();
 
     setService(data);
@@ -72,7 +71,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     const { data, error } = await supabase
       .from("details")
       .select("detail")
-      .eq("service_id", route.params.serviceId);
+      .eq("service_id", params.serviceId);
 
     const details = data?.map(item => item["detail"]);
 
@@ -87,7 +86,7 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
     const { data, error } = await supabase
       .from("outsourcers")
       .select("id, name, logo, brief_description, condominium")
-      .eq("service", route.params.serviceId)
+      .eq("service", params.serviceId)
       .eq("condominium", user?.user_metadata.condominium);
 
     setOutsourcers(data);
@@ -195,11 +194,14 @@ const ServiceDetails = ({ route, navigation }: ScreenProps): JSX.Element => {
           label="Continuar"
           style={styles.button}
           onPress={handleSubmit(values =>
-            navigation.navigate("serviceBooking", {
-              serviceId: route.params.serviceId,
-              selectedDetails: values.details,
-              selectedOutsourcer: values.outsourcer,
-              note: values.note,
+            router.push({
+              pathname: "/home/booking",
+              params: {
+                serviceId: params.serviceId,
+                selectedDetails: values.details,
+                selectedOutsourcer: values.outsourcer,
+                note: values.note,
+              },
             }),
           )}
         />

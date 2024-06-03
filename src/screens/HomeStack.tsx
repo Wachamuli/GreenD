@@ -4,8 +4,8 @@ import { NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import ServiceList from "../components/ServiceList";
-import ServiceDetails from "../components/ServiceDetails";
-import ServiceResume from "../components/ServiceResume";
+import ServiceDetails from "../app/(tabs)/home/details";
+import ServiceResume from "../app/(tabs)/home/resume";
 import Txt from "../components/Txt";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
@@ -16,7 +16,7 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { horizontalScale, moderateScale } from "../utilities/metrics";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import AllServicesScreen from "./AllServicesScreen";
-import ServiceBookingScreen from "./ServiceBooking";
+import ServiceBookingScreen from "../app/(tabs)/home/booking";
 
 export type RootStackParamList = {
   serviceList: undefined;

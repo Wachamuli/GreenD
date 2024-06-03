@@ -2,7 +2,7 @@ import { Alert, StyleSheet, View } from "react-native";
 import Txt from "../components/Txt";
 import { supabase } from "../lib/supabase";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "./PasswordRecoveryStack";
+import { RootStackParamList } from "../screens/PasswordRecoveryStack";
 import Link from "../components/controls/Link";
 import {
   horizontalScale,
@@ -13,14 +13,11 @@ import { ColorPalette } from "../styles/colorPalette";
 import { useEffect, useState } from "react";
 import Popup, { PopupProps } from "../components/Popup";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  "passwordEmailScreen"
->;
-
-const PasswordEmailScreen = ({ route }: ScreenProps) => {
+const PasswordEmailScreen = () => {
   let seconds = 60;
+  const params = useLocalSearchParams();
   const [counter, setCounter] = useState(seconds);
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
@@ -28,9 +25,7 @@ const PasswordEmailScreen = ({ route }: ScreenProps) => {
   const sendRecoveryEmail = async () => {
     setCounter(seconds);
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      route.params?.email,
-    );
+    const { error } = await supabase.auth.resetPasswordForEmail(params?.email);
 
     if (error) {
       setPopupProps({
@@ -62,12 +57,12 @@ const PasswordEmailScreen = ({ route }: ScreenProps) => {
   }, [counter]);
 
   return (
-    <View style={{ paddingHorizontal: horizontalScale(60), marginTop: "10%" }}>
+    <View style={styles.container}>
       <View style={styles.box}>
         <View style={styles.square}></View>
         <Txt>El correo de recuperación ha sido enviado a</Txt>
         {/* TODO: Censor the email address. */}
-        <Txt style={{ fontFamily: "ffBold" }}>{route.params?.email}</Txt>
+        <Txt style={{ fontFamily: "ffBold" }}>{params?.email}</Txt>
       </View>
       <Txt
         style={{
@@ -91,6 +86,12 @@ const PasswordEmailScreen = ({ route }: ScreenProps) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: horizontalScale(60),
+    paddingTop: "10%",
+    backgroundColor: "white",
+  },
   box: {
     paddingVertical: verticalScale(20),
     marginBottom: verticalScale(20),

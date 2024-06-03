@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationProp } from "@react-navigation/native";
 
 import CustomHeader from "../components/layout/CustomHeader";
-import MyProfileScreen from "./MyProfileScreen";
+import Profile from "../app/(tabs)/profile";
 
 export type RootStackParamList = {
   myProfileScreen: undefined;
@@ -16,7 +16,7 @@ const MyProfileStack = (): JSX.Element => {
     <Stack.Navigator screenOptions={{ header: CustomHeader }}>
       <Stack.Screen
         name="myProfileScreen"
-        component={MyProfileScreen}
+        component={Profile}
         options={{ title: "Mi Perfil" }}
       />
     </Stack.Navigator>

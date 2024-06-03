@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import Txt from "../components/Txt";
-import { supabase } from "../lib/supabase";
-import { ColorPalette } from "../styles/colorPalette";
+import Txt from "../../../components/Txt";
+import { supabase } from "../../../lib/supabase";
+import { ColorPalette } from "../../../styles/colorPalette";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
+} from "../../../utilities/metrics";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   IconDefinition,
@@ -20,9 +20,9 @@ import {
   faRightFromBracket,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import Link from "../components/controls/Link";
-import Tappable from "../components/controls/Tappable";
-import ProfileImagePicker from "../components/controls/ProfileImagePicker";
+import Link from "../../../components/controls/Link";
+import Tappable from "../../../components/controls/Tappable";
+import ProfileImagePicker from "../../../components/controls/ProfileImagePicker";
 
 const Option = (props: {
   onPress: () => void;
@@ -60,7 +60,7 @@ const Option = (props: {
   );
 };
 
-const MyProfileScreen = (): JSX.Element => {
+const Profile = (): JSX.Element => {
   const [fullname, setFullname] = useState("");
   const [condominium, setCondominium] = useState<{ name: string } | null>();
 
@@ -163,7 +163,8 @@ const MyProfileScreen = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: ColorPalette.tertiary,
+    // backgroundColor: ColorPalette.tertiary,
+    backgroundColor: "white",
     paddingVertical: verticalScale(50),
     marginBottom: verticalScale(50),
   },
@@ -214,4 +215,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyProfileScreen;
+export default Profile;

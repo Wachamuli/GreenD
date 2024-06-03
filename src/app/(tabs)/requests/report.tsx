@@ -1,33 +1,31 @@
 import { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Txt from "../components/Txt";
-import { RootStackParamList } from "./ServiceRequestsStack";
-import Btn from "../components/controls/Btn";
-import Field from "../components/controls/Field";
+import Txt from "../../../components/Txt";
+import Btn from "../../../components/controls/Btn";
+import Field from "../../../components/controls/Field";
 import { useForm } from "react-hook-form";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
-import Tag from "../components/Tag";
-import Header from "../components/Header";
-import { supabase } from "../lib/supabase";
-import { type Tag as TagType } from "../lib/supabase.type.alias";
+} from "../../../utilities/metrics";
+import Tag from "../../../components/Tag";
+import Header from "../../../components/Header";
+import { supabase } from "../../../lib/supabase";
+import { type Tag as TagType } from "../../../lib/supabase.type.alias";
 import {
   type SuggestionSchema,
   suggestionSchema,
-} from "../utilities/validators/SuggestionSchema";
-import Popup, { type PopupProps } from "../components/Popup";
+} from "../../../utilities/validators/SuggestionSchema";
+import Popup, { type PopupProps } from "../../../components/Popup";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { router, useLocalSearchParams } from "expo-router";
 
-type ScreenProps = NativeStackScreenProps<RootStackParamList, "report">;
-
-const ReportScreen = ({ navigation, route }: ScreenProps): JSX.Element => {
+const Report = (): JSX.Element => {
+  const params = useLocalSearchParams();
   const { control, handleSubmit } = useForm<SuggestionSchema>({
     resolver: zodResolver(suggestionSchema),
   });
@@ -37,7 +35,7 @@ const ReportScreen = ({ navigation, route }: ScreenProps): JSX.Element => {
 
   const onSubmit = async (form: SuggestionSchema) => {
     const { error } = await supabase.rpc("insert_suggestion", {
-      service_request_id_param: route.params.serviceRequestId,
+      service_request_id_param: params.serviceRequestId,
       subject_param: form.subject,
       body_param: form.body,
       tags_param: selectedTags?.map(tag => tag.id),
@@ -60,8 +58,9 @@ const ReportScreen = ({ navigation, route }: ScreenProps): JSX.Element => {
       buttonOptions: {
         label: "Volver atrás",
         onPress: () =>
-          navigation.navigate("activeServicesDetails", {
-            serviceRequestId: route.params.serviceRequestId,
+          router.navigate({
+            pathname: "/requests",
+            params: { serviceRequestId: params.serviceRequestId },
           }),
       },
     });
@@ -217,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReportScreen;
+export default Report;
