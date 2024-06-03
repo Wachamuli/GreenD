@@ -93,8 +93,10 @@ const EmailConfirmationScreen = (): JSX.Element => {
   return (
     <View
       style={{
-        marginTop: verticalScale(75),
+        paddingTop: verticalScale(75),
         paddingHorizontal: horizontalScale(60),
+        backgroundColor: "white",
+        flex: 1,
       }}>
       <View style={{ alignItems: "center" }}>
         {/* FIXME: Image not showing */}

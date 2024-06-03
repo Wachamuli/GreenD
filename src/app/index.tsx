@@ -1,119 +1,85 @@
-import { useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import Header from "../components/info/Header";
-import Field from "../components/controls/Field";
-import Txt from "../components/info/Txt";
-import { verticalScale } from "../utilities/metrics";
-import { supabase } from "../lib/supabase";
-import Popup, { type PopupProps } from "../components/info/Popup";
+import { router } from "expo-router";
+import { Image, StyleSheet, View } from "react-native";
 import Btn from "../components/controls/Btn";
+import Txt from "../components/info/Txt";
 import {
-  SignInSchema,
-  signInSchema,
-} from "../utilities/validators/LoginSchema";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import Link from "../components/controls/Link";
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
-import PasswordField from "../components/controls/PasswordField";
-import { Link as Lonk, router } from "expo-router";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faHeadset } from "@fortawesome/free-solid-svg-icons";
 
-const Login = () => {
-  const { handleSubmit, control } = useForm<SignInSchema>({
-    resolver: zodResolver(signInSchema),
-  });
-  const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
-
-  // TODO: Show splashscreen when loading and handle specific errors
-  const signIn = async (form: SignInSchema) => {
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email,
-      password: form.password,
-    });
-
-    if (error) {
-      if (error.message === "Email not confirmed") {
-        router.push({
-          pathname: "/confirmation",
-          params: { email: form.email, password: form.password },
-        });
-      } else {
-        setPopupProps({
-          title: "¡Ups! Algo salió mal",
-          description: error.message,
-          iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-          buttonOptions: { label: "Entendido" },
-        });
-      }
-    }
-
-    setLoading(false);
-  };
-
+const Index = () => {
   return (
-    <View style={styles.loginScreenContainer}>
-      <View>
-        <Header title="Iniciar Sesión" />
-        <Field
-          name="email"
-          control={control}
-          label="Correo electrónico"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          placeholder="janedoe@domain.tls"
-        />
-        <PasswordField name="password" control={control} label="Contraseña" />
-        <View style={styles.forgotPasswordContainer}>
-          <Link
-            style={styles.forgotPassword}
-            onPress={() => router.navigate("/password-recovery")}>
-            ¿Olvidaste tu contraseña?
-          </Link>
-        </View>
+    <View style={styles.container}>
+      <Txt style={styles.welcome}>Bienvenido a</Txt>
+      <Image
+        source={require("../assets/greenrlogo.png")}
+        style={styles.image}
+      />
+      <Txt style={{ fontSize: moderateScale(20) }}>Slogan Placeholder.</Txt>
+      <View style={styles.buttonsContainer}>
         <Btn
-          disabled={loading}
+          style={styles.loginButton}
           label="Iniciar Sesión"
-          onPress={handleSubmit(signIn)}
+          onPress={() => router.push("/sign-in")}
         />
-
-        <View style={styles.createAccount}>
-          <Txt>¿No tienes cuenta? </Txt>
-          <Link onPress={() => router.push("/signup")}>Regístrate</Link>
+        <Btn
+          style={{ width: "100%" }}
+          label="Regístrate"
+          onPress={() => router.push("/sign-up")}
+        />
+        <View style={styles.helpContainer}>
+          <FontAwesomeIcon
+            style={{ marginRight: moderateScale(10) }}
+            icon={faHeadset}
+            color={ColorPalette.tertiary}
+            size={moderateScale(18)}
+          />
+          <Txt style={{ color: ColorPalette.tertiary, fontFamily: "ffBold", fontSize: moderateScale(14) }}>
+            Ayuda
+          </Txt>
         </View>
       </View>
-
-      <Popup {...popupProps} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  loginScreenContainer: {
+  container: {
     flex: 1,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "white",
+    paddingHorizontal: horizontalScale(20),
+    alignItems: "center",
   },
-  forgotPasswordContainer: {
-    marginBottom: verticalScale(40),
+  welcome: {
+    marginBottom: verticalScale(20),
+    color: ColorPalette.tertiary,
   },
-  forgotPassword: {
-    textAlign: "right",
+  image: {
+    width: horizontalScale(280),
+    height: verticalScale(110),
   },
-  rememberMe: {
-    marginTop: verticalScale(40),
+  buttonsContainer: {
+    width: "100%",
+    position: "absolute",
+    bottom: verticalScale(20),
   },
-  createAccount: {
-    marginTop: verticalScale(40),
+  loginButton: {
+    width: "100%",
+    backgroundColor: "#f3f5ff",
+    color: ColorPalette.primary,
+    borderWidth: moderateScale(2),
+    borderColor: ColorPalette.primary,
+  },
+  helpContainer: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
+    marginTop: verticalScale(20),
   },
 });
 
-export default Login;
+export default Index;

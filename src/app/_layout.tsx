@@ -48,7 +48,8 @@ const RootLayout = () => {
   return (
     <Stack screenOptions={{ header: CustomHeader }}>
       <Stack.Screen name="index" />
-      <Stack.Screen name="signup" options={{ title: "Crea una cuenta" }} />
+      <Stack.Screen name="sign-in" />
+      <Stack.Screen name="sign-up" options={{ title: "Crea una cuenta" }} />
       <Stack.Screen
         name="confirmation"
         options={{ title: "Confirmar correo" }}
