@@ -80,41 +80,6 @@ const TabLayout = () => {
     </Tabs>
   );
   // <Tab.Screen
-  //   name="home"
-  //   component={HomeStack}
-  //   options={{
-  //     title: "Inicio",
-  //     tabBarIcon: props => <FontAwesomeIcon icon={faHome} {...props} />,
-  //   }}
-  // />
-  // <Tab.Screen
-  //   name="requests"
-  //   component={ServiceRequestsStack}
-  //   options={{
-  //     title: "Solicitudes",
-  //     tabBarIcon: props => (
-  //       <FontAwesomeIcon
-  //         icon={props.focused ? faClipboardSolid : faClipboardRegular}
-  //         {...props}
-  //       />
-  //     ),
-  //     tabBarBadge: totalActiveServices,
-  //   }}
-  // />
-  // <Tab.Screen
-  //   name="bookings"
-  //   component={HistorialScreen}
-  //   options={{
-  //     title: "Favoritos",
-  //     tabBarIcon: props => (
-  //       <FontAwesomeIcon
-  //         icon={props.focused ? faBookmarkSolid : faBookmarkRegular}
-  //         {...props}
-  //       />
-  //     ),
-  //   }}
-  // />
-  // <Tab.Screen
   //   name="historial"
   //   component={HistorialScreen}
   //   options={{
@@ -122,19 +87,6 @@ const TabLayout = () => {
   //     tabBarIcon: props => (
   //       <FontAwesomeIcon
   //         icon={props.focused ? faNewspaperSolid : faNewspaperRegular}
-  //         {...props}
-  //       />
-  //     ),
-  //   }}
-  // />
-  // <Tab.Screen
-  //   name="myProfile"
-  //   component={MyProfileStack}
-  //   options={{
-  //     title: "Perfil",
-  //     tabBarIcon: props => (
-  //       <FontAwesomeIcon
-  //         icon={props.focused ? faUserSolid : faUserRegular}
   //         {...props}
   //       />
   //     ),
