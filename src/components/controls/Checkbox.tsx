@@ -8,9 +8,9 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import { View } from "react-native";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../info/ErrorMessage";
 
 type Props = {
   name: string;

@@ -3,9 +3,9 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { navigationProps } from "./ServiceRequestsStack";
 
-import Card from "../components/Card";
+import Card from "../components/containers/Card";
 import Tappable from "../components/controls/Tappable";
-import Txt from "../components/Txt";
+import Txt from "../components/info/Txt";
 import { supabase } from "../lib/supabase";
 import {
   horizontalScale,

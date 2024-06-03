@@ -5,8 +5,8 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "./Header";
 import Txt from "./Txt";
-import Btn from "./controls/Btn";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
+import Btn from "../controls/Btn";
+import { horizontalScale, verticalScale } from "../../utilities/metrics";
 
 export type PopupProps = {
   title?: string;

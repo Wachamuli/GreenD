@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Header from "../components/Header";
+import Header from "../components/info/Header";
 import Field from "../components/controls/Field";
-import Txt from "../components/Txt";
+import Txt from "../components/info/Txt";
 import { verticalScale } from "../utilities/metrics";
 import { supabase } from "../lib/supabase";
-import Popup, { type PopupProps } from "../components/Popup";
+import Popup, { type PopupProps } from "../components/info/Popup";
 import Btn from "../components/controls/Btn";
 import {
   SignInSchema,

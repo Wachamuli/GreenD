@@ -2,7 +2,7 @@ import { View } from "react-native";
 
 import dayjs from "dayjs";
 
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import { capitalize } from "../../utilities/utils";
 import { ColorPalette } from "../../styles/colorPalette";
 import { horizontalScale, moderateScale } from "../../utilities/metrics";

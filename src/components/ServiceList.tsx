@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import Header from "./Header";
 import ServiceCard from "./ServiceCard";
 import Tappable from "./controls/Tappable";

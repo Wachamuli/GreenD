@@ -7,7 +7,7 @@ import {
 } from "../utilities/metrics";
 import { Services } from "../api/mockData";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarDays } from "@fortawesome/free-regular-svg-icons";
 import { faUser } from "@fortawesome/free-regular-svg-icons";

@@ -1,11 +1,11 @@
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
-import MyCalendar from "../../../components/MyCalendar";
+import MyCalendar from "../../../components/controls/MyCalendar";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../utilities/metrics";
-import Txt from "../../../components/Txt";
+import Txt from "../../../components/info/Txt";
 import Tappable from "../../../components/controls/Tappable";
 import { ColorPalette } from "../../../styles/colorPalette";
 import { useState } from "react";

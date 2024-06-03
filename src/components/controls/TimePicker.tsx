@@ -3,9 +3,9 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Control, Controller, FieldValue } from "react-hook-form";
 
-import Txt from "../Txt";
-import ErrorMessage from "../ErrorMessage";
-import WheelTimePicker from "../WheelTimePicker";
+import Txt from "../info/Txt";
+import ErrorMessage from "../info/ErrorMessage";
+import WheelTimePicker from "./WheelTimePicker";
 import { horizontalScale, moderateScale } from "../../utilities/metrics";
 
 let hours = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];

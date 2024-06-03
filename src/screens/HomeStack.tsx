@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ServiceList from "../components/ServiceList";
 import ServiceDetails from "../app/(tabs)/home/details";
 import ServiceResume from "../app/(tabs)/home/resume";
-import Txt from "../components/Txt";
+import Txt from "../components/info/Txt";
 import { supabase } from "../lib/supabase";
 import { Alert } from "react-native";
 import CustomHeader from "../components/layout/CustomHeader";

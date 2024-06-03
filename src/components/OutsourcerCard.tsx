@@ -6,11 +6,11 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import Tappable from "./controls/Tappable";
 import { Outsourcer } from "../api/mockData";
 import { Control, FieldValue, useController } from "react-hook-form";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "./info/ErrorMessage";
 import Btn from "./controls/Btn";
 
 type Props = {

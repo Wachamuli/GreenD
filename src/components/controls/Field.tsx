@@ -9,13 +9,13 @@ import {
 } from "react-native";
 import { Control, FieldValue, useController } from "react-hook-form";
 
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../info/ErrorMessage";
 import { ColorPalette } from "../../styles/colorPalette";
 
 export type FieldProps = TextInputProps & {

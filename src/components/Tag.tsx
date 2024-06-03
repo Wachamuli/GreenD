@@ -4,7 +4,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utilities/metrics";
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import Tappable from "./controls/Tappable";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faX, faXmark, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";

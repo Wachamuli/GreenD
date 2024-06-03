@@ -5,8 +5,8 @@ import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
-import Txt from "../../../components/Txt";
-import Header from "../../../components/Header";
+import Txt from "../../../components/info/Txt";
+import Header from "../../../components/info/Header";
 import ServiceCard from "../../../components/ServiceCard";
 import Tappable from "../../../components/controls/Tappable";
 import SearchBar from "../../../components/controls/SearchBar";

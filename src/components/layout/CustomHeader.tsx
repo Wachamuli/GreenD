@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import Tappable from "../controls/Tappable";
 import {
   horizontalScale,

@@ -1,5 +1,5 @@
 import Txt from "./Txt";
-import { moderateScale, verticalScale } from "../utilities/metrics";
+import { moderateScale, verticalScale } from "../../utilities/metrics";
 import { StyleProp, TextStyle } from "react-native";
 
 const Header = ({

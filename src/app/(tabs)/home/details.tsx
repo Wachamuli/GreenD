@@ -11,8 +11,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { supabase } from "../../../lib/supabase";
-import Header from "../../../components/Header";
-import Txt from "../../../components/Txt";
+import Header from "../../../components/info/Header";
+import Txt from "../../../components/info/Txt";
 import {
   horizontalScale,
   moderateScale,

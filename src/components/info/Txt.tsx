@@ -1,7 +1,7 @@
 import { PropsWithChildren, useCallback } from "react";
 import { Text, TextProps } from "react-native";
 
-import { moderateScale } from "../utilities/metrics";
+import { moderateScale } from "../../utilities/metrics";
 import { useFonts } from "expo-font";
 
 type Props = TextProps & PropsWithChildren;

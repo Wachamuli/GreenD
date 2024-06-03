@@ -3,8 +3,8 @@ import { Picker } from "@react-native-picker/picker";
 import { Control, FieldValue, useController } from "react-hook-form";
 
 import { moderateScale, verticalScale } from "../../utilities/metrics";
-import Txt from "../Txt";
-import ErrorMessage from "../ErrorMessage";
+import Txt from "../info/Txt";
+import ErrorMessage from "../info/ErrorMessage";
 
 type Props = {
   name: string;

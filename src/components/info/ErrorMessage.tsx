@@ -6,10 +6,10 @@ import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
+} from "../../utilities/metrics";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import { ColorPalette } from "../styles/colorPalette";
+import { ColorPalette } from "../../styles/colorPalette";
 
 const ErrorMessage = ({
   error,

@@ -6,7 +6,7 @@ import {
   PressableProps,
 } from "react-native";
 
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import Tappable from "./Tappable";
 import { ColorPalette } from "../../styles/colorPalette";
 

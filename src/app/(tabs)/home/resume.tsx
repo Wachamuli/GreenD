@@ -6,10 +6,10 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 
-import Grid from "../../../components/grid/Grid";
-import Card from "../../../components/Card";
-import Txt from "../../../components/Txt";
-import Header from "../../../components/Header";
+import Grid from "../../../components/containers/Grid";
+import Card from "../../../components/containers/Card";
+import Txt from "../../../components/info/Txt";
+import Header from "../../../components/info/Header";
 import Btn from "../../../components/controls/Btn";
 import { useNavigation } from "@react-navigation/native";
 import { supabase } from "../../../lib/supabase";

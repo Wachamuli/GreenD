@@ -23,8 +23,8 @@ import { ColorPalette } from "../styles/colorPalette";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/PasswordRecoveryStack";
 import { useState } from "react";
-import Popup, { PopupProps } from "../components/Popup";
-import Txt from "../components/Txt";
+import Popup, { PopupProps } from "../components/info/Popup";
+import Txt from "../components/info/Txt";
 import { router } from "expo-router";
 
 const PasswordRecoveryScreen = (): JSX.Element => {

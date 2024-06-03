@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 
 type PressablePropsWithoutStyle = Omit<PressableProps, "style">;
 

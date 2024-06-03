@@ -12,7 +12,7 @@ import Menu from "../components/controls/Menu";
 import Link from "../components/controls/Link";
 import Checkbox from "../components/controls/Checkbox";
 import PasswordEnforcer from "../components/controls/PasswordEnforcer";
-import Popup, { PopupProps } from "../components/Popup";
+import Popup, { PopupProps } from "../components/info/Popup";
 import ProfileImagePicker from "../components/controls/ProfileImagePicker";
 import { supabase } from "../lib/supabase";
 import { horizontalScale, verticalScale } from "../utilities/metrics";

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Checkbox from "./controls/Checkbox";
 import { Control, Controller, FieldValue } from "react-hook-form";
 import { View } from "react-native";
-import ErrorMessage from "./ErrorMessage";
+import ErrorMessage from "./info/ErrorMessage";
 import Detail from "./Detail";
 import { moderateScale, verticalScale } from "../utilities/metrics";
 

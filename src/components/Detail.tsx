@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import CheckBox from "expo-checkbox";
 import { Control, useController } from "react-hook-form";
 
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import Checkbox from "./controls/Checkbox";
 import {
   horizontalScale,

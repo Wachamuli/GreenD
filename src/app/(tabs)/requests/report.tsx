@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import Txt from "../../../components/Txt";
+import Txt from "../../../components/info/Txt";
 import Btn from "../../../components/controls/Btn";
 import Field from "../../../components/controls/Field";
 import { useForm } from "react-hook-form";
@@ -12,14 +12,14 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import Tag from "../../../components/Tag";
-import Header from "../../../components/Header";
+import Header from "../../../components/info/Header";
 import { supabase } from "../../../lib/supabase";
 import { type Tag as TagType } from "../../../lib/supabase.type.alias";
 import {
   type SuggestionSchema,
   suggestionSchema,
 } from "../../../utilities/validators/SuggestionSchema";
-import Popup, { type PopupProps } from "../../../components/Popup";
+import Popup, { type PopupProps } from "../../../components/info/Popup";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";

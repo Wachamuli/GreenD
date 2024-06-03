@@ -3,18 +3,17 @@ import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import dayjs from "dayjs";
 
-import Txt from "../../../components/Txt";
+import Txt from "../../../components/info/Txt";
 import Tappable from "../../../components/controls/Tappable";
-import Card from "../../../components/Card";
-import { RootStackParamList } from "../../../screens/ServiceRequestsStack";
-import Header from "../../../components/Header";
+import Card from "../../../components/containers/Card";
+import Header from "../../../components/info/Header";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../utilities/metrics";
 import { supabase } from "../../../lib/supabase";
-import Popup, { PopupProps } from "../../../components/Popup";
+import Popup, { PopupProps } from "../../../components/info/Popup";
 import { type ServiceRequest } from "../../../lib/supabase.type.alias";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -24,7 +23,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faNewspaper } from "@fortawesome/free-regular-svg-icons";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
-import Grid from "../../../components/grid/Grid";
+import Grid from "../../../components/containers/Grid";
 import { router, useLocalSearchParams } from "expo-router";
 
 const ServiceDetails = (): JSX.Element => {

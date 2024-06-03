@@ -4,7 +4,7 @@ import Tappable from "./controls/Tappable";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 
-import Txt from "./Txt";
+import Txt from "./info/Txt";
 import { ColorPalette } from "../styles/colorPalette";
 import {
   horizontalScale,

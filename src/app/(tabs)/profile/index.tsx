@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import Txt from "../../../components/Txt";
+import Txt from "../../../components/info/Txt";
 import { supabase } from "../../../lib/supabase";
 import { ColorPalette } from "../../../styles/colorPalette";
 import {

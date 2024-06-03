@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { navigationProp } from "../App";
 import Btn from "../components/controls/Btn";
 import { useState } from "react";
-import Popup, { PopupProps } from "../components/Popup";
+import Popup, { PopupProps } from "../components/info/Popup";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
 import { verticalScale } from "../utilities/metrics";

@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, View } from "react-native";
-import Txt from "../components/Txt";
+import Txt from "../components/info/Txt";
 import { supabase } from "../lib/supabase";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../screens/PasswordRecoveryStack";
@@ -11,7 +11,7 @@ import {
 } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
 import { useEffect, useState } from "react";
-import Popup, { PopupProps } from "../components/Popup";
+import Popup, { PopupProps } from "../components/info/Popup";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 

@@ -1,11 +1,11 @@
 import { StyleProp, View, ViewStyle } from "react-native";
-import { boxShadowXP } from "../utilities/crossplatform";
+import { boxShadowXP } from "../../utilities/crossplatform";
 import { PropsWithChildren } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
-} from "../utilities/metrics";
+} from "../../utilities/metrics";
 
 type Props = {
   style?: StyleProp<ViewStyle>;

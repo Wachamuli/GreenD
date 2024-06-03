@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { Control, FieldValue } from "react-hook-form";
 
 import Field from "./Field";
-import Txt from "../Txt";
+import Txt from "../info/Txt";
 import { useState } from "react";
 import {
   horizontalScale,

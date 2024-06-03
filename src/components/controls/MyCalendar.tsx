@@ -10,10 +10,10 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-import Txt from "./Txt";
-import ErrorMessage from "./ErrorMessage";
-import { ColorPalette } from "../styles/colorPalette";
-import { moderateScale } from "../utilities/metrics";
+import Txt from "../info/Txt";
+import ErrorMessage from "../info/ErrorMessage";
+import { ColorPalette } from "../../styles/colorPalette";
+import { moderateScale } from "../../utilities/metrics";
 
 type Props = {
   name: string;

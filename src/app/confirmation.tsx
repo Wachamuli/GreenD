@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 
-import Txt from "../components/Txt";
+import Txt from "../components/info/Txt";
 import Link from "../components/controls/Link";
 import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
-import Popup, { PopupProps } from "../components/Popup";
+import Popup, { PopupProps } from "../components/info/Popup";
 import {
   faCircleInfo,
   faTriangleExclamation,

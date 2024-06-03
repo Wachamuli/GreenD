@@ -14,7 +14,7 @@ import {
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
 
-import Txt from "../../../components/Txt";
+import Txt from "../../../components/info/Txt";
 import Tappable from "../../../components/controls/Tappable";
 import { navigationProps } from "../../../screens/ServiceRequestsStack";
 import { ColorPalette } from "../../../styles/colorPalette";
