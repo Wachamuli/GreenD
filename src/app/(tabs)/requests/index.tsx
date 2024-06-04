@@ -4,23 +4,14 @@ import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faBan,
-  faCheck,
-  faCheckDouble,
-  faPhone,
-  faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
-import { faClock } from "@fortawesome/free-regular-svg-icons";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
 
 import Txt from "../../../components/info/Txt";
 import Tappable from "../../../components/controls/Tappable";
-import { navigationProps } from "../../../screens/ServiceRequestsStack";
 import { ColorPalette } from "../../../styles/colorPalette";
 import { supabase } from "../../../lib/supabase";
 import { Database } from "../../../lib/supabase.types";
-import { ServiceRequestStatus } from "../../../lib/supabase.type.alias";
 import {
   horizontalScale,
   moderateScale,
@@ -28,6 +19,8 @@ import {
 } from "../../../utilities/metrics";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
 import { router } from "expo-router";
+import StatusLabel from "../../../components/info/StatusLabel";
+import CircleButton from "../../../components/controls/CircleButton";
 
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
@@ -47,6 +40,7 @@ function ServiceRequest() {
             borderBottomWidth: moderateScale(1),
             borderColor: ColorPalette.tertiary,
             paddingBottom: verticalScale(10),
+            backgroundColor: "white",
           }}>
           {props.navigationState.routes.map((route, index) => {
             const currentIndex = props.navigationState.index === index;
@@ -138,7 +132,8 @@ const InactiveServiceRequests = () => {
     <View
       style={{
         paddingHorizontal: horizontalScale(20),
-        marginTop: verticalScale(10),
+        paddingTop: verticalScale(10),
+        backgroundColor: "white",
       }}>
       <FlatList
         data={serviceRequests}
@@ -213,7 +208,8 @@ const ActiveServicesScreen = (): JSX.Element => {
     <View
       style={{
         paddingHorizontal: horizontalScale(20),
-        marginTop: verticalScale(10),
+        paddingTop: verticalScale(10),
+        backgroundColor: "white",
       }}>
       <FlatList
         data={serviceRequests}
@@ -225,54 +221,6 @@ const ActiveServicesScreen = (): JSX.Element => {
 };
 
 const ServiceRequestCard = (item: any) => {
-  const navigation = useNavigation<navigationProps>();
-
-  const StatusLabel = ({
-    status,
-  }: {
-    status: ServiceRequestStatus;
-  }): JSX.Element => {
-    let statusBarStyle = { icon: faBan, color: "" };
-
-    switch (status) {
-      case "Pending":
-        statusBarStyle.icon = faClock;
-        statusBarStyle.color = ColorPalette.lighterSecondary;
-        break;
-      case "Confirmed":
-        statusBarStyle.icon = faCheck;
-        statusBarStyle.color = ColorPalette.lighterSecondary;
-        break;
-      case "InProgress":
-        statusBarStyle.icon = faSpinner;
-        statusBarStyle.color = ColorPalette.accent;
-        break;
-      case "Completed":
-        statusBarStyle.icon = faCheckDouble;
-        statusBarStyle.color = ColorPalette.secondary;
-        break;
-      case "Canceled":
-        statusBarStyle.icon = faBan;
-        statusBarStyle.color = ColorPalette.error;
-        break;
-    }
-
-    return (
-      <View
-        style={[
-          styles.statusContainer,
-          { backgroundColor: statusBarStyle.color },
-        ]}>
-        <FontAwesomeIcon
-          icon={statusBarStyle.icon}
-          color="white"
-          size={moderateScale(12)}
-        />
-        <Txt style={styles.status}>{item.status}</Txt>
-      </View>
-    );
-  };
-
   return (
     <Tappable
       onPress={() => {
@@ -305,15 +253,13 @@ const ServiceRequestCard = (item: any) => {
               </Txt>
             </View>
 
-            <Tappable
+            <CircleButton
+              icon={faPhone}
               onPress={() => {
                 Linking.openURL(`tel:${8090001111}`);
               }}
-              hitSlop={moderateScale(15)}>
-              <View style={styles.phoneIconContainer}>
-                <FontAwesomeIcon icon={faPhone} />
-              </View>
-            </Tappable>
+            />
+
           </View>
         </View>
       </View>
@@ -352,19 +298,6 @@ const styles = StyleSheet.create({
   outsourcerName: {
     fontFamily: "ffBold",
     marginTop: verticalScale(10),
-  },
-  statusContainer: {
-    flexDirection: "row",
-    alignSelf: "flex-start",
-    borderRadius: moderateScale(10),
-    paddingVertical: verticalScale(5),
-    paddingHorizontal: verticalScale(10),
-    alignItems: "center",
-  },
-  status: {
-    color: "white",
-    fontSize: moderateScale(12),
-    marginLeft: horizontalScale(5),
   },
   phoneIconContainer: {
     alignSelf: "flex-end",
