@@ -6,6 +6,7 @@ const RequestsLayout = () => {
     <Stack screenOptions={{ header: CustomHeader }}>
       <Stack.Screen name="index" options={{ title: "Solicitudes" }} />
       {/* <Stack.Screen name="index" /> */}
+      <Stack.Screen name="report" options={{ title: "Reportar" }} />
     </Stack>
   )
 }

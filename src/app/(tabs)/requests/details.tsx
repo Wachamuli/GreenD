@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image, Linking, ScrollView, StyleSheet, View } from "react-native";
 import dayjs from "dayjs";
 
 import Txt from "../../../components/info/Txt";
@@ -17,14 +16,26 @@ import Popup, { PopupProps } from "../../../components/info/Popup";
 import { type ServiceRequest } from "../../../lib/supabase.type.alias";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
+  faCaretDown,
+  faCaretRight,
   faChevronRight,
   faDollarSign,
+  faFlag,
+  faPhone,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { faNewspaper } from "@fortawesome/free-regular-svg-icons";
+import {
+  faBookmark,
+  faCreditCard,
+  faNewspaper,
+} from "@fortawesome/free-regular-svg-icons";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
 import Grid from "../../../components/containers/Grid";
 import { router, useLocalSearchParams } from "expo-router";
+import Link from "../../../components/controls/Link";
+import { ColorPalette } from "../../../styles/colorPalette";
+import StatusLabel from "../../../components/info/StatusLabel";
+import CircleButton from "../../../components/controls/CircleButton";
 
 const ServiceDetails = (): JSX.Element => {
   const params = useLocalSearchParams();
@@ -61,10 +72,16 @@ const ServiceDetails = (): JSX.Element => {
     setPopupProps({
       title: "¿Desea cancelar su solicitud?",
       description: "Al cancelar el servicio no se llevará acabo.",
-      buttonOptions: {
-        label: "Cancelar",
-        onPress: () => cancelServiceRequest(),
-      },
+      buttonOptions: [
+        {
+          label: "Atrás",
+          onPress: () => {},
+        },
+        {
+          label: "Sí, cancelar",
+          onPress: () => cancelServiceRequest(),
+        }
+      ],
     });
   };
 
@@ -72,152 +89,154 @@ const ServiceDetails = (): JSX.Element => {
     getServiceDetails();
   }, []);
 
+  const [seeNote, setSeeNote] = useState(true);
+
   return (
-    <ScrollView style={styles.container}>
-      {/* <Header title="Resumen" /> */}
-      <Card>
-        <Txt>{serviceDetails?.status + "..."}</Txt>
-        <Txt>
-          {capitalize(dayjs(serviceDetails?.created_at).format("dddd, MMMM D"))}
-        </Txt>
-        <Txt>
-          {serviceDetails?.r_time && timeFormatter(serviceDetails?.r_time)}
-        </Txt>
-      </Card>
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Image
+          style={styles.outsourcerImage}
+          source={{
+            uri: serviceDetails?.outsourcer?.logo,
+          }}
+        />
 
-      <Card style={{ backgroundColor: "white" }}>
-        <Tappable>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={{
-                backgroundColor: "black",
-                marginRight: horizontalScale(14),
-                padding: moderateScale(10),
-                borderRadius: moderateScale(20),
-              }}>
-              <FontAwesomeIcon icon={faDollarSign} color="white" />
-            </View>
-            <Txt style={{ color: "black", fontWeight: "bold" }}>
-              Procesar pago
-            </Txt>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              color="black"
-              size={25}
-              style={{ marginLeft: "auto" }}
-            />
-          </View>
-        </Tappable>
-      </Card>
+        <Header title={serviceDetails?.outsourcer.name} />
+        <Txt>{serviceDetails?.outsourcer?.brief_description}</Txt>
+      </View>
 
-      <Card>
-        <View style={styles.outsourcerInfoContainer}>
-          <Image
-            style={styles.outsourcerImage}
-            source={{
-              uri: serviceDetails?.outsourcer?.logo ?? "Default image",
-            }}
-          />
-          <Header
-            style={styles.outsourcerName}
-            title={serviceDetails?.outsourcer?.name}
-          />
-          <Txt style={styles.outsourcerBriefDescription}>
-            {serviceDetails?.outsourcer?.brief_description}
-          </Txt>
-        </View>
-
-        <View style={styles.detailsContainer}>
-          <Txt style={styles.detail}>{serviceDetails?.details}</Txt>
-        </View>
-
-        <View style={styles.appointment}>
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Día</Txt>
-            </Grid.Col>
-            <Grid.Col colNumber={2}>
-              <Txt>{serviceDetails?.r_date}</Txt>
-            </Grid.Col>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Hora</Txt>
-            </Grid.Col>
-            <Grid.Col colNumber={2}>
-              <Txt>{serviceDetails?.r_time}</Txt>
-            </Grid.Col>
-          </Grid.Row>
-
-          <View
-            style={{
-              paddingBottom: verticalScale(50),
-              marginTop: verticalScale(50),
-              alignItems: "center",
-            }}>
-            <Txt style={styles.key}>Nota</Txt>
-            <Txt> {serviceDetails?.note || "Sin anotaciones"}</Txt>
-          </View>
-        </View>
-      </Card>
-
-      <Card style={{ backgroundColor: "blue" }}>
-        <Tappable
-          onPress={() => {
+      <View
+        style={{
+          flexDirection: "row",
+          marginVertical: verticalScale(10),
+          justifyContent: "space-evenly",
+        }}>
+        {/* TODO: CircleButtons phone, profile, maybe delete? */}
+        <CircleButton
+          icon={faTrashCan}
+          onPress={showCancelConfirmationModal}
+          iconStyle={{
+            color: ColorPalette.error,
+          }}
+          containerStyle={{
+            borderColor: ColorPalette.error,
+          }}
+        />
+        <CircleButton
+          icon={faFlag}
+          onPress={() =>
             router.push({
               pathname: "/requests/report",
-              params: { serviceRequestId: params.serviceRequestId },
-            });
-          }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={{
-                backgroundColor: "white",
-                marginRight: horizontalScale(14),
-                padding: moderateScale(10),
-                borderRadius: moderateScale(20),
-              }}>
-              <FontAwesomeIcon icon={faNewspaper} color="blue" />
+              params: { serviceRequestId: serviceDetails?.id },
+            })
+          }
+        />
+        <CircleButton
+          icon={faPhone}
+          onPress={() => {
+            Linking.openURL(`tel:${8090001111}`);
+          }}
+        />
+        <CircleButton
+          icon={faBookmark}
+          onPress={() => {
+            Linking.openURL(`tel:${8090001111}`);
+          }}
+        />
+      </View>
+
+      <Card>
+        <Grid.Row>
+          <Grid.Col colNumber={1}>
+            <Txt style={styles.key}>Servicio</Txt>
+          </Grid.Col>
+
+          <Grid.Col colNumber={2}>
+            <Txt style={styles.item}>{serviceDetails?.service.name}</Txt>
+          </Grid.Col>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Col colNumber={1}>
+            <Txt style={styles.key}>Status</Txt>
+          </Grid.Col>
+
+          <Grid.Col colNumber={2}>
+            {/* Ignores the border radius if you remove the View tag */}
+            <View>
+              <StatusLabel
+                containerStyle={{ alignSelf: "flex-end" }}
+                status={serviceDetails?.status}
+              />
             </View>
-            <Txt style={{ color: "white", fontWeight: "bold" }}>Reportar</Txt>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              color="white"
-              size={25}
-              style={{ marginLeft: "auto" }}
-            />
+          </Grid.Col>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Col colNumber={1}>
+            <Txt style={styles.key}>Día</Txt>
+          </Grid.Col>
+
+          <Grid.Col colNumber={2}>
+            <Txt style={styles.item}>
+              {capitalize(dayjs(serviceDetails?.r_date).format("dddd, MMMM D"))}
+            </Txt>
+          </Grid.Col>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Col colNumber={1}>
+            <Txt style={styles.key}>Hora</Txt>
+          </Grid.Col>
+
+          <Grid.Col colNumber={2}>
+            <Txt style={styles.item}>
+              {timeFormatter(serviceDetails?.r_time || "")}
+            </Txt>
+          </Grid.Col>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Col colNumber={1}>
+            <Txt style={styles.key}>Nota</Txt>
+          </Grid.Col>
+
+          <Grid.Col colNumber={2}>
+            {serviceDetails?.note && serviceDetails.note?.length > 0 ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                }}>
+                <Link onPress={() => setSeeNote(toggle => !toggle)}>Ver</Link>
+                <FontAwesomeIcon
+                  icon={seeNote ? faCaretDown : faCaretRight}
+                  color={ColorPalette.primary}
+                />
+              </View>
+            ) : (
+              <Txt
+                style={[
+                  styles.item,
+                  { color: ColorPalette.tertiary, fontFamily: "ffItalic" },
+                ]}>
+                Sin nota
+              </Txt>
+            )}
+          </Grid.Col>
+        </Grid.Row>
+
+        {seeNote && serviceDetails?.note && serviceDetails.note.length > 0 ? (
+          <View style={styles.noteContainer}>
+            <Txt>{serviceDetails.note}</Txt>
           </View>
-        </Tappable>
+        ) : (
+          <></>
+        )}
       </Card>
 
-      <Txt
-        style={{
-          color: "red",
-          fontWeight: "bold",
-          marginTop: verticalScale(30),
-          marginHorizontal: horizontalScale(10),
-        }}>
-        ¡Cuidado!{" "}
-        <Txt style={{ color: "red" }}>Esta acción no es reversible.</Txt>
-      </Txt>
-      <Card style={{ backgroundColor: "red", marginBottom: verticalScale(60) }}>
-        <Tappable onPress={showCancelConfirmationModal}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View
-              style={{
-                backgroundColor: "white",
-                marginRight: horizontalScale(14),
-                padding: moderateScale(10),
-                borderRadius: moderateScale(20),
-              }}>
-              <FontAwesomeIcon icon={faTrashCan} color="red" />
-            </View>
-            <Txt style={{ color: "white", fontWeight: "bold" }}>
-              Cancelar solicitud
-            </Txt>
-          </View>
-        </Tappable>
-      </Card>
+      {/* TODO: Maybe add a another container for payment details */}
 
       <Popup {...popupProps} />
     </ScrollView>
@@ -226,52 +245,27 @@ const ServiceDetails = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: horizontalScale(10),
-    paddingTop: verticalScale(10),
-  },
-  resumeTableContainer: {
-    alignItems: "center",
+    flex: 1,
+    paddingHorizontal: horizontalScale(20),
     backgroundColor: "white",
-    marginHorizontal: horizontalScale(10),
-    paddingTop: verticalScale(20),
-    marginBottom: verticalScale(20),
-    borderRadius: moderateScale(20),
-  },
-  outsourcerInfoContainer: {
-    alignItems: "center",
-    textAlign: "center",
-  },
-  outsourcerImage: {
-    width: horizontalScale(150),
-    height: verticalScale(150),
-    borderRadius: 100,
-  },
-  outsourcerName: {
-    marginTop: verticalScale(10),
-    marginBottom: verticalScale(0),
-  },
-  outsourcerBriefDescription: {
-    color: "gray",
-    marginTop: verticalScale(0),
-  },
-  appointment: {
-    display: "flex",
-    paddingVertical: verticalScale(10),
-    paddingHorizontal: horizontalScale(10),
   },
   key: {
-    fontWeight: "bold",
+    fontFamily: "ffItalic",
+    opacity: 0.5,
   },
-  detailsContainer: {
-    marginVertical: verticalScale(10),
+  item: {
+    textAlign: "right",
   },
-  detail: {},
-  dotlist: {},
-  buttonContainer: {
-    top: "auto",
-    position: "absolute",
-    width: "100%",
-    bottom: 0,
+  noteContainer: {
+    justifyContent: "flex-start",
+    padding: moderateScale(10),
+    borderRadius: moderateScale(10),
+    backgroundColor: "#f3f5ff",
+  },
+  outsourcerImage: {
+    width: moderateScale(150),
+    height: moderateScale(150),
+    borderRadius: moderateScale(150) / 2,
   },
 });
 
