@@ -20,8 +20,6 @@ import {
   faUserLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../screens/PasswordRecoveryStack";
 import { useState } from "react";
 import Popup, { PopupProps } from "../components/info/Popup";
 import Txt from "../components/info/Txt";
@@ -43,7 +41,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: { label: "Entendido" },
+        buttonOptions: [{ label: "Entendido" }],
       });
       setLoading(false);
       return;

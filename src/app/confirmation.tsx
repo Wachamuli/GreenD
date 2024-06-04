@@ -58,14 +58,14 @@ const EmailConfirmationScreen = (): JSX.Element => {
           title: "¡Correo sin confirmar!",
           description: "Revise su bandeja de entrada o spam.",
           iconProps: { icon: faCircleInfo, color: ColorPalette.secondary },
-          buttonOptions: { label: "Entendido" },
+          buttonOptions: [{ label: "Entendido" }],
         });
       } else {
         setPopupProps({
           title: "¡Ups! Algo salió mal",
           description: error.message,
           iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-          buttonOptions: { label: "Entendido" },
+          buttonOptions: [{ label: "Entendido" }],
         });
       }
     }

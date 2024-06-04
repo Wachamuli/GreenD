@@ -15,7 +15,7 @@ export type PopupProps = {
   buttonOptions?: {
     label: string;
     onPress?: (event: GestureResponderEvent) => void;
-  };
+  }[];
 };
 
 const Popup = (props: PopupProps) => {
@@ -51,18 +51,20 @@ const Popup = (props: PopupProps) => {
           {props.description && (
             <Txt style={styles.modalText}>{props.description}</Txt>
           )}
-          {props.buttonOptions && (
-            <Btn
-              style={styles.button}
-              label={props.buttonOptions.label}
-              onPress={event => {
-                if (props.buttonOptions?.onPress)
-                  props.buttonOptions.onPress(event);
+          <View style={styles.buttonsContainer}>
+            {props.buttonOptions?.map((button, index) => (
+              <Btn
+                key={index}
+                style={styles.button}
+                label={button.label}
+                onPress={event => {
+                  if (button.onPress) button.onPress(event);
 
-                setVisible(visible => !visible);
-              }}
-            />
-          )}
+                  setVisible(visible => !visible);
+                }}
+              />
+            ))}
+          </View>
         </View>
       </View>
     </Modal>
@@ -95,6 +97,9 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
   },
   button: {
     width: "auto",

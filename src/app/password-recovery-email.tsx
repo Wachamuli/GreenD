@@ -1,8 +1,6 @@
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Txt from "../components/info/Txt";
 import { supabase } from "../lib/supabase";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../screens/PasswordRecoveryStack";
 import Link from "../components/controls/Link";
 import {
   horizontalScale,
@@ -32,7 +30,7 @@ const PasswordEmailScreen = () => {
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: { label: "Entendido" },
+        buttonOptions: [{ label: "Entendido" }],
       });
     }
 
