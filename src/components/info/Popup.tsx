@@ -1,12 +1,20 @@
 import { memo, useEffect, useState } from "react";
-import { GestureResponderEvent, Modal, StyleSheet, View } from "react-native";
+import {
+  GestureResponderEvent,
+  Modal,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 import Header from "./Header";
 import Txt from "./Txt";
 import Btn from "../controls/Btn";
-import { horizontalScale, verticalScale } from "../../utilities/metrics";
+import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import { StyleProp } from "react-native";
 
 export type PopupProps = {
   title?: string;
@@ -15,6 +23,8 @@ export type PopupProps = {
   buttonOptions?: {
     label: string;
     onPress?: (event: GestureResponderEvent) => void;
+    style?: StyleProp<TextStyle>;
+    containerStyle?: StyleProp<ViewStyle>;
   }[];
 };
 
@@ -47,7 +57,7 @@ const Popup = (props: PopupProps) => {
               size={80}
             />
           )}
-          {props.title && <Header title={props.title} />}
+          {props.title && <Header style={styles.header} title={props.title} />}
           {props.description && (
             <Txt style={styles.modalText}>{props.description}</Txt>
           )}
@@ -55,7 +65,8 @@ const Popup = (props: PopupProps) => {
             {props.buttonOptions?.map((button, index) => (
               <Btn
                 key={index}
-                style={styles.button}
+                style={[styles.button, button.style]}
+                containerStyle={button.containerStyle}
                 label={button.label}
                 onPress={event => {
                   if (button.onPress) button.onPress(event);
@@ -76,6 +87,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: "90%",
+    marginHorizontal: horizontalScale(20),
   },
   modalView: {
     backgroundColor: "white",
@@ -95,11 +108,19 @@ const styles = StyleSheet.create({
   icon: {
     marginBottom: verticalScale(5),
   },
+  header: {
+    textAlign: "center",
+    fontSize: moderateScale(20)
+  },
   modalText: {
     marginBottom: 15,
+    textAlign: "center",
+    fontSize: moderateScale(14)
   },
   buttonsContainer: {
     flexDirection: "row",
+    width: "100%",
+    columnGap: moderateScale(30),
   },
   button: {
     width: "auto",

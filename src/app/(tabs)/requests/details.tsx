@@ -76,11 +76,29 @@ const ServiceDetails = (): JSX.Element => {
         {
           label: "Atrás",
           onPress: () => {},
+          style: {
+            fontSize: moderateScale(14),
+            backgroundColor: "#f3f5ff",
+            color: ColorPalette.primary,
+
+            paddingHorizontal: horizontalScale(20),
+            paddingVertical: verticalScale(15),
+
+            borderWidth: moderateScale(2),
+            borderColor: ColorPalette.primary,
+          },
         },
         {
           label: "Sí, cancelar",
           onPress: () => cancelServiceRequest(),
-        }
+          style: {
+            fontSize: moderateScale(14),
+            backgroundColor: ColorPalette.error,
+
+            paddingVertical: verticalScale(15),
+            paddingHorizontal: horizontalScale(20),
+          },
+        },
       ],
     });
   };
