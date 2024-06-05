@@ -7,7 +7,7 @@ import {
 import Txt from "./info/Txt";
 import Tappable from "./controls/Tappable";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faX, faXmark, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 
 const Tag = ({
   name,
@@ -21,12 +21,16 @@ const Tag = ({
   onPress?: (event: GestureResponderEvent) => void;
 }): JSX.Element => {
   return (
-    <View style={[styles.tagContainer, { backgroundColor: "#f8fafc", borderColor: "#6b7280" }]}>
+    <View style={[styles.tagContainer]}>
       <Tappable containerStyle={styles.tappableContainer} onPress={onPress}>
         {selected && (
-          <FontAwesomeIcon style={styles.icon} icon={faXmark} color={"#6b7280"} />
+          <FontAwesomeIcon
+            style={styles.icon}
+            icon={faXmarkCircle}
+            color={"rgb(111, 146, 240)"}
+          />
         )}
-        <Txt style={[styles.tag, { color: "#6b7280" }]}>{name}</Txt>
+        <Txt style={[styles.tag]}>{name}</Txt>
       </Tappable>
     </View>
   );
@@ -46,7 +50,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(10),
     paddingVertical: horizontalScale(5),
 
-    borderWidth: moderateScale(2),
+    // borderWidth: moderateScale(2),
+    backgroundColor: "#f3f5ff",
     borderRadius: moderateScale(20),
   },
   tappableContainer: {
@@ -57,8 +62,9 @@ const styles = StyleSheet.create({
     marginRight: horizontalScale(2),
   },
   tag: {
-    color: "white",
+    // color: "white",
     fontFamily: "ffBold",
+    color: "rgb(111, 146, 240)",
   },
 });
 

@@ -12,7 +12,6 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import Tag from "../../../components/Tag";
-import Header from "../../../components/info/Header";
 import { supabase } from "../../../lib/supabase";
 import { type Tag as TagType } from "../../../lib/supabase.type.alias";
 import {
@@ -21,8 +20,13 @@ import {
 } from "../../../utilities/validators/SuggestionSchema";
 import Popup, { type PopupProps } from "../../../components/info/Popup";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { router, useLocalSearchParams } from "expo-router";
+import { ColorPalette } from "../../../styles/colorPalette";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 const Report = (): JSX.Element => {
   const params = useLocalSearchParams();
@@ -95,121 +99,138 @@ const Report = (): JSX.Element => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Header title="Reportar" />
-      <Txt>¿Es esta una sugerencia o queja?</Txt>
-      <Txt>Sugerencia 😊</Txt>
-      <Txt>Queja 😡</Txt>
+    <>
+      <ScrollView style={styles.container}>
+        <Txt>Nos encantaría mejorar nuestros servicios con tu ayuda.</Txt>
 
-      <View style={styles.tagsContainer}>
-        <Txt>Positivos</Txt>
-        <FlatList
-          horizontal
-          data={tags?.filter(tag => tag.positive)}
-          keyExtractor={tag => tag.id.toString()}
-          renderItem={({ item: { id, name, color }, index }) => (
-            <Tag
-              key={index}
-              onPress={() => addTag(id, name, color)}
-              name={name}
-              color={color}
-            />
-          )}
-        />
-        <Txt>Negativos</Txt>
-        <FlatList
-          horizontal
-          data={tags?.filter(tag => !tag.positive)}
-          keyExtractor={tag => tag.id.toString()}
-          renderItem={({ item: { id, name, color }, index }) => (
-            <Tag
-              key={index}
-              onPress={() => addTag(id, name, color)}
-              name={name}
-              color={color}
-            />
-          )}
-        />
-      </View>
-
-      <Field
-        style={styles.subject}
-        name="subject"
-        label="Asunto"
-        control={control}
-        placeholder="¿De qué trata?"
-      />
-
-      <View>
-        <Txt>Etiquetas</Txt>
-        <View style={styles.selectedTagsContainer}>
-          {selectedTags.length < 1 && (
-            <Txt
-              style={{
-                color: "#9ca3af",
-                fontSize: moderateScale(12),
-              }}>
-              Agregue etiquetas para mejorar su sugerencia
-            </Txt>
-          )}
-          {selectedTags.map(({ name, color }, index) => (
-            <Tag
-              key={index}
-              name={name}
-              color={color}
-              selected={true}
-              onPress={() => removeTag(name)}
-            />
-          ))}
+        <View style={styles.tagsContainer}>
+          <FlatList
+            horizontal
+            data={tags?.filter(tag => tag.positive)}
+            keyExtractor={tag => tag.id.toString()}
+            renderItem={({ item: { id, name, color }, index }) => (
+              <Tag
+                key={index}
+                onPress={() => addTag(id, name, color)}
+                name={name}
+                color={color}
+              />
+            )}
+          />
+          <FlatList
+            horizontal
+            data={tags?.filter(tag => !tag.positive)}
+            keyExtractor={tag => tag.id.toString()}
+            renderItem={({ item: { id, name, color }, index }) => (
+              <Tag
+                key={index}
+                onPress={() => addTag(id, name, color)}
+                name={name}
+                color={color}
+              />
+            )}
+          />
         </View>
+
+        <Txt style={{ fontFamily: "ffBold", marginBottom: verticalScale(10) }}>
+          Asunto
+        </Txt>
+
+        <Field
+          style={styles.subject}
+          name="subject"
+          control={control}
+          placeholder="¿De qué trata?"
+        />
+
+        <View>
+          <View style={styles.selectedTagsContainer}>
+            {selectedTags.length < 1 && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}>
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  style={{ marginRight: horizontalScale(5) }}
+                  color="#9ca3af"
+                />
+                <Txt style={styles.selectedTagsPlaceholder}>
+                  Agregue etiquetas para mejorar su sugerencia
+                </Txt>
+              </View>
+            )}
+            {selectedTags.map(({ name, color }, index) => (
+              <Tag
+                key={index}
+                name={name}
+                color={color}
+                selected={true}
+                onPress={() => removeTag(name)}
+              />
+            ))}
+          </View>
+        </View>
+
+        <Field
+          style={styles.body}
+          name="body"
+          control={control}
+          placeholder="Detalles del reporte."
+        />
+
+        <Popup {...popupProps} />
+      </ScrollView>
+      <View
+        style={{
+          backgroundColor: "white",
+          paddingHorizontal: horizontalScale(20),
+        }}>
+        <Btn
+          onPress={handleSubmit(onSubmit)}
+          style={styles.button}
+          label="Enviar"
+        />
       </View>
-
-      <Field
-        style={styles.body}
-        name="body"
-        control={control}
-        placeholder="Tu reporte"
-      />
-
-      <Btn
-        onPress={handleSubmit(onSubmit)}
-        style={styles.button}
-        label="Enviar"
-      />
-
-      <Popup {...popupProps} />
-    </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: horizontalScale(10),
-    marginTop: verticalScale(10),
+    backgroundColor: "white",
   },
   tagsContainer: {
-    marginBottom: verticalScale(20),
+    marginVertical: verticalScale(20),
+    rowGap: verticalScale(10),
   },
   subject: {
     width: "100%",
   },
   body: {
-    marginTop: verticalScale(20),
+    marginTop: verticalScale(8),
     textAlignVertical: "top",
     width: "100%",
     height: verticalScale(150),
   },
   selectedTagsContainer: {
     justifyContent: "center",
-    marginTop: verticalScale(10),
+    // marginTop: verticalScale(10),
     borderRadius: moderateScale(10),
-    borderColor: "#9ca3af",
-    borderStyle: "dashed",
-    borderWidth: moderateScale(2),
+    borderColor: ColorPalette.tertiary,
+    borderStyle: "solid",
+    borderWidth: moderateScale(0.5),
     paddingHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(10),
     flexDirection: "row",
     flexWrap: "wrap",
+  },
+  selectedTagsPlaceholder: {
+    color: "#9ca3af",
+    fontSize: moderateScale(12),
   },
   button: {
     width: "100%",
