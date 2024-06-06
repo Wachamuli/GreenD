@@ -34,7 +34,9 @@ const Report = (): JSX.Element => {
     resolver: zodResolver(suggestionSchema),
   });
   const [tags, setTags] = useState<TagType[] | null>([]);
-  const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
+  const [selectedTags, setSelectedTags] = useState<
+    (TagType & { containerColor: string })[]
+  >([]);
   const [popupProps, setPopupProps] = useState<PopupProps>();
   const [username, setUsername] = useState("");
 
@@ -60,14 +62,16 @@ const Report = (): JSX.Element => {
       title: "¡Enviado exitosamente!",
       description: "Gracias por su sugerencia.",
       iconProps: { icon: faCircleCheck, color: "#5cb85c" },
-      buttonOptions: [{
-        label: "Volver atrás",
-        onPress: () =>
-          router.navigate({
-            pathname: "/requests",
-            params: { serviceRequestId: params.serviceRequestId },
-          }),
-      }],
+      buttonOptions: [
+        {
+          label: "Volver atrás",
+          onPress: () =>
+            router.navigate({
+              pathname: "/requests",
+              params: { serviceRequestId: params.serviceRequestId },
+            }),
+        },
+      ],
     });
   };
 
@@ -95,14 +99,23 @@ const Report = (): JSX.Element => {
     setTags(data);
   };
 
-  const addTag = (id: number, name: string, color: string) => {
+  const addTag = (
+    id: number,
+    name: string,
+    color: string,
+    containerColor: string,
+    positive: boolean,
+  ) => {
     for (const tag of selectedTags) {
       if (tag.name === name) {
         return;
       }
     }
 
-    setSelectedTags(prevState => [...prevState, { id, name, color }]);
+    setSelectedTags(prevState => [
+      ...prevState,
+      { id, name, color, containerColor, positive },
+    ]);
   };
 
   const removeTag = (name: string) => {
@@ -119,12 +132,15 @@ const Report = (): JSX.Element => {
             horizontal
             data={tags?.filter(tag => tag.positive)}
             keyExtractor={tag => tag.id.toString()}
-            renderItem={({ item: { id, name, color }, index }) => (
+            renderItem={({ item: { id, name, color, positive }, index }) => (
               <Tag
                 key={index}
-                onPress={() => addTag(id, name, color)}
+                onPress={() =>
+                  addTag(id, name, "rgb(111, 146, 240)", "#f3f5ff", positive)
+                }
                 name={name}
-                color={color}
+                color={"rgb(111, 146, 240)"}
+                containerColor={"#f3f5ff"}
               />
             )}
           />
@@ -132,12 +148,15 @@ const Report = (): JSX.Element => {
             horizontal
             data={tags?.filter(tag => !tag.positive)}
             keyExtractor={tag => tag.id.toString()}
-            renderItem={({ item: { id, name, color }, index }) => (
+            renderItem={({ item: { id, name, color, positive }, index }) => (
               <Tag
                 key={index}
-                onPress={() => addTag(id, name, color)}
+                onPress={() =>
+                  addTag(id, name, ColorPalette.error, "#FDF1FF", positive)
+                }
                 name={name}
-                color={color}
+                color={ColorPalette.error}
+                containerColor={"#FDF1FF"}
               />
             )}
           />
@@ -190,11 +209,12 @@ const Report = (): JSX.Element => {
                 </Txt>
               </View>
             )}
-            {selectedTags.map(({ name, color }, index) => (
+            {selectedTags.map(({ name, color, containerColor }, index) => (
               <Tag
                 key={index}
                 name={name}
                 color={color}
+                containerColor={containerColor}
                 selected={true}
                 onPress={() => removeTag(name)}
               />

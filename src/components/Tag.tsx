@@ -10,28 +10,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
 
-const Tag = ({
-  name,
-  color,
-  selected,
-  onPress,
-}: {
+type Props = {
   name: string;
   color: string;
+  containerColor?: string;
   selected?: boolean;
   onPress?: (event: GestureResponderEvent) => void;
-}): JSX.Element => {
+};
+
+const Tag = (props: Props): JSX.Element => {
   return (
-    <View style={[styles.tagContainer]}>
-      <Tappable containerStyle={styles.tappableContainer} onPress={onPress}>
-        {selected && (
+    <View
+      style={[styles.tagContainer, { backgroundColor: props.containerColor }]}>
+      <Tappable
+        containerStyle={styles.tappableContainer}
+        onPress={props.onPress}>
+        {props.selected && (
           <FontAwesomeIcon
             style={styles.icon}
             icon={faXmarkCircle}
-            color={"rgb(111, 146, 240)"}
+            color={props.color}
           />
         )}
-        <Txt style={[styles.tag]}>{name}</Txt>
+        <Txt style={[styles.tag, { color: props.color }]}>{props.name}</Txt>
       </Tappable>
     </View>
   );
@@ -65,7 +66,6 @@ const styles = StyleSheet.create({
   tag: {
     // color: "white",
     // fontFamily: "ffBold",
-    color: "rgb(111, 146, 240)",
   },
 });
 
