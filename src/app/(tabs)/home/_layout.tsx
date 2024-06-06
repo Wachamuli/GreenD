@@ -91,6 +91,14 @@ const HomeLayout = () => {
         name="all-services"
         options={{ title: "Todos los servicios" }}
       />
+      <Stack.Screen
+        name="booking"
+        options={{ title: "Agendar" }}
+      />
+      <Stack.Screen
+        name="resume"
+        options={{ title: "Resumen" }}
+      />
     </Stack>
   );
 };
