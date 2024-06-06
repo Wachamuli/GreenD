@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
-import { useNavigation } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
@@ -18,7 +17,7 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
 
@@ -129,23 +128,17 @@ const InactiveServiceRequests = () => {
   }
 
   return (
-    <View
-      style={{
-        paddingHorizontal: horizontalScale(20),
-        paddingTop: verticalScale(10),
-        backgroundColor: "white",
-      }}>
-      <FlatList
-        data={serviceRequests}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <ServiceRequestCard {...item} />}
-      />
-    </View>
+    <FlatList
+      style={styles.listContainer}
+      data={serviceRequests}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => <ServiceRequestCard {...item} />}
+    />
   );
 };
 
 const ActiveServicesScreen = (): JSX.Element => {
-  const navigation = useNavigation<navigationProps>();
+  const navigation = useNavigation();
   const [serviceRequests, setServiceRequests] = useState<
     | {
         id: string;
@@ -205,18 +198,12 @@ const ActiveServicesScreen = (): JSX.Element => {
   }
 
   return (
-    <View
-      style={{
-        paddingHorizontal: horizontalScale(20),
-        paddingTop: verticalScale(10),
-        backgroundColor: "white",
-      }}>
-      <FlatList
-        data={serviceRequests}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <ServiceRequestCard {...item} />}
-      />
-    </View>
+    <FlatList
+      style={styles.listContainer}
+      data={serviceRequests}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => <ServiceRequestCard {...item} />}
+    />
   );
 };
 
@@ -259,7 +246,6 @@ const ServiceRequestCard = (item: any) => {
                 Linking.openURL(`tel:${8090001111}`);
               }}
             />
-
           </View>
         </View>
       </View>
@@ -268,6 +254,11 @@ const ServiceRequestCard = (item: any) => {
 };
 
 const styles = StyleSheet.create({
+  listContainer: {
+    paddingHorizontal: horizontalScale(20),
+    paddingTop: verticalScale(10),
+    backgroundColor: "white",
+  },
   container: {
     display: "flex",
     flexDirection: "row",
