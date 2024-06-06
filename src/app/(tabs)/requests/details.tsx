@@ -3,7 +3,6 @@ import { Image, Linking, ScrollView, StyleSheet, View } from "react-native";
 import dayjs from "dayjs";
 
 import Txt from "../../../components/info/Txt";
-import Tappable from "../../../components/controls/Tappable";
 import Card from "../../../components/containers/Card";
 import Header from "../../../components/info/Header";
 import {
@@ -18,17 +17,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faCaretDown,
   faCaretRight,
-  faChevronRight,
-  faDollarSign,
+  faCheck,
   faFlag,
   faPhone,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  faBookmark,
-  faCreditCard,
-  faNewspaper,
-} from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faCreditCard } from "@fortawesome/free-regular-svg-icons";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
 import Grid from "../../../components/containers/Grid";
 import { router, useLocalSearchParams } from "expo-router";
@@ -123,12 +117,7 @@ const ServiceDetails = (): JSX.Element => {
         <Txt>{serviceDetails?.outsourcer?.brief_description}</Txt>
       </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          marginVertical: verticalScale(10),
-          justifyContent: "space-evenly",
-        }}>
+      <View style={styles.buttonsContainer}>
         {/* TODO: CircleButtons phone, profile, maybe delete? */}
         <CircleButton
           icon={faTrashCan}
@@ -145,7 +134,10 @@ const ServiceDetails = (): JSX.Element => {
           onPress={() =>
             router.push({
               pathname: "/requests/report",
-              params: { serviceRequestId: serviceDetails?.id },
+              params: {
+                serviceRequestId: serviceDetails?.id,
+                outsourcerName: serviceDetails?.outsourcer?.name,
+              },
             })
           }
         />
@@ -155,12 +147,7 @@ const ServiceDetails = (): JSX.Element => {
             Linking.openURL(`tel:${8090001111}`);
           }}
         />
-        <CircleButton
-          icon={faBookmark}
-          onPress={() => {
-            Linking.openURL(`tel:${8090001111}`);
-          }}
-        />
+        <CircleButton icon={faBookmark} onPress={() => {}} />
       </View>
 
       <Card>
@@ -180,13 +167,10 @@ const ServiceDetails = (): JSX.Element => {
           </Grid.Col>
 
           <Grid.Col colNumber={2}>
-            {/* Ignores the border radius if you remove the View tag */}
-            <View>
-              <StatusLabel
-                containerStyle={{ alignSelf: "flex-end" }}
-                status={serviceDetails?.status}
-              />
-            </View>
+            <StatusLabel
+              containerStyle={{ alignSelf: "flex-end" }}
+              status={serviceDetails?.status}
+            />
           </Grid.Col>
         </Grid.Row>
 
@@ -254,6 +238,23 @@ const ServiceDetails = (): JSX.Element => {
         )}
       </Card>
 
+      <Txt style={{ fontFamily: "ffBold", marginTop: verticalScale(20) }}>
+        A realizar
+      </Txt>
+
+      <Card style={{ marginTop: verticalScale(10) }}>
+        {serviceDetails?.details.split(",").map((detail, index) => (
+          <View key={index} style={styles.detailContainer}>
+            <FontAwesomeIcon
+              style={{ marginRight: horizontalScale(5) }}
+              icon={faCheck}
+              size={moderateScale(20)}
+            />
+            <Txt>{detail}</Txt>
+          </View>
+        ))}
+      </Card>
+
       {/* TODO: Maybe add a another container for payment details */}
 
       <Popup {...popupProps} />
@@ -263,9 +264,14 @@ const ServiceDetails = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingHorizontal: horizontalScale(20),
+    paddingBottom: verticalScale(20),
     backgroundColor: "white",
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    marginVertical: verticalScale(10),
+    justifyContent: "space-evenly",
   },
   key: {
     fontFamily: "ffItalic",
@@ -284,6 +290,11 @@ const styles = StyleSheet.create({
     width: moderateScale(150),
     height: moderateScale(150),
     borderRadius: moderateScale(150) / 2,
+  },
+  detailContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "99%", // weird
   },
 });
 
