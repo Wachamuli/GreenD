@@ -25,7 +25,7 @@ const RootLayout = () => {
         router.replace("/home");
         break;
       case "SIGNED_OUT":
-        router.replace("/");
+        router.replace("/sign-in");
         break;
       // TODO: We need to move this in a new layout only
       // for the password recovery flow

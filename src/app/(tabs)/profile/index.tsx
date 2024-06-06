@@ -38,6 +38,9 @@ const Option = (props: {
           justifyContent: "space-between",
           alignItems: "center",
           flexDirection: "row",
+          // borderBottomColor: ColorPalette.tertiary,
+          // borderBottomWidth: moderateScale(0.5),
+          // paddingHorizontal: horizontalScale(10)
         }}>
         <View style={styles.optionContainer}>
           <FontAwesomeIcon
@@ -53,7 +56,6 @@ const Option = (props: {
         <FontAwesomeIcon
           icon={faChevronRight}
           color={props.fontColor}
-          // size={props.iconSize}
         />
       </View>
     </Tappable>
@@ -96,60 +98,73 @@ const Profile = (): JSX.Element => {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ backgroundColor: "white" }}>
         <ProfileImagePicker />
 
         <View style={styles.subContainer}>
           <Txt style={styles.fullname}>{fullname}</Txt>
           <Txt style={styles.condominium}>{condominium?.name}</Txt>
 
-          <Option
-            onPress={logout}
-            label="Cerrar sesión"
-            fontColor={ColorPalette.primary}
-            icon={faRightFromBracket}
-            iconSize={moderateScale(21)}
-          />
+          <Txt style={styles.subHeader}>Personal</Txt>
 
-          <Option
-            onPress={() => {}}
-            label="Editar perfil"
-            fontColor={ColorPalette.primary}
-            icon={faPerson}
-            iconSize={moderateScale(25)}
-          />
+          <View style={styles.section}>
+            <Option
+              onPress={() => {}}
+              label="Editar perfil"
+              fontColor={ColorPalette.primary}
+              icon={faPerson}
+              iconSize={moderateScale(25)}
+            />
 
-          <Option
-            onPress={() => {}}
-            label="Cambiar idioma"
-            fontColor={ColorPalette.primary}
-            icon={faLanguage}
-            iconSize={moderateScale(25)}
-          />
+            <Option
+              onPress={() => {}}
+              label="Cambiar idioma"
+              fontColor={ColorPalette.primary}
+              icon={faLanguage}
+              iconSize={moderateScale(25)}
+            />
+          </View>
 
-          <Option
-            onPress={() => {}}
-            label="Gestionar notificaciones"
-            fontColor={ColorPalette.primary}
-            icon={faBell}
-            iconSize={moderateScale(21)}
-          />
+          <Txt style={styles.subHeader}>Configuración</Txt>
 
-          <Option
-            onPress={() => {}}
-            label="Ayuda"
-            fontColor={ColorPalette.primary}
-            icon={faCircleQuestion}
-            iconSize={moderateScale(20)}
-          />
+          <View style={styles.section}>
+            <Option
+              onPress={() => {}}
+              label="Gestionar notificaciones"
+              fontColor={ColorPalette.primary}
+              icon={faBell}
+              iconSize={moderateScale(21)}
+            />
 
-          <Option
-            onPress={() => {}}
-            label="Eliminar cuenta"
-            fontColor={ColorPalette.error}
-            icon={faTrash}
-            iconSize={moderateScale(21)}
-          />
+            <Option
+              onPress={() => {}}
+              label="Ayuda"
+              fontColor={ColorPalette.primary}
+              icon={faCircleQuestion}
+              iconSize={moderateScale(20)}
+            />
+          </View>
+
+          <Txt style={styles.subHeader}>Sesión</Txt>
+
+          <View style={styles.section}>
+            <Option
+              onPress={logout}
+              label="Cerrar sesión"
+              fontColor={ColorPalette.primary}
+              icon={faRightFromBracket}
+              iconSize={moderateScale(21)}
+            />
+
+            <Option
+              onPress={() => {}}
+              label="Eliminar cuenta"
+              fontColor={ColorPalette.error}
+              icon={faTrash}
+              iconSize={moderateScale(21)}
+            />
+          </View>
+
         </View>
 
         <View style={styles.footer}>
@@ -177,6 +192,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: moderateScale(0.5),
     borderBottomColor: ColorPalette.tertiary,
     paddingBottom: verticalScale(20),
+    marginBottom: verticalScale(20),
+  },
+  subHeader: {
+    fontFamily: "ffBold",
+    fontSize: moderateScale(18),
+    marginBottom: verticalScale(5),
   },
   subContainer: {
     width: "100%",
@@ -197,10 +218,12 @@ const styles = StyleSheet.create({
     backgroundColor: ColorPalette.primary,
     borderRadius: moderateScale(90) / 2,
   },
+  section: {
+    marginBottom: verticalScale(20),
+  },
   optionContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: verticalScale(10),
   },
   option: {
     fontFamily: "ffBold",
