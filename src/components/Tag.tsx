@@ -8,6 +8,7 @@ import Txt from "./info/Txt";
 import Tappable from "./controls/Tappable";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { ColorPalette } from "../styles/colorPalette";
 
 const Tag = ({
   name,
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   },
   tag: {
     // color: "white",
-    fontFamily: "ffBold",
+    // fontFamily: "ffBold",
     color: "rgb(111, 146, 240)",
   },
 });

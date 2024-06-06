@@ -36,6 +36,7 @@ const Report = (): JSX.Element => {
   const [tags, setTags] = useState<TagType[] | null>([]);
   const [selectedTags, setSelectedTags] = useState<TagType[]>([]);
   const [popupProps, setPopupProps] = useState<PopupProps>();
+  const [username, setUsername] = useState("");
 
   const onSubmit = async (form: SuggestionSchema) => {
     const { error } = await supabase.rpc("insert_suggestion", {
@@ -50,7 +51,7 @@ const Report = (): JSX.Element => {
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: "#FF7D7D" },
-        buttonOptions: { label: "Entendido" },
+        buttonOptions: [{ label: "Entendido" }],
       });
       return;
     }
@@ -59,18 +60,28 @@ const Report = (): JSX.Element => {
       title: "¡Enviado exitosamente!",
       description: "Gracias por su sugerencia.",
       iconProps: { icon: faCircleCheck, color: "#5cb85c" },
-      buttonOptions: {
+      buttonOptions: [{
         label: "Volver atrás",
         onPress: () =>
           router.navigate({
             pathname: "/requests",
             params: { serviceRequestId: params.serviceRequestId },
           }),
-      },
+      }],
     });
   };
 
+  const getUser = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    setUsername(user?.user_metadata.name);
+  };
+
   useEffect(() => {
+    getUser();
     getTags();
   }, []);
 
@@ -132,6 +143,23 @@ const Report = (): JSX.Element => {
           />
         </View>
 
+        <View
+          style={{
+            flexDirection: "row",
+            width: "70%",
+            justifyContent: "space-between",
+            marginBottom: verticalScale(10),
+          }}>
+          <View>
+            <Txt style={{ color: ColorPalette.tertiary }}>From:</Txt>
+            <Txt style={{ color: ColorPalette.tertiary }}>To:</Txt>
+          </View>
+          <View>
+            <Txt> {username} </Txt>
+            <Txt>{params.outsourcerName}</Txt>
+          </View>
+        </View>
+
         <Txt style={{ fontFamily: "ffBold", marginBottom: verticalScale(10) }}>
           Asunto
         </Txt>
@@ -185,7 +213,9 @@ const Report = (): JSX.Element => {
       </ScrollView>
       <View
         style={{
-          backgroundColor: "white",
+          bottom: 0,
+          width: "100%",
+          position: "absolute",
           paddingHorizontal: horizontalScale(20),
         }}>
         <Btn
@@ -204,6 +234,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   tagsContainer: {
+    borderBottomWidth: moderateScale(0.5),
+    borderColor: ColorPalette.tertiary,
+    paddingBottom: verticalScale(20),
     marginVertical: verticalScale(20),
     rowGap: verticalScale(10),
   },
@@ -211,10 +244,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   body: {
-    marginTop: verticalScale(8),
     textAlignVertical: "top",
     width: "100%",
     height: verticalScale(150),
+    marginTop: verticalScale(8),
+    marginBottom: verticalScale(140),
   },
   selectedTagsContainer: {
     justifyContent: "center",

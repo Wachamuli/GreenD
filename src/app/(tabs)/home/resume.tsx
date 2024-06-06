@@ -171,30 +171,16 @@ const ServiceResume = () => {
         <Header title="A Realizar..." style={styles.subHeader} />
 
         <Card>
-          {/* TODO: Refactorize this sloppy code */}
-          {params.selectedDetail?.split(",").length <= 1 ? (
-            <View style={styles.detailContainer}>
+          {params.selectedDetails?.split(",").map((detail, index) => (
+            <View key={index} style={styles.detailContainer}>
               <FontAwesomeIcon
                 style={{ marginRight: horizontalScale(5) }}
                 icon={faCheck}
                 size={moderateScale(20)}
               />
-              <Txt>{params.selectedDetails}</Txt>
+              <Txt>{detail}</Txt>
             </View>
-          ) : (
-            <>
-              {params.selectedDetails.split(",").map((value, index) => (
-                <View key={index} style={styles.detailContainer}>
-                  <FontAwesomeIcon
-                    style={{ marginRight: horizontalScale(5) }}
-                    icon={faCheck}
-                    size={moderateScale(20)}
-                  />
-                  <Txt>{value}</Txt>
-                </View>
-              ))}
-            </>
-          )}
+          ))}
         </Card>
 
         <Btn label="Solicitar" onPress={createRequest} style={styles.button} />
