@@ -83,116 +83,132 @@ const ServiceResume = () => {
   };
 
   return (
-    <ScrollView>
-      <View style={{ paddingHorizontal: horizontalScale(20) }}>
-        <Card style={styles.card}>
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Servicio</Txt>
-            </Grid.Col>
+    <>
+      <ScrollView
+        style={{ backgroundColor: "white" }}
+        contentContainerStyle={{
+          backgroundColor: "white",
+          paddingHorizontal: horizontalScale(20),
+        }}>
+        <View>
+          <Card style={styles.card}>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Servicio</Txt>
+              </Grid.Col>
 
-            <Grid.Col colNumber={2}>
-              <Txt style={styles.item}>{outsourcer?.service.name}</Txt>
-            </Grid.Col>
-          </Grid.Row>
+              <Grid.Col colNumber={2}>
+                <Txt style={styles.item}>{outsourcer?.service.name}</Txt>
+              </Grid.Col>
+            </Grid.Row>
 
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Contratista</Txt>
-            </Grid.Col>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Contratista</Txt>
+              </Grid.Col>
 
-            <Grid.Col colNumber={2}>
-              <Txt style={styles.item}>{outsourcer?.name}</Txt>
-            </Grid.Col>
-          </Grid.Row>
+              <Grid.Col colNumber={2}>
+                <Txt style={styles.item}>{outsourcer?.name}</Txt>
+              </Grid.Col>
+            </Grid.Row>
 
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Día</Txt>
-            </Grid.Col>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Día</Txt>
+              </Grid.Col>
 
-            <Grid.Col colNumber={2}>
-              <Txt style={styles.item}>
-                {capitalize(dayjs(params.selectedDay).format("dddd, MMMM D"))}
-              </Txt>
-            </Grid.Col>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Hora</Txt>
-            </Grid.Col>
-
-            <Grid.Col colNumber={2}>
-              <Txt style={styles.item}>{params.selectedTime}</Txt>
-            </Grid.Col>
-          </Grid.Row>
-
-          <Grid.Row>
-            <Grid.Col colNumber={1}>
-              <Txt style={styles.key}>Nota</Txt>
-            </Grid.Col>
-
-            <Grid.Col colNumber={2}>
-              {params.note && params.note?.length > 0 ? (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}>
-                  <Link onPress={() => setSeeNote(toggle => !toggle)}>Ver</Link>
-                  <FontAwesomeIcon
-                    icon={seeNote ? faCaretDown : faCaretRight}
-                    color={ColorPalette.primary}
-                  />
-                </View>
-              ) : (
-                <Txt
-                  style={[
-                    styles.item,
-                    { color: ColorPalette.tertiary, fontFamily: "ffItalic" },
-                  ]}>
-                  Sin nota
+              <Grid.Col colNumber={2}>
+                <Txt style={styles.item}>
+                  {capitalize(dayjs(params.selectedDay).format("dddd, MMMM D"))}
                 </Txt>
-              )}
-            </Grid.Col>
-          </Grid.Row>
+              </Grid.Col>
+            </Grid.Row>
 
-          {seeNote && params.note && params.note?.length > 0 ? (
-            <View style={styles.noteContainer}>
-              <Txt>{params.note}</Txt>
-            </View>
-          ) : (
-            <></>
-          )}
-        </Card>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Hora</Txt>
+              </Grid.Col>
 
-        <Header title="A Realizar..." style={styles.subHeader} />
+              <Grid.Col colNumber={2}>
+                <Txt style={styles.item}>{params.selectedTime}</Txt>
+              </Grid.Col>
+            </Grid.Row>
 
-        <Card>
-          {params.selectedDetails?.split(",").map((detail, index) => (
-            <View key={index} style={styles.detailContainer}>
-              <FontAwesomeIcon
-                style={{ marginRight: horizontalScale(5) }}
-                icon={faCheck}
-                size={moderateScale(20)}
-              />
-              <Txt>{detail}</Txt>
-            </View>
-          ))}
-        </Card>
+            <Grid.Row>
+              <Grid.Col colNumber={1}>
+                <Txt style={styles.key}>Nota</Txt>
+              </Grid.Col>
 
+              <Grid.Col colNumber={2}>
+                {params.note && params.note?.length > 0 ? (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "flex-end",
+                    }}>
+                    <Link onPress={() => setSeeNote(toggle => !toggle)}>
+                      Ver
+                    </Link>
+                    <FontAwesomeIcon
+                      icon={seeNote ? faCaretDown : faCaretRight}
+                      color={ColorPalette.primary}
+                    />
+                  </View>
+                ) : (
+                  <Txt
+                    style={[
+                      styles.item,
+                      { color: ColorPalette.tertiary, fontFamily: "ffItalic" },
+                    ]}>
+                    Sin nota
+                  </Txt>
+                )}
+              </Grid.Col>
+            </Grid.Row>
+
+            {seeNote && params.note && params.note?.length > 0 ? (
+              <View style={styles.noteContainer}>
+                <Txt>{params.note}</Txt>
+              </View>
+            ) : (
+              <></>
+            )}
+          </Card>
+
+          <Header title="A Realizar..." style={styles.subHeader} />
+
+          <Card style={{ marginBottom: verticalScale(10) }}>
+            {params.selectedDetails?.split(",").map((detail, index) => (
+              <View key={index} style={styles.detailContainer}>
+                <FontAwesomeIcon
+                  style={{ marginRight: horizontalScale(5) }}
+                  icon={faCheck}
+                  size={moderateScale(20)}
+                />
+                <Txt>{detail}</Txt>
+              </View>
+            ))}
+          </Card>
+        </View>
+      </ScrollView>
+
+      <View
+        style={{
+          bottom: 0,
+          width: "100%",
+          position: "absolute",
+          paddingHorizontal: horizontalScale(20),
+        }}>
         <Btn label="Solicitar" onPress={createRequest} style={styles.button} />
       </View>
-    </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   resumeTableContainer: {
     alignItems: "center",
-    backgroundColor: "white",
     height: "80%",
     marginHorizontal: horizontalScale(10),
     paddingVertical: verticalScale(20),

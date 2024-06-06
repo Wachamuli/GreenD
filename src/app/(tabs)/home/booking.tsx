@@ -100,7 +100,7 @@ const ServiceBookingScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: verticalScale(5),
+    paddingTop: verticalScale(5),
     paddingHorizontal: horizontalScale(20),
     backgroundColor: "white",
   },
