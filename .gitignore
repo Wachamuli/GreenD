@@ -74,3 +74,4 @@ web-build/
 # dev
 %ProgramData%
 notes.md
+.vscode
