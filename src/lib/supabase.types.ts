@@ -12,25 +12,25 @@ export type Database = {
       bookings: {
         Row: {
           booking_id: number
-          outsourcer: string
+          outsourcer_id: string
           user_id: string
         }
         Insert: {
           booking_id?: number
-          outsourcer: string
+          outsourcer_id: string
           user_id: string
         }
         Update: {
           booking_id?: number
-          outsourcer?: string
+          outsourcer_id?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "bookings_outsourcer_fkey"
-            columns: ["outsourcer"]
+            foreignKeyName: "bookings_outsourcer_id_fkey"
+            columns: ["outsourcer_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "outsourcers"
             referencedColumns: ["id"]
           },
           {

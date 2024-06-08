@@ -7,10 +7,12 @@ import {
   faHome,
   faClipboard as faClipboardSolid,
   faUser as faUserSolid,
+  faBookmark as faBookmarkSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser as faUserRegular,
   faClipboard as faClipboardRegular,
+  faBookmark as faBookmarkRegular,
 } from "@fortawesome/free-regular-svg-icons";
 import { supabase } from "../../lib/supabase";
 
@@ -42,9 +44,7 @@ const TabLayout = () => {
   }, []);
 
   return (
-    <Tabs
-      tabBar={CustomTabs}
-      screenOptions={{ headerShown: false }}>
+    <Tabs tabBar={CustomTabs} screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="home"
         options={{
@@ -66,6 +66,18 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
+        name="bookings"
+        options={{
+          title: "Marcadores",
+          tabBarIcon: props => (
+            <FontAwesomeIcon
+              icon={props.focused ? faBookmarkSolid : faBookmarkRegular}
+              {...props}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Perfil",
@@ -79,19 +91,6 @@ const TabLayout = () => {
       />
     </Tabs>
   );
-  // <Tab.Screen
-  //   name="historial"
-  //   component={HistorialScreen}
-  //   options={{
-  //     title: "Historial",
-  //     tabBarIcon: props => (
-  //       <FontAwesomeIcon
-  //         icon={props.focused ? faNewspaperSolid : faNewspaperRegular}
-  //         {...props}
-  //       />
-  //     ),
-  //   }}
-  // />
 };
 
 export default TabLayout;
