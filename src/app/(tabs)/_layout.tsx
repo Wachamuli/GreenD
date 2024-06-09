@@ -8,11 +8,13 @@ import {
   faClipboard as faClipboardSolid,
   faUser as faUserSolid,
   faBookmark as faBookmarkSolid,
+  faCalendar as faCalendarSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faUser as faUserRegular,
   faClipboard as faClipboardRegular,
   faBookmark as faBookmarkRegular,
+  faCalendar as faCalendarRegular,
 } from "@fortawesome/free-regular-svg-icons";
 import { supabase } from "../../lib/supabase";
 
@@ -63,6 +65,18 @@ const TabLayout = () => {
             />
           ),
           tabBarBadge: totalActiveServices,
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: "Calendario",
+          tabBarIcon: props => (
+            <FontAwesomeIcon
+              icon={props.focused ? faCalendarSolid : faCalendarRegular}
+              {...props}
+            />
+          ),
         }}
       />
       <Tabs.Screen

@@ -253,6 +253,8 @@ const ServiceRequestCard = (item: any) => {
   );
 };
 
+export { ServiceRequestCard };
+
 const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: horizontalScale(20),
