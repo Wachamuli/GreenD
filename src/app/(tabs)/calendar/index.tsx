@@ -147,9 +147,8 @@ const Calendar = () => {
               }}
             />
 
-            {/* TODO: Add length to citas: e.g. Citas (2) */}
             <Header
-              title={ `Citas`  }
+              title={`Citas (${serviceRequests?.length})`}
               style={{
                 fontSize: moderateScale(18),
                 marginTop: verticalScale(10),
@@ -157,19 +156,15 @@ const Calendar = () => {
             />
           </>
         )}
-        renderItem={({ item }) => {
-          // FIXME: Not displaying this text
-          if (serviceRequests.length === 0) {
-            Alert.alert("AAAAA")
-            return (
-              <View>
-                <Txt>Sin citas disponibles para hoy</Txt>
-              </View>
-            );
-          }
-
-          return <ServiceRequestCard {...item} />;
-        }}
+        renderItem={({ item }) => <ServiceRequestCard {...item} />}
+        ListEmptyComponent={() => (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <Txt style={{ color: ColorPalette.tertiary }}>
+              Sin citas disponibles para hoy
+            </Txt>
+          </View>
+        )}
       />
     </View>
   );
