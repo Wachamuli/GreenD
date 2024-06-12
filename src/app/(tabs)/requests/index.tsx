@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { TabView, SceneMap } from "react-native-tab-view";
 
@@ -17,7 +16,7 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
-import { router, useNavigation } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
 
@@ -68,7 +67,6 @@ function ServiceRequest() {
 }
 
 const InactiveServiceRequests = () => {
-  const navigation = useNavigation<navigationProps>();
   const [serviceRequests, setServiceRequests] = useState<
     | {
         id: string;
@@ -108,10 +106,9 @@ const InactiveServiceRequests = () => {
     setServiceRequests(data);
   };
 
-  useEffect(() => {
-    const suscription = navigation.addListener("focus", getServiceRequests);
-    return suscription;
-  }, [navigation]);
+  useFocusEffect(() => {
+    getServiceRequests();
+  });
 
   if (serviceRequests && serviceRequests?.length < 1) {
     return (
@@ -138,7 +135,6 @@ const InactiveServiceRequests = () => {
 };
 
 const ActiveServicesScreen = (): JSX.Element => {
-  const navigation = useNavigation();
   const [serviceRequests, setServiceRequests] = useState<
     | {
         id: string;
@@ -178,10 +174,9 @@ const ActiveServicesScreen = (): JSX.Element => {
     setServiceRequests(data);
   };
 
-  useEffect(() => {
-    const suscription = navigation.addListener("focus", getServiceRequests);
-    return suscription;
-  }, [navigation]);
+  useFocusEffect(() => {
+    getServiceRequests();
+  });
 
   if (serviceRequests && serviceRequests?.length < 1) {
     return (
