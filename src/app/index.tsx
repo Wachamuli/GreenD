@@ -24,12 +24,12 @@ const Index = () => {
         <Btn
           style={styles.loginButton}
           label="Iniciar Sesión"
-          onPress={() => router.push("/sign-in")}
+          onPress={() => router.navigate("/sign-in")}
         />
         <Btn
           style={{ width: "100%" }}
           label="Regístrate"
-          onPress={() => router.push("/sign-up")}
+          onPress={() => router.navigate("/sign-up")}
         />
         <View style={styles.helpContainer}>
           <FontAwesomeIcon

@@ -30,7 +30,7 @@ const RootLayout = () => {
       // TODO: We need to move this in a new layout only
       // for the password recovery flow
       case "PASSWORD_RECOVERY":
-        router.push("/password-recovery-new");
+        router.navigate("/password-recovery-new");
         break;
     }
   });

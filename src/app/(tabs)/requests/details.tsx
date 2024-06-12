@@ -132,7 +132,7 @@ const ServiceDetails = (): JSX.Element => {
         <CircleButton
           icon={faFlag}
           onPress={() =>
-            router.push({
+            router.navigate({
               pathname: "/requests/report",
               params: {
                 serviceRequestId: serviceDetails?.id,

@@ -30,8 +30,6 @@ const Bookings = () => {
       return;
     }
 
-    console.log(data)
-
     setBookmarks(data);
   };
 

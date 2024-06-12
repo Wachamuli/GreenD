@@ -47,7 +47,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
       return;
     }
 
-    router.push({
+    router.navigate({
       pathname: "/password-recovery-email",
       params: { email: data.email },
     });

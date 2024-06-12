@@ -198,7 +198,7 @@ const Home = (): JSX.Element => {
                 if (index <= 4) return <ServiceCard {...data} />;
 
                 return (
-                  <Tappable onPress={() => router.push("/home/all-services")}>
+                  <Tappable onPress={() => router.navigate("/home/all-services")}>
                     <View
                       style={{
                         width: moderateScale(100),

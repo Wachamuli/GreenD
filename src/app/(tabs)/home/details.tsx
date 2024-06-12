@@ -194,7 +194,7 @@ const ServiceDetails = (): JSX.Element => {
           label="Continuar"
           style={styles.button}
           onPress={handleSubmit(values =>
-            router.push({
+            router.navigate({
               pathname: "/home/booking",
               params: {
                 serviceId: params.serviceId,

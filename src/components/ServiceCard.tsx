@@ -63,7 +63,7 @@ const ServiceCard = (props: Props): JSX.Element => {
     <Tappable
       containerStyle={[styles.serviceCardContainer]}
       onPress={() => {
-        router.push({
+        router.navigate({
           pathname: "/home/details",
           params: { serviceId: props.id },
         });

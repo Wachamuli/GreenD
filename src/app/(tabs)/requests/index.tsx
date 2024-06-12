@@ -211,7 +211,7 @@ const ServiceRequestCard = (item: any) => {
   return (
     <Tappable
       onPress={() => {
-        router.push({
+        router.navigate({
           pathname: "/requests/details",
           params: { serviceRequestId: item.id },
         });

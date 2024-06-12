@@ -38,7 +38,7 @@ const Login = () => {
 
     if (error) {
       if (error.message === "Email not confirmed") {
-        router.push({
+        router.navigate({
           pathname: "/confirmation",
           params: { email: form.email, password: form.password },
         });
@@ -83,7 +83,7 @@ const Login = () => {
 
         <View style={styles.createAccount}>
           <Txt>¿No tienes cuenta? </Txt>
-          <Link onPress={() => router.push("/sign-up")}>Regístrate</Link>
+          <Link onPress={() => router.navigate("/sign-up")}>Regístrate</Link>
         </View>
       </View>
 
