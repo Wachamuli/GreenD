@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-import { Stack, SplashScreen, router } from "expo-router";
+import { Stack, SplashScreen, useNavigation } from "expo-router";
+import { CommonActions } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import dayjs from "dayjs";
+
 import CustomHeader from "../components/layout/CustomHeader";
 import { supabase } from "../lib/supabase";
 
@@ -11,28 +13,38 @@ dayjs.locale("es");
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
+  const navigation = useNavigation();
+
+  supabase.auth.onAuthStateChange(events => {
+    switch (events) {
+      case "SIGNED_IN":
+        navigation.dispatch(
+          CommonActions.reset({
+            routes: [{ name: "(tabs)" }],
+          }),
+        );
+        break;
+      case "SIGNED_OUT":
+        navigation.dispatch(
+          CommonActions.reset({
+            routes: [{ name: "sign-in" }],
+          }),
+        );
+        break;
+      // TODO: We need to move this in a new layout only
+      // for the password recovery flow
+      case "PASSWORD_RECOVERY":
+        // router.navigate("/password-recovery-new");
+        break;
+    }
+  });
+
   const [fontsLoaded, fontsError] = useFonts({
     ffNormal: require("../assets/fonts/Montserrat/static/Montserrat-Regular.ttf"),
     ffItalic: require("../assets/fonts/Montserrat/static/Montserrat-Italic.ttf"),
     ffBold: require("../assets/fonts/Montserrat/static/Montserrat-Bold.ttf"),
     ffBoldItalic: require("../assets/fonts/Montserrat/static/Montserrat-BoldItalic.ttf"),
     ffBlack: require("../assets/fonts/Montserrat/static/Montserrat-Black.ttf"),
-  });
-
-  supabase.auth.onAuthStateChange(events => {
-    switch (events) {
-      case "SIGNED_IN":
-        router.replace("/home");
-        break;
-      case "SIGNED_OUT":
-        router.replace("/sign-in");
-        break;
-      // TODO: We need to move this in a new layout only
-      // for the password recovery flow
-      case "PASSWORD_RECOVERY":
-        router.navigate("/password-recovery-new");
-        break;
-    }
   });
 
   useEffect(() => {
