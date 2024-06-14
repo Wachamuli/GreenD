@@ -17,6 +17,7 @@ import { ColorPalette } from "../../styles/colorPalette";
 
 type Props = {
   data: ArrayLike<any> | null | undefined;
+  selected: string | number;
   onPress?: (id: string | number, event: GestureResponderEvent) => void;
   style?: {
     backgroundColor?: string;
@@ -29,8 +30,6 @@ type Props = {
 };
 
 const Filter = (props: Props) => {
-  const [selected, setSelected] = useState<string | number>(0);
-
   const FilterTag = ({ name, id }: { name: string; id: string | number }) => {
     return (
       <View
@@ -38,24 +37,23 @@ const Filter = (props: Props) => {
           styles.tagContainer,
           {
             backgroundColor:
-              selected == id
+              props.selected == id
                 ? props.style?.selectedBackgroundColor
                 : props.style?.backgroundColor,
           },
         ]}>
         <Tappable
           onPress={e => {
-            setSelected(id.toString());
             props.onPress && props.onPress(id, e);
           }}>
           <Txt
             style={{
               color:
-                selected == id
+                props.selected == id
                   ? props.style?.selectedColor
                   : props.style?.color,
               borderColor:
-                selected == id
+                props.selected == id
                   ? props.style?.selectedBorderColor
                   : props.style?.borderColor,
             }}>
@@ -68,11 +66,9 @@ const Filter = (props: Props) => {
 
   return (
     <FlatList
-      contentContainerStyle={{
-        backgroundColor: "white",
-        paddingTop: verticalScale(10),
-      }}
       horizontal
+      style={styles.list}
+      contentContainerStyle={styles.containerList}
       data={props.data}
       renderItem={({ item, index }) => {
         if (index === 0) {
@@ -107,6 +103,14 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: horizontalScale(2),
+  },
+  list: {
+    paddingBottom: verticalScale(5),
+    backgroundColor: "white",
+  },
+  containerList: {
+    backgroundColor: "white",
+    paddingHorizontal: horizontalScale(20),
   },
 });
 
