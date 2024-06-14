@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
@@ -19,6 +19,7 @@ import { capitalize, timeFormatter } from "../../../utilities/utils";
 import { router, useFocusEffect } from "expo-router";
 import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
+import Filter from "../../../components/controls/Filter";
 
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
@@ -66,6 +67,20 @@ function ServiceRequest() {
   );
 }
 
+const EmptyRequestList = () => {
+  return (
+    <View
+      style={{
+        display: "flex",
+        marginTop: "50%",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+      <Txt>Sin solicitudes por el momento</Txt>
+    </View>
+  );
+};
+
 const InactiveServiceRequests = () => {
   const [serviceRequests, setServiceRequests] = useState<
     | {
@@ -106,30 +121,20 @@ const InactiveServiceRequests = () => {
     setServiceRequests(data);
   };
 
-  useFocusEffect(() => {
-    getServiceRequests();
-  });
-
-  if (serviceRequests && serviceRequests?.length < 1) {
-    return (
-      <View
-        style={{
-          display: "flex",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <Txt>Sin solicitudes por el momento</Txt>
-      </View>
-    );
-  }
+  useFocusEffect(
+    useCallback(() => {
+      getServiceRequests();
+    }, []),
+  );
 
   return (
     <FlatList
       style={styles.listContainer}
       data={serviceRequests}
       keyExtractor={item => item.id}
+      // ListHeaderComponent={() => <Filter data={} />}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
+      ListEmptyComponent={EmptyRequestList}
     />
   );
 };
@@ -174,23 +179,11 @@ const ActiveServicesScreen = (): JSX.Element => {
     setServiceRequests(data);
   };
 
-  useFocusEffect(() => {
-    getServiceRequests();
-  });
-
-  if (serviceRequests && serviceRequests?.length < 1) {
-    return (
-      <View
-        style={{
-          display: "flex",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-        <Txt>Sin solicitudes por el momento</Txt>
-      </View>
-    );
-  }
+  useFocusEffect(
+    useCallback(() => {
+      getServiceRequests();
+    }, []),
+  );
 
   return (
     <FlatList
@@ -198,6 +191,7 @@ const ActiveServicesScreen = (): JSX.Element => {
       data={serviceRequests}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
+      ListEmptyComponent={EmptyRequestList}
     />
   );
 };
@@ -306,3 +300,6 @@ const styles = StyleSheet.create({
 });
 
 export default ServiceRequest;
+function a(): undefined {
+  throw new Error("Function not implemented.");
+}
