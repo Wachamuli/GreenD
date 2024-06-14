@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
@@ -21,47 +21,71 @@ import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
 import Filter from "../../../components/controls/Filter";
 
+// TODO: This code needs a heavery refactorization.
+
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
-
   const [routes] = useState([
     { key: "first", title: "Pendiente" },
     { key: "second", title: "Completado" },
   ]);
+  const [services, setServices] = useState();
+  const [serviceFilter, setServiceFilter] = useState<string | number>(0);
+
+  const getServices = async () => {
+    const { data } = await supabase.from("services").select("id, name");
+    setServices(data);
+  };
+
+  useEffect(() => {
+    getServices();
+  }, []);
 
   return (
     <TabView
       renderTabBar={props => (
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            borderBottomWidth: moderateScale(1),
-            borderColor: ColorPalette.tertiary,
-            paddingBottom: verticalScale(10),
-            backgroundColor: "white",
-          }}>
-          {props.navigationState.routes.map((route, index) => {
-            const currentIndex = props.navigationState.index === index;
-            return (
-              <Tappable key={index} onPress={() => setIndex(index)}>
-                <Txt
-                  style={{
-                    fontFamily: currentIndex ? "ffBold" : "ffNormal",
-                    color: currentIndex ? ColorPalette.primary : "#9ca3af",
-                  }}>
-                  {route.title}
-                </Txt>
-              </Tappable>
-            );
-          })}
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              borderBottomWidth: moderateScale(1),
+              borderColor: ColorPalette.tertiary,
+              paddingBottom: verticalScale(10),
+              backgroundColor: "white",
+            }}>
+            {props.navigationState.routes.map((route, index) => {
+              const currentIndex = props.navigationState.index === index;
+              return (
+                <Tappable key={index} onPress={() => setIndex(index)}>
+                  <Txt
+                    style={{
+                      fontFamily: currentIndex ? "ffBold" : "ffNormal",
+                      color: currentIndex ? ColorPalette.primary : "#9ca3af",
+                    }}>
+                    {route.title}
+                  </Txt>
+                </Tappable>
+              );
+            })}
+          </View>
+
+          <Filter
+            data={services}
+            onPress={id => setServiceFilter(id)}
+            style={{
+              selectedColor: "white",
+              selectedBorderColor: "white",
+              selectedBackgroundColor: ColorPalette.primary,
+            }}
+          />
         </View>
       )}
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={SceneMap({
-        first: ActiveServicesScreen,
-        second: InactiveServiceRequests,
+        first: () => <ActiveServicesScreen serviceFilter={serviceFilter} />,
+        second: () => <InactiveServiceRequests serviceFilter={serviceFilter} />,
       })}
     />
   );
@@ -81,7 +105,11 @@ const EmptyRequestList = () => {
   );
 };
 
-const InactiveServiceRequests = () => {
+const InactiveServiceRequests = ({
+  serviceFilter,
+}: {
+  serviceFilter: string | number;
+}) => {
   const [serviceRequests, setServiceRequests] = useState<
     | {
         id: string;
@@ -105,13 +133,33 @@ const InactiveServiceRequests = () => {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("service_requests")
-      .select(
-        "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
-      )
-      .or("status.eq.Completed, status.eq.Canceled")
-      .eq("user_id", user.id);
+    let data;
+    let error;
+
+    if (serviceFilter) {
+      const { data: filteredRequests, error: errorRequest } = await supabase
+        .from("service_requests")
+        .select(
+          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
+        )
+        .or("status.eq.Completed, status.eq.Canceled")
+        .eq("service", serviceFilter)
+        .eq("user_id", user.id);
+
+      error = errorRequest;
+      data = filteredRequests;
+    } else {
+      const { data: allRequests, error: errorRequest } = await supabase
+        .from("service_requests")
+        .select(
+          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
+        )
+        .or("status.eq.Completed, status.eq.Canceled")
+        .eq("user_id", user.id);
+
+      error = errorRequest;
+      data = allRequests;
+    }
 
     if (error) {
       console.log(error.message);
@@ -132,14 +180,17 @@ const InactiveServiceRequests = () => {
       style={styles.listContainer}
       data={serviceRequests}
       keyExtractor={item => item.id}
-      // ListHeaderComponent={() => <Filter data={} />}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
       ListEmptyComponent={EmptyRequestList}
     />
   );
 };
 
-const ActiveServicesScreen = (): JSX.Element => {
+const ActiveServicesScreen = ({
+  serviceFilter,
+}: {
+  serviceFilter: string | number;
+}): JSX.Element => {
   const [serviceRequests, setServiceRequests] = useState<
     | {
         id: string;
@@ -163,13 +214,33 @@ const ActiveServicesScreen = (): JSX.Element => {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("service_requests")
-      .select(
-        "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
-      )
-      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-      .eq("user_id", user.id);
+    let data;
+    let error;
+
+    if (serviceFilter) {
+      const { data: filteredRequests, error: errorRequest } = await supabase
+        .from("service_requests")
+        .select(
+          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
+        )
+        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+        .eq("service", serviceFilter)
+        .eq("user_id", user.id);
+
+      error = errorRequest;
+      data = filteredRequests;
+    } else {
+      const { data: allRequests, error: errorRequest } = await supabase
+        .from("service_requests")
+        .select(
+          "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
+        )
+        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+        .eq("user_id", user.id);
+
+      error = errorRequest;
+      data = allRequests;
+    }
 
     if (error) {
       console.log(error.message);
