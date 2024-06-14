@@ -37,11 +37,21 @@ const Calendar = () => {
   );
 
   const getBookings = async (selectedDay: string) => {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (!user || userError) {
+      console.error(userError?.message || "Could not get user.");
+      return;
+    }
+
     const { data: serviceRequests } = await supabase
       .from("service_requests")
       .select("*, outsourcer(name, logo), service(name) ")
       .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-      .eq("user_id", "dda5f1fe-63a1-48f2-805d-eae991ecd996");
+      .eq("user_id", user.id);
 
     const filteredServices = serviceRequests?.filter(
       requests => requests.r_date === selectedDay,
