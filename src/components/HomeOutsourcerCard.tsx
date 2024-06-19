@@ -34,8 +34,6 @@ const HomeOutsourcerCard = (item: any) => {
       return null;
     }
 
-    // console.log(data);
-
     data.length > 0 ? setIsBookmarked(true) : setIsBookmarked(false);
 
     return data[0].booking_id?.toString();

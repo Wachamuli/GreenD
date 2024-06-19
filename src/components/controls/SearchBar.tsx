@@ -28,6 +28,7 @@ const SearchBar = () => {
 const styles = StyleSheet.create({
   container: {
     marginBottom: verticalScale(5),
+    paddingHorizontal: horizontalScale(20),
     width: "100%",
   },
   textInput: {

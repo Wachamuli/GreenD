@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { Alert, FlatList, StyleSheet, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 import { Calendar as CalendarComponent } from "react-native-calendars";
 import { supabase } from "../../../lib/supabase";
-import { timeFormatter } from "../../../utilities/utils";
 import Txt from "../../../components/info/Txt";
 import {
   horizontalScale,
@@ -17,8 +16,7 @@ import {
 import dayjs from "dayjs";
 import { ColorPalette } from "../../../styles/colorPalette";
 import Header from "../../../components/info/Header";
-import Tappable from "../../../components/controls/Tappable";
-import { router } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import { ServiceRequestCard } from "../requests";
 
 type SelectedDay = {
@@ -73,6 +71,12 @@ const Calendar = () => {
 
     setBookingDays(formattedBookingDays);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getBookings(selectedDay);
+    }, []),
+  );
 
   useEffect(() => {
     getBookings(selectedDay);

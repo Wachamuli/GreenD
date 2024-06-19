@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
@@ -44,7 +44,7 @@ function ServiceRequest() {
   return (
     <TabView
       renderTabBar={props => (
-        <View>
+        <View style={{ backgroundColor: "white" }}>
           <View
             style={{
               flexDirection: "row",
@@ -70,15 +70,18 @@ function ServiceRequest() {
             })}
           </View>
 
-          <Filter
-            data={services}
-            onPress={id => setServiceFilter(id)}
-            style={{
-              selectedColor: "white",
-              selectedBorderColor: "white",
-              selectedBackgroundColor: ColorPalette.primary,
-            }}
-          />
+          <View style={{ paddingTop: verticalScale(20) }}>
+            <Filter
+              data={services}
+              selected={serviceFilter}
+              onPress={id => setServiceFilter(id)}
+              style={{
+                selectedColor: "white",
+                selectedBorderColor: "white",
+                selectedBackgroundColor: ColorPalette.primary,
+              }}
+            />
+          </View>
         </View>
       )}
       navigationState={{ index, routes }}
