@@ -38,7 +38,12 @@ const Index = () => {
             color={ColorPalette.tertiary}
             size={moderateScale(18)}
           />
-          <Txt style={{ color: ColorPalette.tertiary, fontFamily: "ffBold", fontSize: moderateScale(14) }}>
+          <Txt
+            style={{
+              color: ColorPalette.tertiary,
+              fontFamily: "ffBold",
+              fontSize: moderateScale(14),
+            }}>
             Ayuda
           </Txt>
         </View>

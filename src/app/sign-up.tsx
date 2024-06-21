@@ -26,12 +26,12 @@ const Signup = (): JSX.Element => {
   const { control, handleSubmit, setError } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
+  const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [popupProps, setPopupProps] = useState<PopupProps>();
   const [condominiums, setCondomiums] = useState<
     { id: string; name: string }[] | null
   >();
-  const [popupProps, setPopupProps] = useState<PopupProps>();
-  const [image, setImage] = useState("");
 
   const getCondomiums = async () => {
     const { data, error } = await supabase
@@ -39,34 +39,19 @@ const Signup = (): JSX.Element => {
       .select("id, name");
 
     if (error) {
-      /* Handle error */
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: [{ label: "Entendido" }],
+      });
     }
 
     setCondomiums(data);
   };
 
-  // FIXME: This is not working because of the Row Level Security of the Auth schema.
-  const checkEmailExists = async (email: string): Promise<boolean | null> => {
-    const { data, error } = await supabase.rpc("check_email_exists", {
-      email_to_check: email,
-    });
-
-    if (error) {
-      // TODO: Handle error
-    }
-
-    return data;
-  };
-
   const onSubmit = async (values: SignUpSchema) => {
     setLoading(true);
-
-    // const emailExits = await checkEmailExists(values.email);
-
-    // if (emailExits) {
-    //   setError("email", { message: "Este correo ya está en uso" });
-    //   return;
-    // }
 
     const { error } = await supabase.auth.signUp({
       email: values.email,
@@ -86,6 +71,11 @@ const Signup = (): JSX.Element => {
     setLoading(false);
 
     if (error) {
+      if (error.code === "user_already_exists") {
+        setError("email", { message: "Correo ocupado"})
+        return;
+      }
+
       setPopupProps({
         title: "¡Ups! Algo salió mal",
         description: error.message,
