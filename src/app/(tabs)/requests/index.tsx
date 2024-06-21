@@ -126,16 +126,6 @@ const InactiveServiceRequests = ({
   >([]);
 
   const getServiceRequests = async () => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (!user || userError) {
-      console.error(userError?.message || "Could not get user.");
-      return;
-    }
-
     let data;
     let error;
 
@@ -147,7 +137,6 @@ const InactiveServiceRequests = ({
         )
         .or("status.eq.Completed, status.eq.Canceled")
         .eq("service", serviceFilter)
-        .eq("user_id", user.id);
 
       error = errorRequest;
       data = filteredRequests;
@@ -158,7 +147,6 @@ const InactiveServiceRequests = ({
           "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
         )
         .or("status.eq.Completed, status.eq.Canceled")
-        .eq("user_id", user.id);
 
       error = errorRequest;
       data = allRequests;
@@ -207,16 +195,6 @@ const ActiveServicesScreen = ({
   >([]);
 
   const getServiceRequests = async () => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (!user || userError) {
-      console.error(userError?.message || "Could not get user.");
-      return;
-    }
-
     let data;
     let error;
 
@@ -228,7 +206,6 @@ const ActiveServicesScreen = ({
         )
         .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
         .eq("service", serviceFilter)
-        .eq("user_id", user.id);
 
       error = errorRequest;
       data = filteredRequests;
@@ -239,7 +216,6 @@ const ActiveServicesScreen = ({
           "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
         )
         .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-        .eq("user_id", user.id);
 
       error = errorRequest;
       data = allRequests;

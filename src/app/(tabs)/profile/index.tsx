@@ -53,43 +53,32 @@ const Option = (props: {
             {props.label}
           </Txt>
         </View>
-        <FontAwesomeIcon
-          icon={faChevronRight}
-          color={props.fontColor}
-        />
+        <FontAwesomeIcon icon={faChevronRight} color={props.fontColor} />
       </View>
     </Tappable>
   );
 };
 
 const Profile = (): JSX.Element => {
-  const [fullname, setFullname] = useState("");
-  const [condominium, setCondominium] = useState<{ name: string } | null>();
+  const [profile, setProfile] = useState({
+    name: "",
+    surname: "",
+    condominium: { name: "" },
+  });
 
   const logout = async () => {
-    // TODO: Manage error
+    // TODO: Handle error
     const { error } = await supabase.auth.signOut();
   };
 
   const getUser = async () => {
-    const { data, error: userError } = await supabase.auth.getUser();
-
-    if (userError) {
-    }
-
-    const { data: condominiumData, error: condominiumError } = await supabase
-      .from("condominiums")
-      .select("name")
-      .eq("id", data.user?.user_metadata.condominium)
+    // TODO: Handle error
+    const { data: user, error } = await supabase
+      .from("profiles")
+      .select("name, surname, condominium (name)")
       .single();
 
-    if (condominiumError) {
-    }
-
-    setCondominium(condominiumData);
-    setFullname(
-      data.user?.user_metadata.name + " " + data.user?.user_metadata.surname,
-    );
+    setProfile(user);
   };
 
   useEffect(() => {
@@ -102,8 +91,10 @@ const Profile = (): JSX.Element => {
         <ProfileImagePicker />
 
         <View style={styles.subContainer}>
-          <Txt style={styles.fullname}>{fullname}</Txt>
-          <Txt style={styles.condominium}>{condominium?.name}</Txt>
+          <Txt style={styles.fullname}>
+            {profile.name + " " + profile.surname}
+          </Txt>
+          <Txt style={styles.condominium}>{profile.condominium.name}</Txt>
 
           <Txt style={styles.subHeader}>Personal</Txt>
 
@@ -164,7 +155,6 @@ const Profile = (): JSX.Element => {
               iconSize={moderateScale(21)}
             />
           </View>
-
         </View>
 
         <View style={styles.footer}>
@@ -178,7 +168,6 @@ const Profile = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: ColorPalette.tertiary,
     backgroundColor: "white",
     paddingVertical: verticalScale(50),
     marginBottom: verticalScale(50),

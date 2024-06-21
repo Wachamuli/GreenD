@@ -3,27 +3,17 @@ import Txt from "../../../components/info/Txt";
 import { horizontalScale, verticalScale } from "../../../utilities/metrics";
 import HomeOutsourcerCard from "../../../components/HomeOutsourcerCard";
 import { type Bookings as BookingType } from "../../../lib/supabase.type.alias";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../../lib/supabase";
+import { useFocusEffect } from "expo-router";
 
 const Bookings = () => {
   const [bookmarks, setBookmarks] = useState<BookingType[]>();
 
   const getBookmarkedOutsourcers = async () => {
-    const {
-      data: { user },
-      error: userError
-    } = await supabase.auth.getUser();
-
-    if (userError) {
-      console.log(userError);
-      return;
-    }
-
     const { data, error } = await supabase
       .from("bookings")
       .select("outsourcer_id (*)")
-      .eq("user_id", user?.id);
 
     if (error) {
       console.log(error);
@@ -33,9 +23,11 @@ const Bookings = () => {
     setBookmarks(data);
   };
 
-  useEffect(() => {
-    getBookmarkedOutsourcers();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getBookmarkedOutsourcers();
+    }, []),
+  );
 
   return (
     <FlatList

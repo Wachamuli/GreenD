@@ -58,6 +58,11 @@ const ServiceDetails = (): JSX.Element => {
       .update({ status: "Canceled" })
       .eq("id", params.serviceRequestId);
 
+    if (error) {
+      console.log(error);
+      return;
+    }
+
     // TODO: Instead of goBack go to the Suggestions screen
     router.dismiss();
   };
