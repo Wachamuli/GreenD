@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 
+import { Control, FieldValue, useController } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus, faUser } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../../styles/colorPalette";
@@ -8,10 +9,32 @@ import * as ImagePicker from "expo-image-picker";
 
 import Tappable from "./Tappable";
 import { moderateScale, verticalScale } from "../../utilities/metrics";
+import ErrorMessage from "../info/ErrorMessage";
 
-// TODO: Doesn't upload nothing to the DB yet.
-const ProfileImagePicker = () => {
+type Props = {
+  name: string;
+  control: Control<FieldValue<any>>;
+  value: string;
+  onValueChange: any;
+};
+
+const ProfileImagePicker = (props: Props) => {
   const [image, setImage] = useState("");
+  const {
+    fieldState: { error: fieldError },
+  } = useController({
+    name: props.name,
+    defaultValue: "",
+    control: props.control,
+  });
+
+  useEffect(() => {
+    props.onValueChange(props.name, image);
+  }, [image]);
+
+  useEffect(() => {
+    setImage(props.value);
+  }, [props.value]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -22,9 +45,7 @@ const ProfileImagePicker = () => {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    if (!result.canceled) setImage(result.assets[0].uri);
   };
 
   return (
@@ -51,6 +72,7 @@ const ProfileImagePicker = () => {
           />
         </View>
       </Tappable>
+      <ErrorMessage error={fieldError} />
     </View>
   );
 };

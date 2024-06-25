@@ -3,6 +3,7 @@ import { passwordRegex } from "../utils";
 
 export const signUpSchema = z
   .object({
+    avatar: z.string().optional(),
     name: z.string().min(1, "Un nombre es necesario"),
     surname: z.string().optional(),
     email: z

@@ -23,10 +23,10 @@ import {
 } from "../utilities/validators/SignUpSchema";
 
 const Signup = (): JSX.Element => {
-  const { control, handleSubmit, setError } = useForm<SignUpSchema>({
+  const [image, setImage] = useState("");
+  const { control, handleSubmit, setError, setValue } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
-  const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [popupProps, setPopupProps] = useState<PopupProps>();
   const [condominiums, setCondomiums] = useState<
@@ -50,10 +50,58 @@ const Signup = (): JSX.Element => {
     setCondomiums(data);
   };
 
+  const uploadUserAvatar = async (
+    userId: string,
+    imageUri: string | undefined,
+  ) => {
+    if (!imageUri) return;
+
+    const imageExtension = imageUri.substring(imageUri.lastIndexOf(".") + 1);
+    const imagePath = "avatar." + imageExtension;
+    const imageFullPath = userId + "/" + imagePath;
+
+    const formData = new FormData();
+    formData.append("files", {
+      uri: imageUri,
+      name: imageFullPath,
+      type: `image/${imageExtension}`,
+    });
+
+    const { data, error } = await supabase.storage
+      .from("test")
+      .upload(imageFullPath, formData, {
+        contentType: `image/${imageExtension}`,
+        upsert: true,
+      });
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    const { data: f } = supabase.storage.from("test").getPublicUrl(data.path);
+
+    // The row is not updated because the user is not authenticated a this point.
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({
+        avatar: f.publicUrl,
+      })
+      .eq("id", userId);
+
+    if (updateError) {
+      console.error(updateError.message);
+      return;
+    }
+  };
+
   const onSubmit = async (values: SignUpSchema) => {
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signUp({
       email: values.email,
       password: values.password,
       phone: values.cellphone,
@@ -72,7 +120,7 @@ const Signup = (): JSX.Element => {
 
     if (error) {
       if (error.code === "user_already_exists") {
-        setError("email", { message: "Correo ocupado"})
+        setError("email", { message: "Correo ocupado" });
         return;
       }
 
@@ -84,6 +132,8 @@ const Signup = (): JSX.Element => {
       });
       return;
     }
+
+    uploadUserAvatar(user?.id as string, values.avatar);
 
     router.replace({
       pathname: "/confirmation",
@@ -97,7 +147,12 @@ const Signup = (): JSX.Element => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <ProfileImagePicker />
+      <ProfileImagePicker
+        name="avatar"
+        control={control}
+        value={image}
+        onValueChange={setValue}
+      />
 
       <Field
         name="name"

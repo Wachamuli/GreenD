@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 
 import Txt from "../../../components/info/Txt";
 import { supabase } from "../../../lib/supabase";
@@ -9,87 +9,127 @@ import {
   moderateScale,
   verticalScale,
 } from "../../../utilities/metrics";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
-  IconDefinition,
   faBell,
-  faChevronRight,
   faCircleQuestion,
   faLanguage,
   faPerson,
   faRightFromBracket,
   faTrash,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "../../../components/controls/Link";
-import Tappable from "../../../components/controls/Tappable";
 import ProfileImagePicker from "../../../components/controls/ProfileImagePicker";
-
-const Option = (props: {
-  onPress: () => void;
-  fontColor: string;
-  icon: IconDefinition;
-  iconSize: number;
-  label: string;
-}): JSX.Element => {
-  return (
-    <Tappable onPress={props.onPress}>
-      <View
-        style={{
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          // borderBottomColor: ColorPalette.tertiary,
-          // borderBottomWidth: moderateScale(0.5),
-          // paddingHorizontal: horizontalScale(10)
-        }}>
-        <View style={styles.optionContainer}>
-          <FontAwesomeIcon
-            style={{ maxWidth: horizontalScale(20) }}
-            icon={props.icon}
-            color={props.fontColor}
-            size={props.iconSize}
-          />
-          <Txt style={[styles.option, { color: props.fontColor }]}>
-            {props.label}
-          </Txt>
-        </View>
-        <FontAwesomeIcon icon={faChevronRight} color={props.fontColor} />
-      </View>
-    </Tappable>
-  );
-};
+import { useForm } from "react-hook-form";
+import Popup, { PopupProps } from "../../../components/info/Popup";
+import SettingsOption from "../../../components/controls/SettingsOptions";
 
 const Profile = (): JSX.Element => {
+  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const { control, setValue, watch } = useForm();
   const [profile, setProfile] = useState({
+    id: "",
+    avatar: "",
     name: "",
     surname: "",
     condominium: { name: "" },
   });
 
   const logout = async () => {
-    // TODO: Handle error
     const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: [{ label: "Entendido" }],
+      });
+    }
   };
 
-  const getUser = async () => {
-    // TODO: Handle error
-    const { data: user, error } = await supabase
+  const uploadUserAvatar = async (
+    userId: string,
+    imageUri: string | undefined,
+  ) => {
+    if (!imageUri) return;
+
+    const imageExtension = imageUri.substring(imageUri.lastIndexOf(".") + 1);
+    const imagePath = "avatar." + imageExtension;
+    const imageFullPath = userId + "/" + imagePath;
+
+    const formData = new FormData();
+    formData.append("files", {
+      uri: imageUri,
+      name: imageFullPath,
+      type: `image/${imageExtension}`,
+    });
+
+    const { data, error } = await supabase.storage
+      .from("test")
+      .upload(imageFullPath, formData, {
+        contentType: `image/${imageExtension}`,
+        upsert: true,
+      });
+    
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    const { data: f } = supabase.storage.from("test").getPublicUrl(data.path);
+    console.log(f)
+
+    const { error: updateError } = await supabase
       .from("profiles")
-      .select("name, surname, condominium (name)")
+      .update({
+        avatar: f.publicUrl,
+      })
+      .eq("id", userId);
+
+    if (updateError) {
+      console.error(updateError.message);
+      return;
+    }
+  };
+
+  const getProfileInfo = async () => {
+    const { data: profileData, error } = await supabase
+      .from("profiles")
+      .select("id, name, surname, avatar, condominium (name)")
       .single();
 
-    setProfile(user);
+    if (error) {
+      setPopupProps({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: [{ label: "Entendido" }],
+      });
+    }
+
+    setProfile(profileData);
   };
 
   useEffect(() => {
-    getUser();
+    getProfileInfo();
   }, []);
+  // Dependency array  👀
+
+  const avatar = watch("avatar", profile.avatar);
+  useEffect(() => {
+    uploadUserAvatar(profile.id, avatar);
+  }, [avatar]);
 
   return (
     <>
       <ScrollView contentContainerStyle={{ backgroundColor: "white" }}>
-        <ProfileImagePicker />
-
+        <ProfileImagePicker
+          name="avatar"
+          control={control}
+          value={profile.avatar}
+          onValueChange={setValue}
+        />
         <View style={styles.subContainer}>
           <Txt style={styles.fullname}>
             {profile.name + " " + profile.surname}
@@ -99,15 +139,14 @@ const Profile = (): JSX.Element => {
           <Txt style={styles.subHeader}>Personal</Txt>
 
           <View style={styles.section}>
-            <Option
+            <SettingsOption
               onPress={() => {}}
               label="Editar perfil"
               fontColor={ColorPalette.primary}
               icon={faPerson}
               iconSize={moderateScale(25)}
             />
-
-            <Option
+            <SettingsOption
               onPress={() => {}}
               label="Cambiar idioma"
               fontColor={ColorPalette.primary}
@@ -119,15 +158,14 @@ const Profile = (): JSX.Element => {
           <Txt style={styles.subHeader}>Configuración</Txt>
 
           <View style={styles.section}>
-            <Option
+            <SettingsOption
               onPress={() => {}}
               label="Gestionar notificaciones"
               fontColor={ColorPalette.primary}
               icon={faBell}
               iconSize={moderateScale(21)}
             />
-
-            <Option
+            <SettingsOption
               onPress={() => {}}
               label="Ayuda"
               fontColor={ColorPalette.primary}
@@ -139,15 +177,14 @@ const Profile = (): JSX.Element => {
           <Txt style={styles.subHeader}>Sesión</Txt>
 
           <View style={styles.section}>
-            <Option
+            <SettingsOption
               onPress={logout}
               label="Cerrar sesión"
               fontColor={ColorPalette.primary}
               icon={faRightFromBracket}
               iconSize={moderateScale(21)}
             />
-
-            <Option
+            <SettingsOption
               onPress={() => {}}
               label="Eliminar cuenta"
               fontColor={ColorPalette.error}
@@ -161,6 +198,8 @@ const Profile = (): JSX.Element => {
           <Link onPress={() => {}}>Políticas de Privacidad</Link>
           <Txt>Version 1.0.0</Txt>
         </View>
+
+        <Popup {...popupProps} />
       </ScrollView>
     </>
   );
@@ -209,15 +248,6 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: verticalScale(20),
-  },
-  optionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  option: {
-    fontFamily: "ffBold",
-    marginLeft: horizontalScale(10),
-    paddingVertical: verticalScale(10),
   },
   footer: {
     width: "100%",

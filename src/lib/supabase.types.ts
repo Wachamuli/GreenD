@@ -186,6 +186,7 @@ export type Database = {
         Row: {
           active: boolean
           address: string
+          avatar: string | null
           condominium: string
           id: string
           name: string
@@ -196,6 +197,7 @@ export type Database = {
         Insert: {
           active?: boolean
           address: string
+          avatar?: string | null
           condominium: string
           id: string
           name: string
@@ -206,6 +208,7 @@ export type Database = {
         Update: {
           active?: boolean
           address?: string
+          avatar?: string | null
           condominium?: string
           id?: string
           name?: string
@@ -402,19 +405,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      check_email_exists:
-        | {
-            Args: {
-              email: string
-            }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              email_to_check: string
-            }
-            Returns: boolean
-          }
+      email_exists: {
+        Args: {
+          email_param: string
+        }
+        Returns: boolean
+      }
       insert_suggestion: {
         Args: {
           service_request_id_param: string

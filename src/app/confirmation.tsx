@@ -37,7 +37,7 @@ const EmailConfirmationScreen = (): JSX.Element => {
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: { label: "Entendido" },
+        buttonOptions: [{ label: "Entendido" }],
       });
     }
   };

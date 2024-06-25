@@ -15,29 +15,31 @@ SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
   const navigation = useNavigation();
 
-  supabase.auth.onAuthStateChange(events => {
-    switch (events) {
-      case "SIGNED_IN":
-        navigation.dispatch(
-          CommonActions.reset({
-            routes: [{ name: "(tabs)" }],
-          }),
-        );
-        break;
-      case "SIGNED_OUT":
-        navigation.dispatch(
-          CommonActions.reset({
-            routes: [{ name: "sign-in" }],
-          }),
-        );
-        break;
-      // TODO: We need to move this in a new layout only
-      // for the password recovery flow
-      case "PASSWORD_RECOVERY":
-        // router.navigate("/password-recovery-new");
-        break;
-    }
-  });
+  useEffect(() => {
+    supabase.auth.onAuthStateChange(events => {
+      switch (events) {
+        case "SIGNED_IN":
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "(tabs)" }],
+            }),
+          );
+          break;
+        case "SIGNED_OUT":
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: "sign-in" }],
+            }),
+          );
+          break;
+        // TODO: We need to move this in a new layout only
+        // for the password recovery flow
+        case "PASSWORD_RECOVERY":
+          // router.navigate("/password-recovery-new");
+          break;
+      }
+    });
+  }, []);
 
   const [fontsLoaded, fontsError] = useFonts({
     ffNormal: require("../assets/fonts/Montserrat/static/Montserrat-Regular.ttf"),
