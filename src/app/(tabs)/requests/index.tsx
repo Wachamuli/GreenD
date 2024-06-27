@@ -136,7 +136,7 @@ const InactiveServiceRequests = ({
           "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
         )
         .or("status.eq.Completed, status.eq.Canceled")
-        .eq("service", serviceFilter)
+        .eq("service", serviceFilter);
 
       error = errorRequest;
       data = filteredRequests;
@@ -146,7 +146,7 @@ const InactiveServiceRequests = ({
         .select(
           "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
         )
-        .or("status.eq.Completed, status.eq.Canceled")
+        .or("status.eq.Completed, status.eq.Canceled");
 
       error = errorRequest;
       data = allRequests;
@@ -169,6 +169,7 @@ const InactiveServiceRequests = ({
   return (
     <FlatList
       style={styles.listContainer}
+      contentContainerStyle={styles.listContentContainer}
       data={serviceRequests}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
@@ -205,7 +206,7 @@ const ActiveServicesScreen = ({
           "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
         )
         .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-        .eq("service", serviceFilter)
+        .eq("service", serviceFilter);
 
       error = errorRequest;
       data = filteredRequests;
@@ -215,7 +216,7 @@ const ActiveServicesScreen = ({
         .select(
           "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
         )
-        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress");
 
       error = errorRequest;
       data = allRequests;
@@ -238,6 +239,7 @@ const ActiveServicesScreen = ({
   return (
     <FlatList
       style={styles.listContainer}
+      contentContainerStyle={styles.listContentContainer}
       data={serviceRequests}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
@@ -299,6 +301,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(20),
     paddingTop: verticalScale(10),
     backgroundColor: "white",
+  },
+  listContentContainer: { 
+    paddingBottom: verticalScale(30)
   },
   container: {
     display: "flex",
