@@ -1,40 +1,34 @@
-import {
-  FlatList,
-  Keyboard,
-  Modal,
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-} from "react-native";
+import { useEffect, useState } from "react";
+import { SectionList, StyleSheet, TextInput, View } from "react-native";
+import { router } from "expo-router";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
+import { supabase } from "../../lib/supabase";
+import Txt from "../info/Txt";
+import Tappable from "./Tappable";
+import { ColorPalette } from "../../styles/colorPalette";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
-import { ColorPalette } from "../../styles/colorPalette";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import Txt from "../info/Txt";
-import { useCallback, useEffect, useState } from "react";
-import { supabase } from "../../lib/supabase";
-import Tappable from "./Tappable";
-import { router } from "expo-router";
 
-const SearchItem = ({ id, name }: { id: string; name: string }) => {
-
+const SearchItem = ({ name, id }: { name: string; id?: string }) => {
   return (
-    <Tappable onPress={() => {
-      router.navigate({
-        pathname: "/home/details",
-        params: { serviceId: id },
-      });
-    }}>
+    <Tappable
+      disabled={!id}
+      onPress={() => {
+        router.navigate({
+          pathname: "/home/details",
+          params: { serviceId: id },
+        });
+      }}>
       <View
         style={{
           borderBottomWidth: moderateScale(0.5),
           borderBottomColor: ColorPalette.tertiary,
-          paddingHorizontal: horizontalScale(10),
           paddingVertical: verticalScale(15),
         }}>
         <Txt>{name}</Txt>
@@ -45,38 +39,67 @@ const SearchItem = ({ id, name }: { id: string; name: string }) => {
 
 const SearchBar = () => {
   const [isSearching, setIsSearching] = useState(false);
+  const [search, setSearch] = useState("");
   const [services, setServices] = useState([{ id: "", name: "" }]);
+  const [temporaryServices, setTemporaryServices] = useState([
+    { id: "", name: "" },
+  ]);
+  const [outsourcers, setOutsources] = useState([
+    { id: "", name: "", service: { name: "" } },
+  ]);
+  const [temporaryOutsourcers, setTemporaryOutsourcers] = useState([
+    { id: "", name: "", service: { name: "" } },
+  ]);
 
   const getServices = async () => {
     const { data } = await supabase.from("services").select("id, name");
     setServices(data);
+    setTemporaryServices(data);
+  };
+
+  const getOutsourcers = async () => {
+    const { data } = await supabase
+      .from("outsourcers")
+      .select("id, name, service (name)");
+    setOutsources(data);
+    setTemporaryOutsourcers(data);
   };
 
   useEffect(() => {
-    if (isSearching) getServices();
-  }, [isSearching]);
+    getServices();
+    getOutsourcers();
+  }, []);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const sections = [
+    {
+      title: "Servicios",
+      data: temporaryServices,
+      EmptySectionComponent: () => (
+        <SearchItem name="Ningún servicio encontrado" />
+      ),
+    },
+    {
+      title: "Populares",
+      data: temporaryOutsourcers,
+      EmptySectionComponent: () => (
+        <SearchItem name="Ningún contratista encontrado" />
+      ),
+    },
+
+  ];
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true); // or some other action
-      },
+    setTemporaryServices(
+      services.filter(service =>
+        service.name.toLowerCase().startsWith(search.toLowerCase()),
+      ),
     );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false); // or some other action
-      },
+    setTemporaryOutsourcers(
+      outsourcers.filter(outsourcer =>
+        outsourcer.service.name.toLowerCase().startsWith(search.toLowerCase()),
+      ),
     );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+  }, [search]);
 
   return (
     <View style={styles.container}>
@@ -85,6 +108,7 @@ const SearchBar = () => {
           placeholder="Buscar"
           placeholderTextColor={"#9ca3af"}
           style={styles.textInput}
+          onChangeText={text => setSearch(text)}
           onFocus={() => setIsSearching(true)}
           onBlur={() => setIsSearching(false)}
         />
@@ -93,19 +117,40 @@ const SearchBar = () => {
         </View>
       </View>
       <View>
-        {/* {isKeyboardVisible && isSearching && ( */}
-          <FlatList
-            style={{
-              position: "absolute",
-              backgroundColor: "white",
-              width: "100%",
-            }}
-            data={services}
-            renderItem={({ item }) => {
-              return <SearchItem {...item} />;
-            }}
-          />
-        {/* )} */}
+        <SectionList
+          style={{
+            display: isSearching ? "flex" : "none",
+            position: "absolute",
+            backgroundColor: "white",
+            width: "100%",
+            borderWidth: moderateScale(0.5),
+            borderRadius: moderateScale(10),
+            paddingHorizontal: horizontalScale(10),
+            marginTop: verticalScale(5),
+          }}
+          keyboardShouldPersistTaps="always"
+          keyExtractor={item => item.id}
+          sections={sections}
+          ListEmptyComponent={() => <Txt>Resultado no encontrado</Txt>}
+          renderSectionHeader={({
+            section: { data, title, EmptySectionComponent },
+          }) => (
+            <View>
+              <Txt
+                style={{
+                  fontFamily: "ffBold",
+                  marginTop: verticalScale(10),
+                }}>
+                {title}
+              </Txt>
+
+              {data.length < 1 && <EmptySectionComponent />}
+            </View>
+          )}
+          renderItem={({ item }) => (
+            <SearchItem id={item.id} name={item.name} />
+          )}
+        />
       </View>
     </View>
   );

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { FlatList, View, Alert, ActivityIndicator, Image } from "react-native";
 
-import { Picker } from "@react-native-picker/picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
