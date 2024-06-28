@@ -18,7 +18,7 @@ import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import Link from "../components/controls/Link";
 import { ColorPalette } from "../styles/colorPalette";
 import PasswordField from "../components/controls/PasswordField";
-import { Link as Lonk, router } from "expo-router";
+import { router } from "expo-router";
 
 const Login = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({

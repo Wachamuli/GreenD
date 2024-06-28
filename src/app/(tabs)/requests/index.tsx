@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { FlatList, Image, Linking, StyleSheet, View } from "react-native";
 
 import dayjs from "dayjs";
@@ -9,7 +10,6 @@ import Txt from "../../../components/info/Txt";
 import Tappable from "../../../components/controls/Tappable";
 import { ColorPalette } from "../../../styles/colorPalette";
 import { supabase } from "../../../lib/supabase";
-import { Database } from "../../../lib/supabase.types";
 import {
   horizontalScale,
   moderateScale,
@@ -20,8 +20,6 @@ import { router, useFocusEffect } from "expo-router";
 import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
 import Filter from "../../../components/controls/Filter";
-
-// TODO: This code needs a heavery refactorization.
 
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
@@ -113,64 +111,32 @@ const InactiveServiceRequests = ({
 }: {
   serviceFilter: string | number;
 }) => {
-  const [serviceRequests, setServiceRequests] = useState<
-    | {
-        id: string;
-        outsourcer: { name: string; logo: string };
-        r_date: string;
-        r_time: string;
-        service: { name: string };
-        status: Database["public"]["Enums"]["service_request_status"];
-      }[]
-    | null
-  >([]);
-
-  const getServiceRequests = async () => {
-    let data;
-    let error;
-
-    if (serviceFilter) {
-      const { data: filteredRequests, error: errorRequest } = await supabase
+  const {
+    data: inactiveServiceRequests,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["inactiveServiceRequests", serviceFilter],
+    queryFn: async () =>
+      await supabase
         .from("service_requests")
         .select(
           "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
         )
         .or("status.eq.Completed, status.eq.Canceled")
-        .eq("service", serviceFilter);
+        .match(serviceFilter ? { service: serviceFilter } : {})
+        .throwOnError(),
+  });
 
-      error = errorRequest;
-      data = filteredRequests;
-    } else {
-      const { data: allRequests, error: errorRequest } = await supabase
-        .from("service_requests")
-        .select(
-          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
-        )
-        .or("status.eq.Completed, status.eq.Canceled");
+  if (error) return <Txt>Hubo un error</Txt>;
 
-      error = errorRequest;
-      data = allRequests;
-    }
-
-    if (error) {
-      console.log(error.message);
-      return;
-    }
-
-    setServiceRequests(data);
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      getServiceRequests();
-    }, []),
-  );
+  if (isLoading) return <Txt>Cargando...</Txt>;
 
   return (
     <FlatList
       style={styles.listContainer}
       contentContainerStyle={styles.listContentContainer}
-      data={serviceRequests}
+      data={inactiveServiceRequests.data}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
       ListEmptyComponent={EmptyRequestList}
@@ -183,64 +149,30 @@ const ActiveServicesScreen = ({
 }: {
   serviceFilter: string | number;
 }): JSX.Element => {
-  const [serviceRequests, setServiceRequests] = useState<
-    | {
-        id: string;
-        outsourcer: { name: string; logo: string };
-        r_date: string;
-        r_time: string;
-        service: { name: string };
-        status: Database["public"]["Enums"]["service_request_status"];
-      }[]
-    | null
-  >([]);
-
-  const getServiceRequests = async () => {
-    let data;
-    let error;
-
-    if (serviceFilter) {
-      const { data: filteredRequests, error: errorRequest } = await supabase
+  const {
+    data: activeServiceRequests,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["activeServiceRequests", serviceFilter],
+    queryFn: async () =>
+      await supabase
         .from("service_requests")
-        .select(
-          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
-        )
+        .select("id, r_date, r_time, status, service (id, name), outsourcer (logo, name)")
         .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-        .eq("service", serviceFilter);
+        .match(serviceFilter ? { service: serviceFilter } : {})
+        .throwOnError(),
+  });
 
-      error = errorRequest;
-      data = filteredRequests;
-    } else {
-      const { data: allRequests, error: errorRequest } = await supabase
-        .from("service_requests")
-        .select(
-          "id, r_date, r_time, status, service (name), outsourcer (logo, name)",
-        )
-        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress");
+  if (error) return <Txt>Hubo un error</Txt>;
 
-      error = errorRequest;
-      data = allRequests;
-    }
-
-    if (error) {
-      console.log(error.message);
-      return;
-    }
-
-    setServiceRequests(data);
-  };
-
-  useFocusEffect(
-    useCallback(() => {
-      getServiceRequests();
-    }, []),
-  );
+  if (isLoading) return <Txt>Cargando...</Txt>;
 
   return (
     <FlatList
       style={styles.listContainer}
       contentContainerStyle={styles.listContentContainer}
-      data={serviceRequests}
+      data={activeServiceRequests.data}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
       ListEmptyComponent={EmptyRequestList}
@@ -302,8 +234,8 @@ const styles = StyleSheet.create({
     paddingTop: verticalScale(10),
     backgroundColor: "white",
   },
-  listContentContainer: { 
-    paddingBottom: verticalScale(30)
+  listContentContainer: {
+    paddingBottom: verticalScale(30),
   },
   container: {
     display: "flex",
