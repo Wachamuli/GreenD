@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FlatList, StyleSheet, View } from "react-native";
 
@@ -15,6 +15,7 @@ import {
 } from "../../../utilities/metrics";
 import Filter from "../../../components/controls/Filter";
 import ServiceRequestCard from "../../../components/containers/ServiceRequestCard";
+import LoadingIndicator from "../../../components/info/LoadingIndicator";
 
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
@@ -22,31 +23,31 @@ function ServiceRequest() {
     { key: "first", title: "Pendiente" },
     { key: "second", title: "Completado" },
   ]);
-  const [services, setServices] = useState();
   const [serviceFilter, setServiceFilter] = useState<string | number>(0);
+  const {
+    data: services,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["services"],
+    queryFn: async () => await supabase.from("services").select("id, name"),
+  });
 
-  const getServices = async () => {
-    const { data } = await supabase.from("services").select("id, name");
-    setServices(data);
-  };
+  if (error) return <Txt>Hubo un error</Txt>;
 
-  useEffect(() => {
-    getServices();
-  }, []);
+  if (isLoading) return <LoadingIndicator/>;
 
   return (
     <TabView
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={SceneMap({
+        first: () => <ActiveServicesScreen serviceFilter={serviceFilter} />,
+        second: () => <InactiveServiceRequests serviceFilter={serviceFilter} />,
+      })}
       renderTabBar={props => (
         <View style={{ backgroundColor: "white" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              borderBottomWidth: moderateScale(1),
-              borderColor: ColorPalette.tertiary,
-              paddingBottom: verticalScale(10),
-              backgroundColor: "white",
-            }}>
+          <View style={styles.tabviewLabels}>
             {props.navigationState.routes.map((route, index) => {
               const currentIndex = props.navigationState.index === index;
               return (
@@ -65,7 +66,7 @@ function ServiceRequest() {
 
           <View style={{ paddingTop: verticalScale(20) }}>
             <Filter
-              data={services}
+              data={services.data}
               selected={serviceFilter}
               onPress={id => setServiceFilter(id)}
               style={{
@@ -77,12 +78,6 @@ function ServiceRequest() {
           </View>
         </View>
       )}
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={SceneMap({
-        first: () => <ActiveServicesScreen serviceFilter={serviceFilter} />,
-        second: () => <InactiveServiceRequests serviceFilter={serviceFilter} />,
-      })}
     />
   );
 }
@@ -92,6 +87,42 @@ const EmptyRequestList = () => {
     <View style={styles.centeredItem}>
       <Txt>Sin solicitudes por el momento</Txt>
     </View>
+  );
+};
+
+const ActiveServicesScreen = ({
+  serviceFilter,
+}: {
+  serviceFilter: string | number;
+}): JSX.Element => {
+  const {
+    data: activeServiceRequests,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["activeServiceRequests", serviceFilter],
+    queryFn: async () =>
+      await supabase
+        .from("service_requests")
+        .select("id, r_date, r_time, status, service (id, name), outsourcer (logo, name)")
+        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+        .match(serviceFilter ? { service: serviceFilter } : {})
+        .throwOnError(),
+  });
+
+  if (error) return <Txt>Hubo un error</Txt>;
+
+  if (isLoading) return <LoadingIndicator />;
+
+  return (
+    <FlatList
+      style={styles.listContainer}
+      contentContainerStyle={styles.listContentContainer}
+      data={activeServiceRequests.data}
+      keyExtractor={item => item.id}
+      renderItem={({ item }) => <ServiceRequestCard {...item} />}
+      ListEmptyComponent={EmptyRequestList}
+    />
   );
 };
 
@@ -119,7 +150,7 @@ const InactiveServiceRequests = ({
 
   if (error) return <Txt>Hubo un error</Txt>;
 
-  if (isLoading) return <Txt>Cargando...</Txt>;
+  if (isLoading) return <LoadingIndicator />;
 
   return (
     <FlatList
@@ -133,45 +164,15 @@ const InactiveServiceRequests = ({
   );
 };
 
-const ActiveServicesScreen = ({
-  serviceFilter,
-}: {
-  serviceFilter: string | number;
-}): JSX.Element => {
-  const {
-    data: activeServiceRequests,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["activeServiceRequests", serviceFilter],
-    queryFn: async () =>
-      await supabase
-        .from("service_requests")
-        .select(
-          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
-        )
-        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-        .match(serviceFilter ? { service: serviceFilter } : {})
-        .throwOnError(),
-  });
-
-  if (error) return <Txt>Hubo un error</Txt>;
-
-  if (isLoading) return <Txt>Cargando...</Txt>;
-
-  return (
-    <FlatList
-      style={styles.listContainer}
-      contentContainerStyle={styles.listContentContainer}
-      data={activeServiceRequests.data}
-      keyExtractor={item => item.id}
-      renderItem={({ item }) => <ServiceRequestCard {...item} />}
-      ListEmptyComponent={EmptyRequestList}
-    />
-  );
-};
-
 const styles = StyleSheet.create({
+  tabviewLabels: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    borderBottomWidth: moderateScale(1),
+    borderColor: ColorPalette.tertiary,
+    paddingBottom: verticalScale(10),
+    backgroundColor: "white",
+  },
   listContainer: {
     paddingHorizontal: horizontalScale(20),
     paddingTop: verticalScale(10),
@@ -181,10 +182,9 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(30),
   },
   centeredItem: {
-    display: "flex",
-    marginTop: "50%",
-    justifyContent: "center",
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
 });
 
