@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import { ColorPalette } from "../../../styles/colorPalette";
 import Header from "../../../components/info/Header";
 import { useFocusEffect } from "expo-router";
-import { ServiceRequestCard } from "../requests";
+import { ServiceRequestCard } from "../../../components/containers/ServiceRequestCard";
 
 type SelectedDay = {
   [x: string]: {
