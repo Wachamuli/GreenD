@@ -1,4 +1,3 @@
-import { memo, useEffect, useState } from "react";
 import {
   GestureResponderEvent,
   Modal,
@@ -13,10 +12,14 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import Header from "./Header";
 import Txt from "./Txt";
 import Btn from "../controls/Btn";
-import { horizontalScale, moderateScale, verticalScale } from "../../utilities/metrics";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../../utilities/metrics";
 import { StyleProp } from "react-native";
 
-export type PopupProps = {
+export type ModalProps = {
   title?: string;
   description?: string;
   iconProps?: { icon: IconDefinition; color: string };
@@ -28,24 +31,19 @@ export type PopupProps = {
   }[];
 };
 
-const Popup = (props: PopupProps) => {
-  const [visible, setVisible] = useState(false);
-  const isAnyPropAvailable =
-    props.title || props.description || props.buttonOptions || props.iconProps;
+type Props = {
+  isVisible: boolean;
+  onClose: () => void;
+};
 
-  useEffect(() => {
-    setVisible(true);
-  }, [props]);
-
-  if (!isAnyPropAvailable) return <></>;
-
+const MyModal = (props: ModalProps & Props) => {
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      visible={visible}
+      visible={props.isVisible}
       onRequestClose={() => {
-        setVisible(visible => !visible);
+        props.onClose();
       }}>
       <View style={styles.modalContainer}>
         <View style={styles.modalView}>
@@ -71,7 +69,7 @@ const Popup = (props: PopupProps) => {
                 onPress={event => {
                   if (button.onPress) button.onPress(event);
 
-                  setVisible(visible => !visible);
+                  props.onClose();
                 }}
               />
             ))}
@@ -110,12 +108,12 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: "center",
-    fontSize: moderateScale(20)
+    fontSize: moderateScale(20),
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    fontSize: moderateScale(14)
+    fontSize: moderateScale(14),
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -128,4 +126,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(Popup);
+export default MyModal;

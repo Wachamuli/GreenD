@@ -11,7 +11,6 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import { supabase } from "../../../lib/supabase";
-import Popup, { PopupProps } from "../../../components/info/Popup";
 import { type ServiceRequest } from "../../../lib/supabase.type.alias";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -22,7 +21,7 @@ import {
   faPhone,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBookmark, faCreditCard } from "@fortawesome/free-regular-svg-icons";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { capitalize, timeFormatter } from "../../../utilities/utils";
 import Grid from "../../../components/containers/Grid";
 import { router, useLocalSearchParams } from "expo-router";
@@ -30,11 +29,12 @@ import Link from "../../../components/controls/Link";
 import { ColorPalette } from "../../../styles/colorPalette";
 import StatusLabel from "../../../components/info/StatusLabel";
 import CircleButton from "../../../components/controls/CircleButton";
+import { useModal } from "../../../hooks/useModal";
 
 const ServiceDetails = (): JSX.Element => {
   const params = useLocalSearchParams();
   const [serviceDetails, setServiceDetails] = useState<ServiceRequest>();
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
 
   const getServiceDetails = async () => {
     const { data, error } = await supabase
@@ -68,7 +68,7 @@ const ServiceDetails = (): JSX.Element => {
   };
 
   const showCancelConfirmationModal = () => {
-    setPopupProps({
+    modal.open({
       title: "¿Desea cancelar su solicitud?",
       description: "Al cancelar el servicio no se llevará acabo.",
       buttonOptions: [
@@ -261,8 +261,6 @@ const ServiceDetails = (): JSX.Element => {
       </Card>
 
       {/* TODO: Maybe add a another container for payment details */}
-
-      <Popup {...popupProps} />
     </ScrollView>
   );
 };

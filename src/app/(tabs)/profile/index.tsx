@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 import Txt from "../../../components/info/Txt";
 import { supabase } from "../../../lib/supabase";
@@ -21,11 +21,11 @@ import {
 import Link from "../../../components/controls/Link";
 import ProfileImagePicker from "../../../components/controls/ProfileImagePicker";
 import { useForm } from "react-hook-form";
-import Popup, { PopupProps } from "../../../components/info/Popup";
 import SettingsOption from "../../../components/controls/SettingsOptions";
+import { useModal } from "../../../hooks/useModal";
 
 const Profile = (): JSX.Element => {
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
   const { control, setValue, watch } = useForm();
   const [profile, setProfile] = useState({
     id: "",
@@ -39,7 +39,7 @@ const Profile = (): JSX.Element => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -100,7 +100,7 @@ const Profile = (): JSX.Element => {
       .single();
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -198,8 +198,6 @@ const Profile = (): JSX.Element => {
           <Link onPress={() => {}}>Políticas de Privacidad</Link>
           <Txt>Version 1.0.0</Txt>
         </View>
-
-        <Popup {...popupProps} />
       </ScrollView>
     </>
   );

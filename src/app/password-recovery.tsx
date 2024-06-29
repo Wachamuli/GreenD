@@ -21,13 +21,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
 import { useState } from "react";
-import Popup, { PopupProps } from "../components/info/Popup";
 import Txt from "../components/info/Txt";
 import { router } from "expo-router";
+import { useModal } from "../hooks/useModal";
 
 const PasswordRecoveryScreen = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
   const { control, handleSubmit } = useForm<PasswordRecoverySchema>({
     resolver: zodResolver(passwordRecoverySchema),
   });
@@ -37,7 +37,7 @@ const PasswordRecoveryScreen = (): JSX.Element => {
     const { error } = await supabase.auth.resetPasswordForEmail(data.email);
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -93,8 +93,6 @@ const PasswordRecoveryScreen = (): JSX.Element => {
           onPress={handleSubmit(sendRecoveryEmail)}
           label="Continuar"
         />
-
-        <Popup {...popupProps} />
       </View>
     </View>
   );

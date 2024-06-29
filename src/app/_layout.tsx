@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import CustomHeader from "../components/layout/CustomHeader";
 import { supabase } from "../lib/supabase";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ModalProvider from "../hooks/useModal";
 
 dayjs.locale("es");
 // calendarSetup("es");
@@ -63,28 +64,30 @@ const RootLayout = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Stack screenOptions={{ header: CustomHeader }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="sign-in" />
-        <Stack.Screen name="sign-up" options={{ title: "Crea una cuenta" }} />
-        <Stack.Screen
-          name="confirmation"
-          options={{ title: "Confirmar correo" }}
-        />
-        <Stack.Screen
-          name="password-recovery"
-          options={{ title: "Recuperar contraseña" }}
-        />
-        <Stack.Screen
-          name="password-recovery-email"
-          options={{ title: "Recuperar contraseña" }}
-        />
-        <Stack.Screen
-          name="password-recovery-new"
-          options={{ title: "Recuperar contraseña" }}
-        />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <ModalProvider>
+        <Stack screenOptions={{ header: CustomHeader }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="sign-in" />
+          <Stack.Screen name="sign-up" options={{ title: "Crea una cuenta" }} />
+          <Stack.Screen
+            name="confirmation"
+            options={{ title: "Confirmar correo" }}
+          />
+          <Stack.Screen
+            name="password-recovery"
+            options={{ title: "Recuperar contraseña" }}
+          />
+          <Stack.Screen
+            name="password-recovery-email"
+            options={{ title: "Recuperar contraseña" }}
+          />
+          <Stack.Screen
+            name="password-recovery-new"
+            options={{ title: "Recuperar contraseña" }}
+          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </ModalProvider>
     </QueryClientProvider>
   );
 };

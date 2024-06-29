@@ -18,7 +18,6 @@ import {
   type SuggestionSchema,
   suggestionSchema,
 } from "../../../utilities/validators/SuggestionSchema";
-import Popup, { type PopupProps } from "../../../components/info/Popup";
 import { faCircleCheck } from "@fortawesome/free-regular-svg-icons";
 import {
   faPlus,
@@ -27,6 +26,7 @@ import {
 import { router, useLocalSearchParams } from "expo-router";
 import { ColorPalette } from "../../../styles/colorPalette";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useModal } from "../../../hooks/useModal";
 
 const Report = (): JSX.Element => {
   const params = useLocalSearchParams();
@@ -37,8 +37,8 @@ const Report = (): JSX.Element => {
   const [selectedTags, setSelectedTags] = useState<
     (TagType & { containerColor: string })[]
   >([]);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
   const [username, setUsername] = useState("");
+  const modal = useModal();
 
   const onSubmit = async (form: SuggestionSchema) => {
     const { error } = await supabase.rpc("insert_suggestion", {
@@ -49,7 +49,7 @@ const Report = (): JSX.Element => {
     });
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: "#FF7D7D" },
@@ -58,7 +58,7 @@ const Report = (): JSX.Element => {
       return;
     }
 
-    setPopupProps({
+    modal.open({
       title: "¡Enviado exitosamente!",
       description: "Gracias por su sugerencia.",
       iconProps: { icon: faCircleCheck, color: "#5cb85c" },
@@ -228,8 +228,6 @@ const Report = (): JSX.Element => {
           control={control}
           placeholder="Detalles del reporte."
         />
-
-        <Popup {...popupProps} />
       </ScrollView>
       <View
         style={{

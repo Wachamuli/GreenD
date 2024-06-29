@@ -9,16 +9,16 @@ import {
 } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
 import { useEffect, useState } from "react";
-import Popup, { PopupProps } from "../components/info/Popup";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
+import { useModal } from "../hooks/useModal";
 
 const PasswordEmailScreen = () => {
   let seconds = 60;
   const params = useLocalSearchParams();
   const [counter, setCounter] = useState(seconds);
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
 
   const sendRecoveryEmail = async () => {
     setCounter(seconds);
@@ -26,7 +26,7 @@ const PasswordEmailScreen = () => {
     const { error } = await supabase.auth.resetPasswordForEmail(params?.email);
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -77,8 +77,6 @@ const PasswordEmailScreen = () => {
       <Link disabled={loading || counter > 0} onPress={sendRecoveryEmail}>
         Reenviar correo
       </Link>
-
-      <Popup {...popupProps} />
     </View>
   );
 };

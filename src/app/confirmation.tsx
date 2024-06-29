@@ -7,7 +7,6 @@ import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 import { ColorPalette } from "../styles/colorPalette";
-import Popup, { PopupProps } from "../components/info/Popup";
 import {
   faCircleInfo,
   faTriangleExclamation,
@@ -19,7 +18,7 @@ const EmailConfirmationScreen = (): JSX.Element => {
   const params = useLocalSearchParams();
   const [counter, setCounter] = useState(time);
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
 
   const resendConfirmationEmail = async () => {
     setCounter(time);
@@ -33,7 +32,7 @@ const EmailConfirmationScreen = (): JSX.Element => {
     });
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -54,14 +53,14 @@ const EmailConfirmationScreen = (): JSX.Element => {
 
     if (error) {
       if (error.message === "Email not confirmed") {
-        setPopupProps({
+        modal.open({
           title: "¡Correo sin confirmar!",
           description: "Revise su bandeja de entrada o spam.",
           iconProps: { icon: faCircleInfo, color: ColorPalette.secondary },
           buttonOptions: [{ label: "Entendido" }],
         });
       } else {
-        setPopupProps({
+        modal.open({
           title: "¡Ups! Algo salió mal",
           description: error.message,
           iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -141,8 +140,6 @@ const EmailConfirmationScreen = (): JSX.Element => {
           }}
         />
       </View>
-
-      <Popup {...popupProps} />
     </View>
   );
 };

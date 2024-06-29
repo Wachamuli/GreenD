@@ -8,7 +8,6 @@ import Field from "../components/controls/Field";
 import Txt from "../components/info/Txt";
 import { verticalScale } from "../utilities/metrics";
 import { supabase } from "../lib/supabase";
-import Popup, { type PopupProps } from "../components/info/Popup";
 import Btn from "../components/controls/Btn";
 import {
   SignInSchema,
@@ -19,13 +18,14 @@ import Link from "../components/controls/Link";
 import { ColorPalette } from "../styles/colorPalette";
 import PasswordField from "../components/controls/PasswordField";
 import { router } from "expo-router";
+import { useModal } from "../hooks/useModal";
 
 const Login = () => {
   const { handleSubmit, control } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
 
   // TODO: Show splashscreen when loading and handle specific errors
   const signIn = async (form: SignInSchema) => {
@@ -43,7 +43,7 @@ const Login = () => {
           params: { email: form.email, password: form.password },
         });
       } else {
-        setPopupProps({
+        modal.open({
           title: "¡Ups! Algo salió mal",
           description: error.message,
           iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -86,8 +86,6 @@ const Login = () => {
           <Link onPress={() => router.navigate("/sign-up")}>Regístrate</Link>
         </View>
       </View>
-
-      <Popup {...popupProps} />
     </View>
   );
 };

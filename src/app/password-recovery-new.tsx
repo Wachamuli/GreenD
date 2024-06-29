@@ -8,18 +8,17 @@ import {
   newPasswordSchema,
 } from "../utilities/validators/PasswordRecoverySchema";
 import { supabase } from "../lib/supabase";
-import { useNavigation } from "@react-navigation/native";
 import Btn from "../components/controls/Btn";
 import { useState } from "react";
-import Popup, { PopupProps } from "../components/info/Popup";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { ColorPalette } from "../styles/colorPalette";
 import { verticalScale } from "../utilities/metrics";
 import { router } from "expo-router";
+import { useModal } from "../hooks/useModal";
 
 const NewPasswordScreen = () => {
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
+  const modal = useModal();
   const { handleSubmit, control } = useForm<NewPasswordSchema>({
     resolver: zodResolver(newPasswordSchema),
   });
@@ -32,7 +31,7 @@ const NewPasswordScreen = () => {
 
     if (error) {
       setLoading(false);
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -69,8 +68,6 @@ const NewPasswordScreen = () => {
         label="Continuar"
         onPress={handleSubmit(recoverPassword)}
       />
-
-      <Popup {...popupProps} />
     </View>
   );
 };

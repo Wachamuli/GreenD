@@ -12,7 +12,6 @@ import Menu from "../components/controls/Menu";
 import Link from "../components/controls/Link";
 import Checkbox from "../components/controls/Checkbox";
 import PasswordEnforcer from "../components/controls/PasswordEnforcer";
-import Popup, { PopupProps } from "../components/info/Popup";
 import ProfileImagePicker from "../components/controls/ProfileImagePicker";
 import { supabase } from "../lib/supabase";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
@@ -21,6 +20,7 @@ import {
   type SignUpSchema,
   signUpSchema,
 } from "../utilities/validators/SignUpSchema";
+import { useModal } from "../hooks/useModal";
 
 const Signup = (): JSX.Element => {
   const [image, setImage] = useState("");
@@ -28,10 +28,10 @@ const Signup = (): JSX.Element => {
     resolver: zodResolver(signUpSchema),
   });
   const [loading, setLoading] = useState(false);
-  const [popupProps, setPopupProps] = useState<PopupProps>();
   const [condominiums, setCondomiums] = useState<
     { id: string; name: string }[] | null
   >();
+  const modal = useModal();
 
   const getCondomiums = async () => {
     const { data, error } = await supabase
@@ -39,7 +39,7 @@ const Signup = (): JSX.Element => {
       .select("id, name");
 
     if (error) {
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -124,7 +124,7 @@ const Signup = (): JSX.Element => {
         return;
       }
 
-      setPopupProps({
+      modal.open({
         title: "¡Ups! Algo salió mal",
         description: error.message,
         iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
@@ -231,7 +231,6 @@ const Signup = (): JSX.Element => {
         label="Registrarse"
       />
 
-      <Popup {...popupProps} />
     </ScrollView>
   );
 };
