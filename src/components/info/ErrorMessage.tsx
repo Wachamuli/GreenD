@@ -15,7 +15,11 @@ const ErrorMessage = ({
   error,
   style,
 }: {
-  error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+  error:
+    | FieldError
+    | Merge<FieldError, FieldErrorsImpl<any>>
+    | { message: string }
+    | undefined;
   style?: StyleProp<TextStyle>;
 }): JSX.Element => {
   return (

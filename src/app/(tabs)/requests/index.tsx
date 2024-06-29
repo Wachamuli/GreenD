@@ -16,6 +16,7 @@ import {
 import Filter from "../../../components/controls/Filter";
 import ServiceRequestCard from "../../../components/containers/ServiceRequestCard";
 import LoadingIndicator from "../../../components/info/LoadingIndicator";
+import ErroView from "../../../components/info/ErrorView";
 
 function ServiceRequest() {
   const [index, setIndex] = useState(0);
@@ -33,9 +34,9 @@ function ServiceRequest() {
     queryFn: async () => await supabase.from("services").select("id, name"),
   });
 
-  if (error) return <Txt>Hubo un error</Txt>;
+  if (error) return <ErroView />;
 
-  if (isLoading) return <LoadingIndicator/>;
+  if (isLoading) return <LoadingIndicator />;
 
   return (
     <TabView
@@ -66,7 +67,7 @@ function ServiceRequest() {
 
           <View style={{ paddingTop: verticalScale(20) }}>
             <Filter
-              data={services.data}
+              data={services!.data}
               selected={serviceFilter}
               onPress={id => setServiceFilter(id)}
               style={{
@@ -104,13 +105,15 @@ const ActiveServicesScreen = ({
     queryFn: async () =>
       await supabase
         .from("service_requests")
-        .select("id, r_date, r_time, status, service (id, name), outsourcer (logo, name)")
+        .select(
+          "id, r_date, r_time, status, service (id, name), outsourcer (logo, name)",
+        )
         .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
         .match(serviceFilter ? { service: serviceFilter } : {})
         .throwOnError(),
   });
 
-  if (error) return <Txt>Hubo un error</Txt>;
+  if (error) return <ErroView />;
 
   if (isLoading) return <LoadingIndicator />;
 
@@ -118,7 +121,7 @@ const ActiveServicesScreen = ({
     <FlatList
       style={styles.listContainer}
       contentContainerStyle={styles.listContentContainer}
-      data={activeServiceRequests.data}
+      data={activeServiceRequests!.data}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
       ListEmptyComponent={EmptyRequestList}
@@ -148,7 +151,7 @@ const InactiveServiceRequests = ({
         .throwOnError(),
   });
 
-  if (error) return <Txt>Hubo un error</Txt>;
+  if (error) return <ErroView />;
 
   if (isLoading) return <LoadingIndicator />;
 
@@ -156,7 +159,7 @@ const InactiveServiceRequests = ({
     <FlatList
       style={styles.listContainer}
       contentContainerStyle={styles.listContentContainer}
-      data={inactiveServiceRequests.data}
+      data={inactiveServiceRequests!.data}
       keyExtractor={item => item.id}
       renderItem={({ item }) => <ServiceRequestCard {...item} />}
       ListEmptyComponent={EmptyRequestList}
