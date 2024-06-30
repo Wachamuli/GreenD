@@ -21,34 +21,20 @@ import {
   signUpSchema,
 } from "../utilities/validators/SignUpSchema";
 import { useModal } from "../hooks/useModal";
+import { useQuery } from "@tanstack/react-query";
 
 const Signup = (): JSX.Element => {
+  const modal = useModal();
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
   const { control, handleSubmit, setError, setValue } = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
-  const [loading, setLoading] = useState(false);
-  const [condominiums, setCondomiums] = useState<
-    { id: string; name: string }[] | null
-  >();
-  const modal = useModal();
-
-  const getCondomiums = async () => {
-    const { data, error } = await supabase
-      .from("condominiums")
-      .select("id, name");
-
-    if (error) {
-      modal.open({
-        title: "¡Ups! Algo salió mal",
-        description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: [{ label: "Entendido" }],
-      });
-    }
-
-    setCondomiums(data);
-  };
+  const { data: condominiums } = useQuery({
+    queryKey: ["condominiums"],
+    queryFn: async () =>
+      await supabase.from("condominiums").select("id, name").throwOnError(),
+  });
 
   const uploadUserAvatar = async (
     userId: string,
@@ -67,7 +53,7 @@ const Signup = (): JSX.Element => {
       type: `image/${imageExtension}`,
     });
 
-    const { data, error } = await supabase.storage
+    const { data: image, error } = await supabase.storage
       .from("test")
       .upload(imageFullPath, formData, {
         contentType: `image/${imageExtension}`,
@@ -75,24 +61,20 @@ const Signup = (): JSX.Element => {
       });
 
     if (error) {
-      console.log(error);
+      modal.error(error.message);
       return;
     }
 
-    const { data: f } = supabase.storage.from("test").getPublicUrl(data.path);
+    const { data: imagePublicUrl } = supabase.storage
+      .from("test")
+      .getPublicUrl(image.path);
 
-    // The row is not updated because the user is not authenticated a this point.
     const { error: updateError } = await supabase
       .from("profiles")
-      .update({
-        avatar: f.publicUrl,
-      })
+      .update({ avatar: imagePublicUrl.publicUrl })
       .eq("id", userId);
 
-    if (updateError) {
-      console.error(updateError.message);
-      return;
-    }
+    if (updateError) modal.error(updateError.message);
   };
 
   const onSubmit = async (values: SignUpSchema) => {
@@ -140,10 +122,6 @@ const Signup = (): JSX.Element => {
       params: { email: values.email, password: values.password },
     });
   };
-
-  useEffect(() => {
-    getCondomiums();
-  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -198,7 +176,7 @@ const Signup = (): JSX.Element => {
         name="condominium"
         control={control}
         placeholder="Seleccione un residencial"
-        options={condominiums}
+        options={condominiums?.data}
       />
 
       <Field
@@ -230,7 +208,6 @@ const Signup = (): JSX.Element => {
         onPress={handleSubmit(onSubmit)}
         label="Registrarse"
       />
-
     </ScrollView>
   );
 };
