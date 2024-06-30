@@ -7,6 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   scheme: "green-d",
   orientation: "portrait",
   platforms: ["android", "ios"],
+  experiments: { typedRoutes: true },
   extra: {
     eas: {
       projectId: "0edfea24-9c31-4e5e-9a3b-a5570a24f972",
