@@ -19,9 +19,11 @@ import { supabase } from "../../../lib/supabase";
 import { ColorPalette } from "../../../styles/colorPalette";
 import { router } from "expo-router";
 import Filter from "../../../components/controls/Filter";
+import { useQuery } from "@tanstack/react-query";
+import ServicesHomeView from "../requests/ServicesHomeView";
 
 const Home = (): JSX.Element => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [outsourcers, setOutsourcers] = useState<
     | {
         id: string;
@@ -34,38 +36,7 @@ const Home = (): JSX.Element => {
       }[]
     | null
   >(null);
-  const [services, setServices] = useState<
-    | {
-        id: string;
-        name: string;
-        description: string;
-        image: string;
-      }[]
-    | null
-  >(null);
   const [serviceFilter, setServiceFilter] = useState<string | number>(0);
-
-  const getServices = async () => {
-    setLoading(true);
-
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    const { data: condominiumServices, error } = await supabase
-      .from("condominium_services")
-      .select(`service_id (id, name, description, image)`)
-      .eq("condominium_id", user?.user_metadata.condominium);
-
-    if (error) Alert.alert(error.message);
-
-    const serviceData = condominiumServices?.map(item => item["service_id"]);
-
-    // FIXME:
-    setServices(serviceData);
-    setLoading(false);
-  };
 
   const getOutsourcers = async () => {
     const {
@@ -107,12 +78,8 @@ const Home = (): JSX.Element => {
   };
 
   useEffect(() => {
-    getServices();
-  }, []);
-
-  useEffect(() => {
     getOutsourcers();
-  }, [serviceFilter])
+  }, [serviceFilter]);
 
   if (loading) {
     return (
@@ -163,64 +130,7 @@ const Home = (): JSX.Element => {
                 />
               </View>
 
-              <FlatList
-                data={services}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-                numColumns={3}
-                columnWrapperStyle={{
-                  justifyContent: "space-between",
-                }}
-                ListHeaderComponent={() => (
-                  <Header
-                    style={{ fontSize: moderateScale(18) }}
-                    title={"Servicios"}
-                  />
-                )}
-                renderItem={({ item: data, index }) => {
-                  if (index <= 4) return <ServiceCard {...data} />;
-
-                  return (
-                    <Tappable
-                      onPress={() => router.navigate("/home/all-services")}>
-                      <View
-                        style={{
-                          width: moderateScale(100),
-                          height: moderateScale(80),
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}>
-                        <View
-                          style={{
-                            width: moderateScale(80),
-                            height: moderateScale(80),
-                            borderRadius: moderateScale(80) / 2,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: "#f3f4f6",
-                          }}>
-                          <FontAwesomeIcon
-                            icon={faEllipsis}
-                            size={moderateScale(42)}
-                            color={ColorPalette.tertiary}
-                          />
-                        </View>
-                      </View>
-                      <View>
-                        <Txt
-                          style={{
-                            fontSize: moderateScale(12),
-                            textAlign: "center",
-                            fontFamily: "ffBold",
-                            color: ColorPalette.tertiary,
-                          }}>
-                          Ver todos
-                        </Txt>
-                      </View>
-                    </Tappable>
-                  );
-                }}
-              />
+              <ServicesHomeView/>
 
               <Header
                 style={{ fontSize: moderateScale(18) }}
@@ -228,7 +138,7 @@ const Home = (): JSX.Element => {
               />
             </View>
 
-            <Filter
+            {/* <Filter
               data={services}
               selected={serviceFilter}
               onPress={id => setServiceFilter(id)}
@@ -236,7 +146,7 @@ const Home = (): JSX.Element => {
                 selectedBackgroundColor: ColorPalette.primary,
                 selectedColor: "white",
               }}
-            />
+            /> */}
           </View>
         )}
         renderItem={({ item: outsourcer }) => (
