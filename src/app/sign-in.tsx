@@ -13,9 +13,7 @@ import {
   SignInSchema,
   signInSchema,
 } from "../utilities/validators/LoginSchema";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import Link from "../components/controls/Link";
-import { ColorPalette } from "../styles/colorPalette";
 import PasswordField from "../components/controls/PasswordField";
 import { router } from "expo-router";
 import { useModal } from "../hooks/useModal";
@@ -41,16 +39,9 @@ const Login = () => {
         params: { email: form.email, password: form.password },
       });
       return;
-    } 
-
-    if (error) {
-      modal.open({
-        title: "¡Ups! Algo salió mal",
-        description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: [{ label: "Entendido" }],
-      });
     }
+
+    if (error) modal.error(error.message);
 
     setLoading(false);
   };

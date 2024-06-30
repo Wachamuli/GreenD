@@ -6,11 +6,6 @@ import Link from "../components/controls/Link";
 import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
-import { ColorPalette } from "../styles/colorPalette";
-import {
-  faCircleInfo,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useModal } from "../hooks/useModal";
 
@@ -32,14 +27,7 @@ const EmailConfirmationScreen = (): JSX.Element => {
       },
     });
 
-    if (error) {
-      modal.open({
-        title: "¡Ups! Algo salió mal",
-        description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: [{ label: "Entendido" }],
-      });
-    }
+    if (error) modal.error(error.message);
   };
 
   // TODO: Instead of going directly to index, first redirect to Login
@@ -53,23 +41,14 @@ const EmailConfirmationScreen = (): JSX.Element => {
     });
 
     if (error?.message === "Email not confirmed") {
-      modal.open({
-        title: "¡Correo sin confirmar!",
-        description: "Revise su bandeja de entrada o spam.",
-        iconProps: { icon: faCircleInfo, color: ColorPalette.secondary },
-        buttonOptions: [{ label: "Entendido" }],
-      });
+      modal.info(
+        "¡Correo sin confirmar!",
+        "Revise su bandeja de entrada o spam.",
+      );
       return;
     }
 
-    if (error) {
-      modal.open({
-        title: "¡Ups! Algo salió mal",
-        description: error.message,
-        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-        buttonOptions: [{ label: "Entendido" }],
-      });
-    }
+    if (error) modal.error(error.message);
 
     setLoading(false);
   };
@@ -100,7 +79,6 @@ const EmailConfirmationScreen = (): JSX.Element => {
         flex: 1,
       }}>
       <View style={{ alignItems: "center" }}>
-        {/* FIXME: Image not showing */}
         <Image
           source={require("../assets/greenrlogo.png")}
           style={{
