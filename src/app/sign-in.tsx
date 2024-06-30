@@ -21,13 +21,12 @@ import { router } from "expo-router";
 import { useModal } from "../hooks/useModal";
 
 const Login = () => {
+  const modal = useModal();
+  const [loading, setLoading] = useState(false);
   const { handleSubmit, control } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
-  const [loading, setLoading] = useState(false);
-  const modal = useModal();
 
-  // TODO: Show splashscreen when loading and handle specific errors
   const signIn = async (form: SignInSchema) => {
     setLoading(true);
 
@@ -36,20 +35,21 @@ const Login = () => {
       password: form.password,
     });
 
+    if (error?.message === "Email not confirmed") {
+      router.navigate({
+        pathname: "/confirmation",
+        params: { email: form.email, password: form.password },
+      });
+      return;
+    } 
+
     if (error) {
-      if (error.message === "Email not confirmed") {
-        router.navigate({
-          pathname: "/confirmation",
-          params: { email: form.email, password: form.password },
-        });
-      } else {
-        modal.open({
-          title: "¡Ups! Algo salió mal",
-          description: error.message,
-          iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-          buttonOptions: [{ label: "Entendido" }],
-        });
-      }
+      modal.open({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: [{ label: "Entendido" }],
+      });
     }
 
     setLoading(false);

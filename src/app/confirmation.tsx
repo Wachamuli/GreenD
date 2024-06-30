@@ -12,10 +12,11 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLocalSearchParams } from "expo-router";
+import { useModal } from "../hooks/useModal";
 
 const EmailConfirmationScreen = (): JSX.Element => {
   let time = 30; // In seconds
-  const params = useLocalSearchParams();
+  const params = useLocalSearchParams<{ email: string; password: string }>();
   const [counter, setCounter] = useState(time);
   const [loading, setLoading] = useState(false);
   const modal = useModal();
@@ -24,7 +25,7 @@ const EmailConfirmationScreen = (): JSX.Element => {
     setCounter(time);
     // Maybe this is not the function that I need for this purpose.
     const { error } = await supabase.auth.signInWithOtp({
-      email: params.email,
+      email: params.email!,
       options: {
         shouldCreateUser: false,
         // emailRedirectTo: 'https://example.com/welcome',
@@ -47,26 +48,27 @@ const EmailConfirmationScreen = (): JSX.Element => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: params.email,
-      password: params.password,
+      email: params.email!,
+      password: params.password!,
     });
 
+    if (error?.message === "Email not confirmed") {
+      modal.open({
+        title: "¡Correo sin confirmar!",
+        description: "Revise su bandeja de entrada o spam.",
+        iconProps: { icon: faCircleInfo, color: ColorPalette.secondary },
+        buttonOptions: [{ label: "Entendido" }],
+      });
+      return;
+    }
+
     if (error) {
-      if (error.message === "Email not confirmed") {
-        modal.open({
-          title: "¡Correo sin confirmar!",
-          description: "Revise su bandeja de entrada o spam.",
-          iconProps: { icon: faCircleInfo, color: ColorPalette.secondary },
-          buttonOptions: [{ label: "Entendido" }],
-        });
-      } else {
-        modal.open({
-          title: "¡Ups! Algo salió mal",
-          description: error.message,
-          iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
-          buttonOptions: [{ label: "Entendido" }],
-        });
-      }
+      modal.open({
+        title: "¡Ups! Algo salió mal",
+        description: error.message,
+        iconProps: { icon: faTriangleExclamation, color: ColorPalette.error },
+        buttonOptions: [{ label: "Entendido" }],
+      });
     }
 
     setLoading(false);
