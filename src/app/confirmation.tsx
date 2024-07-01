@@ -1,23 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Image, View } from "react-native";
+
+import { useLocalSearchParams } from "expo-router";
 
 import Txt from "../components/info/Txt";
 import Link from "../components/controls/Link";
 import Btn from "../components/controls/Btn";
 import { supabase } from "../lib/supabase";
-import { horizontalScale, verticalScale } from "../utilities/metrics";
-import { useLocalSearchParams } from "expo-router";
 import { useModal } from "../hooks/useModal";
+import { useTimer } from "../hooks/useTimer";
+import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 const EmailConfirmationScreen = (): JSX.Element => {
-  let time = 30; // In seconds
-  const params = useLocalSearchParams<{ email: string; password: string }>();
-  const [counter, setCounter] = useState(time);
-  const [loading, setLoading] = useState(false);
+  const initialCount = 30;
   const modal = useModal();
+  const [loading, setLoading] = useState(false);
+  const { counter, setCounter } = useTimer(initialCount);
+  const params = useLocalSearchParams<{ email: string; password: string }>();
 
   const resendConfirmationEmail = async () => {
-    setCounter(time);
+    setCounter(initialCount);
     // Maybe this is not the function that I need for this purpose.
     const { error } = await supabase.auth.signInWithOtp({
       email: params.email!,
@@ -52,23 +54,6 @@ const EmailConfirmationScreen = (): JSX.Element => {
 
     setLoading(false);
   };
-
-  useEffect(() => {
-    const timer = setInterval(
-      () =>
-        setCounter(prevCounter => {
-          if (prevCounter <= 0) {
-            clearInterval(timer);
-            return prevCounter;
-          }
-
-          return prevCounter - 1;
-        }),
-      1000,
-    );
-
-    return () => clearInterval(timer);
-  }, [counter]);
 
   return (
     <View
