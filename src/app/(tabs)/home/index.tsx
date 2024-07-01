@@ -1,26 +1,17 @@
 import { useState, useEffect } from "react";
-import { FlatList, View, Alert, ActivityIndicator, Image } from "react-native";
+import { FlatList, View, ActivityIndicator } from "react-native";
 
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-
-import Txt from "../../../components/info/Txt";
 import Header from "../../../components/info/Header";
-import ServiceCard from "../../../components/ServiceCard";
-import Tappable from "../../../components/controls/Tappable";
 import SearchBar from "../../../components/controls/SearchBar";
 import HomeOutsourcerCard from "../../../components/HomeOutsourcerCard";
+import ServicesHomeView from "../requests/ServicesHomeView";
+import Carousel from "../../../components/Carousel";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../utilities/metrics";
 import { supabase } from "../../../lib/supabase";
-import { ColorPalette } from "../../../styles/colorPalette";
-import { router } from "expo-router";
-import Filter from "../../../components/controls/Filter";
-import { useQuery } from "@tanstack/react-query";
-import ServicesHomeView from "../requests/ServicesHomeView";
 
 const Home = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
@@ -108,34 +99,31 @@ const Home = (): JSX.Element => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <View>
-            <View style={{ paddingHorizontal: horizontalScale(20) }}>
-              <Header title="Ofertas" style={{ fontSize: moderateScale(18) }} />
-
-              <View
-                style={{
-                  width: "100%",
-                  height: verticalScale(80),
-                  borderRadius: moderateScale(10),
-                  overflow: "hidden",
-                  marginBottom: verticalScale(20),
-                }}>
-                <Image
-                  source={{
-                    uri: "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
-                  }}
-                  style={{
-                    height: verticalScale(80),
-                    width: "100%",
-                  }}
+            <View>
+              <View style={{ paddingHorizontal: horizontalScale(20) }}>
+                <Header
+                  title="Ofertas"
+                  style={{ fontSize: moderateScale(18) }}
                 />
               </View>
 
-              <ServicesHomeView/>
-
-              <Header
-                style={{ fontSize: moderateScale(18) }}
-                title="Más Populares"
+              <Carousel
+                images={[
+                  "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+                  "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+                  "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+                  "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+                ]}
               />
+
+              <View style={{ paddingHorizontal: horizontalScale(20) }}>
+                <ServicesHomeView />
+
+                <Header
+                  style={{ fontSize: moderateScale(18) }}
+                  title="Más Populares"
+                />
+              </View>
             </View>
 
             {/* <Filter
