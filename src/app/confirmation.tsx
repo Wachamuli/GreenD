@@ -12,14 +12,13 @@ import { useTimer } from "../hooks/useTimer";
 import { horizontalScale, verticalScale } from "../utilities/metrics";
 
 const EmailConfirmationScreen = (): JSX.Element => {
-  const initialCount = 30;
   const modal = useModal();
   const [loading, setLoading] = useState(false);
-  const { counter, setCounter } = useTimer(initialCount);
+  const { counter, resetCounter } = useTimer(30);
   const params = useLocalSearchParams<{ email: string; password: string }>();
 
   const resendConfirmationEmail = async () => {
-    setCounter(initialCount);
+    resetCounter();
     // Maybe this is not the function that I need for this purpose.
     const { error } = await supabase.auth.signInWithOtp({
       email: params.email!,
