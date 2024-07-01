@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: verticalScale(80),
-    borderRadius: moderateScale(10),
+    // borderRadius: moderateScale(10),
     overflow: "hidden",
   },
   imageDimensions: {

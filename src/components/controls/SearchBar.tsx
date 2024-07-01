@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 99,
     marginBottom: verticalScale(5),
-    paddingHorizontal: horizontalScale(20),
+    // paddingHorizontal: horizontalScale(20),
     width: "100%",
   },
   textInput: {
