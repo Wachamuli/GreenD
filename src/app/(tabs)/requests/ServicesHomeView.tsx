@@ -1,4 +1,4 @@
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 
@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 import Txt from "../../../components/info/Txt";
-import Header from "../../../components/info/Header";
 import ServiceCard from "../../../components/ServiceCard";
 import Tappable from "../../../components/controls/Tappable";
+import LoadingIndicator from "../../../components/info/LoadingIndicator";
 import { supabase } from "../../../lib/supabase";
 import { Service } from "../../../lib/supabase.type.alias";
 import { moderateScale } from "../../../utilities/metrics";
@@ -38,7 +38,7 @@ const ServicesHomeView = () => {
     },
   });
 
-  if (isLoading) return <ActivityIndicator />;
+  if (isLoading) return <LoadingIndicator />;
 
   return (
     <FlatList
@@ -49,9 +49,6 @@ const ServicesHomeView = () => {
       columnWrapperStyle={{
         justifyContent: "space-between",
       }}
-      ListHeaderComponent={() => (
-        <Header style={{ fontSize: moderateScale(18) }} title={"Servicios"} />
-      )}
       renderItem={({ item: data, index }) => {
         if (index <= 4)
           return (
