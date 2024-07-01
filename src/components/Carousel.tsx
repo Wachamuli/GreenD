@@ -27,7 +27,6 @@ const Carousel = ({ images }: { images: string[] }) => {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const xOffeset = event.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(xOffeset / screenWidth);
-    console.log(currentIndex);
     setCurrentIndex(currentIndex);
   };
 
