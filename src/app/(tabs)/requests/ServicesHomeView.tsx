@@ -13,13 +13,18 @@ import { supabase } from "../../../lib/supabase";
 import { Service } from "../../../lib/supabase.type.alias";
 import { moderateScale } from "../../../utilities/metrics";
 import { ColorPalette } from "../../../styles/colorPalette";
+import ErrorView from "../../../components/info/ErrorView";
 
 const ServicesHomeView = () => {
-  const { data: user } = useQuery({
+  const { data: user, error: userError } = useQuery({
     queryKey: ["user"],
     queryFn: async () => await supabase.auth.getUser(),
   });
-  const { data: services, isLoading } = useQuery({
+  const {
+    data: services,
+    isLoading,
+    error: servicesError,
+  } = useQuery({
     enabled: !!user,
     queryKey: ["services", user],
     queryFn: async () => {
@@ -32,11 +37,13 @@ const ServicesHomeView = () => {
       // @ts-ignore
       const services: Service[] = condominiumServices?.map(
         item => item["service_id"],
-      ); 
+      );
 
       return services;
     },
   });
+
+  if (servicesError || userError) return <ErrorView />;
 
   if (isLoading) return <LoadingIndicator />;
 

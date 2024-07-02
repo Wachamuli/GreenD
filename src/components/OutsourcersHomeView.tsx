@@ -1,23 +1,28 @@
+import { useState } from "react";
 import { FlatList } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+
 import Filter from "./controls/Filter";
 import LoadingIndicator from "./info/LoadingIndicator";
-import { supabase } from "../lib/supabase";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { ColorPalette } from "../styles/colorPalette";
 import HomeOutsourcerCard from "./HomeOutsourcerCard";
-import { verticalScale } from "../utilities/metrics";
+import ErrorView from "./info/ErrorView";
+import { supabase } from "../lib/supabase";
+import { ColorPalette } from "../styles/colorPalette";
 
 const OutsourcersHomeView = () => {
   const [serviceFilter, setServiceFilter] = useState<string | number>(0);
-  const { data: user, isLoading: isUserLoading } = useQuery({
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    error: userError,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: async () => await supabase.auth.getUser(),
   });
   const {
     data: outsourcers,
     isLoading: isOutsourcersLoading,
-    isSuccess,
+    error: outsourcersError,
   } = useQuery({
     enabled: !!user,
     queryKey: ["outsourcers", user, serviceFilter],
@@ -31,7 +36,11 @@ const OutsourcersHomeView = () => {
         .match(serviceFilter ? { service: serviceFilter } : {})
         .throwOnError(),
   });
-  const { data: services, isLoading: isServicesLoading } = useQuery({
+  const {
+    data: services,
+    isLoading: isServicesLoading,
+    error: servicesError,
+  } = useQuery({
     enabled: !!user,
     queryKey: ["services", user],
     queryFn: async () => {
@@ -50,7 +59,9 @@ const OutsourcersHomeView = () => {
     },
   });
 
-  if (isUserLoading || isOutsourcersLoading || isServicesLoading)
+  if (userError || servicesError || outsourcersError) return <ErrorView />;
+
+  if (isUserLoading || isServicesLoading || isOutsourcersLoading)
     return <LoadingIndicator />;
 
   return (
