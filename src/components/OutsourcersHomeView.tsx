@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 
+import Txt from "./info/Txt";
 import Filter from "./controls/Filter";
 import LoadingIndicator from "./info/LoadingIndicator";
 import HomeOutsourcerCard from "./HomeOutsourcerCard";
 import ErrorView from "./info/ErrorView";
 import { supabase } from "../lib/supabase";
 import { ColorPalette } from "../styles/colorPalette";
+import { verticalScale } from "../utilities/metrics";
 
 const OutsourcersHomeView = () => {
   const [serviceFilter, setServiceFilter] = useState<string | number>(0);
@@ -81,6 +83,11 @@ const OutsourcersHomeView = () => {
       )}
       renderItem={({ item: outsourcer }) => (
         <HomeOutsourcerCard {...outsourcer} />
+      )}
+      ListEmptyComponent={() => (
+        <View style={{ paddingBottom: verticalScale(150) }}>
+          <Txt>Sin más papopulares en la categoría</Txt>
+        </View>
       )}
     />
   );
