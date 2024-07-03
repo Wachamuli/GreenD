@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { SectionList, StyleSheet, TextInput, View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { supabase } from "../../lib/supabase";
 import Txt from "../info/Txt";
 import Tappable from "./Tappable";
+import LoadingIndicator from "../info/LoadingIndicator";
+import { supabase } from "../../lib/supabase";
 import { ColorPalette } from "../../styles/colorPalette";
 import {
   horizontalScale,
@@ -38,37 +40,68 @@ const SearchItem = ({ name, id }: { name: string; id?: string }) => {
 };
 
 const SearchBar = () => {
-  const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState("");
-  const [services, setServices] = useState([{ id: "", name: "" }]);
+  const [isSearching, setIsSearching] = useState(false);
+
   const [temporaryServices, setTemporaryServices] = useState([
-    { id: "", name: "" },
+    { id: 0, name: "" },
   ]);
-  const [outsourcers, setOutsources] = useState([
-    { id: "", name: "", service: { name: "" } },
-  ]);
+  const {
+    data: services,
+    isLoading: isServicesLoading,
+    isSuccess: isServicesSuccess,
+  } = useQuery({
+    queryKey: ["services"],
+    queryFn: async () => {
+      const result = await supabase
+        .from("services")
+        .select("id, name")
+        .throwOnError();
+
+      setTemporaryServices(result.data);
+      return result;
+    },
+  });
+
   const [temporaryOutsourcers, setTemporaryOutsourcers] = useState([
     { id: "", name: "", service: { name: "" } },
   ]);
+  const {
+    data: outsources,
+    isLoading: isOutsourcersLoading,
+    isSuccess: isOutsourcersSuccess,
+  } = useQuery({
+    queryKey: ["outsourcers"],
+    queryFn: async () => {
+      const result = await supabase
+        .from("outsourcers")
+        .select("id, name, service (name)")
+        .throwOnError();
 
-  const getServices = async () => {
-    const { data } = await supabase.from("services").select("id, name");
-    setServices(data);
-    setTemporaryServices(data);
-  };
+      setTemporaryOutsourcers(result.data);
+      return result;
+    },
+  });
 
-  const getOutsourcers = async () => {
-    const { data } = await supabase
-      .from("outsourcers")
-      .select("id, name, service (name)");
-    setOutsources(data);
-    setTemporaryOutsourcers(data);
-  };
+  if (isServicesLoading) return <LoadingIndicator />;
 
   useEffect(() => {
-    getServices();
-    getOutsourcers();
-  }, []);
+    if (isServicesSuccess)
+      setTemporaryServices(
+        services.data!.filter(service =>
+          service.name.toLowerCase().startsWith(search.toLowerCase()),
+        ),
+      );
+
+    if (isOutsourcersSuccess)
+      setTemporaryOutsourcers(
+        outsources.data!.filter(outsourcer =>
+          outsourcer.service.name
+            .toLowerCase()
+            .startsWith(search.toLowerCase()),
+        ),
+      );
+  }, [search]);
 
   const sections = [
     {
@@ -85,21 +118,7 @@ const SearchBar = () => {
         <SearchItem name="Ningún contratista encontrado" />
       ),
     },
-
   ];
-
-  useEffect(() => {
-    setTemporaryServices(
-      services.filter(service =>
-        service.name.toLowerCase().startsWith(search.toLowerCase()),
-      ),
-    );
-    setTemporaryOutsourcers(
-      outsourcers.filter(outsourcer =>
-        outsourcer.service.name.toLowerCase().startsWith(search.toLowerCase()),
-      ),
-    );
-  }, [search]);
 
   return (
     <View style={styles.container}>
@@ -180,3 +199,52 @@ const styles = StyleSheet.create({
 });
 
 export default SearchBar;
+
+// const SearchBar = () => {
+//   const {
+//     data: services,
+//     isLoading: isServicesLoading,
+//     isSuccess: isServicesSuccess,
+//   } = useQuery({
+//     queryKey: ["services"],
+//     queryFn: async () =>
+//       await supabase.from("services").select("id, name").throwOnError(),
+//   });
+//   const {
+//     data: outsources,
+//     isLoading: isOutsourcersLoading,
+//     isSuccess: isOutsourcersSuccess,
+//   } = useQuery({
+//     queryKey: ["outsourcers"],
+//     queryFn: async () =>
+//       await supabase
+//         .from("outsourcers")
+//         .select("id, name, service (name)")
+//         .throwOnError(),
+//   });
+//   const [isSearching, setIsSearching] = useState(false);
+//   const [search, setSearch] = useState("");
+//   const [temporaryServices, setTemporaryServices] = useState<any>();
+//   const [temporaryOutsourcers, setTemporaryOutsourcers] = useState<any>();
+
+//   if (isServicesSuccess) setTemporaryServices(services);
+//   if (isOutsourcersSuccess) setTemporaryOutsourcers(outsources);
+
+//   useEffect(() => {
+//     if (isServicesSuccess)
+//       setTemporaryServices(
+//         services.filter(service =>
+//           service.name.toLowerCase().startsWith(search.toLowerCase()),
+//         ),
+//       );
+
+//     if (isOutsourcersSuccess)
+//       setTemporaryOutsourcers(
+//         outsourcers.filter(outsourcer =>
+//           outsourcer.service.name
+//             .toLowerCase()
+//             .startsWith(search.toLowerCase()),
+//         ),
+//       );
+//   }, [search]);
+// };
