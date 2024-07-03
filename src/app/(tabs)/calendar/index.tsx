@@ -83,30 +83,29 @@ const Calendar = () => {
   if (isRequestLoading) return <LoadingIndicator />;
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={filteredRequests}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={() => (
-          <>
-            <MyCalendar markedDates={marked} onValueChange={setSelectedDay} />
+    <FlatList
+      style={styles.container}
+      data={filteredRequests}
+      showsVerticalScrollIndicator={false}
+      ListHeaderComponent={() => (
+        <>
+          <MyCalendar markedDates={marked} onValueChange={setSelectedDay} />
 
-            <Header
-              title={`Citas (${filteredRequests?.length})`}
-              style={styles.subHeader}
-            />
-          </>
-        )}
-        renderItem={({ item }) => <ServiceRequestCard {...item} />}
-        ListEmptyComponent={() => (
-          <View style={styles.emptyList}>
-            <Txt style={{ color: ColorPalette.tertiary }}>
-              Sin citas disponibles para hoy
-            </Txt>
-          </View>
-        )}
-      />
-    </View>
+          <Header
+            title={`Citas (${filteredRequests?.length})`}
+            style={styles.subHeader}
+          />
+        </>
+      )}
+      renderItem={({ item }) => <ServiceRequestCard {...item} />}
+      ListEmptyComponent={() => (
+        <View style={styles.emptyList}>
+          <Txt style={{ color: ColorPalette.tertiary }}>
+            Sin citas disponibles para hoy
+          </Txt>
+        </View>
+      )}
+    />
   );
 };
 
