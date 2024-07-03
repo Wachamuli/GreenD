@@ -16,6 +16,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../../utilities/metrics";
+import ErrorView from "../info/ErrorView";
 
 const SearchItem = ({ name, id }: { name: string; id?: string }) => {
   return (
@@ -40,70 +41,71 @@ const SearchItem = ({ name, id }: { name: string; id?: string }) => {
 };
 
 const SearchBar = () => {
-  const [search, setSearch] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-
-  const [temporaryServices, setTemporaryServices] = useState([
-    { id: 0, name: "" },
-  ]);
   const {
     data: services,
     isLoading: isServicesLoading,
     isSuccess: isServicesSuccess,
+    error: servicesError,
   } = useQuery({
     queryKey: ["services"],
-    queryFn: async () => {
-      const result = await supabase
-        .from("services")
-        .select("id, name")
-        .throwOnError();
-
-      setTemporaryServices(result.data);
-      return result;
-    },
+    queryFn: async () =>
+      await supabase.from("services").select("id, name").throwOnError(),
   });
-
-  const [temporaryOutsourcers, setTemporaryOutsourcers] = useState([
-    { id: "", name: "", service: { name: "" } },
-  ]);
   const {
     data: outsources,
     isLoading: isOutsourcersLoading,
     isSuccess: isOutsourcersSuccess,
+    error: outsourcersError,
   } = useQuery({
     queryKey: ["outsourcers"],
-    queryFn: async () => {
-      const result = await supabase
+    queryFn: async () =>
+      await supabase
         .from("outsourcers")
         .select("id, name, service (name)")
-        .throwOnError();
-
-      setTemporaryOutsourcers(result.data);
-      return result;
-    },
+        .returns<{ id: string; name: string; service: { name: string } }[]>()
+        .throwOnError(),
   });
 
-  if (isServicesLoading) return <LoadingIndicator />;
+  const [temporaryServices, setTemporaryServices] = useState([
+    { id: 0, name: "" },
+  ]);
+
+  const [temporaryOutsourcers, setTemporaryOutsourcers] = useState([
+    { id: "", name: "", service: { name: "" } },
+  ]);
+  const [search, setSearch] = useState("");
+
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    if (isServicesSuccess)
-      setTemporaryServices(
-        services.data!.filter(service =>
-          service.name.toLowerCase().startsWith(search.toLowerCase()),
-        ),
-      );
+    if (!isServicesSuccess) return;
 
-    if (isOutsourcersSuccess)
-      setTemporaryOutsourcers(
-        outsources.data!.filter(outsourcer =>
-          outsourcer.service.name
-            .toLowerCase()
-            .startsWith(search.toLowerCase()),
-        ),
-      );
-  }, [search]);
+    setTemporaryServices(
+      services.data!.filter(service =>
+        service.name.toLowerCase().startsWith(search.toLowerCase()),
+      ),
+    );
+  }, [search, isServicesSuccess]);
 
-  const sections = [
+  useEffect(() => {
+    if (!isOutsourcersSuccess) return;
+
+    setTemporaryOutsourcers(
+      outsources.data!.filter(outsourcer =>
+        outsourcer.service.name.toLowerCase().startsWith(search.toLowerCase()),
+      ),
+    );
+  }, [search, isOutsourcersSuccess]);
+
+  if (servicesError || outsourcersError) return <ErrorView />;
+
+  if (isServicesLoading || isOutsourcersLoading) return <LoadingIndicator />;
+
+  const sections: {
+    title: string;
+    data: any;
+    EmptySectionComponent: () => JSX.Element;
+  }[] = [
     {
       title: "Servicios",
       data: temporaryServices,
@@ -137,18 +139,12 @@ const SearchBar = () => {
       </View>
       <View>
         <SectionList
-          style={{
-            display: isSearching ? "flex" : "none",
-            position: "absolute",
-            backgroundColor: "white",
-            width: "100%",
-            borderWidth: moderateScale(0.5),
-            borderRadius: moderateScale(10),
-            paddingHorizontal: horizontalScale(10),
-            marginTop: verticalScale(5),
-          }}
+          style={[
+            styles.sectionList,
+            { display: isSearching ? "flex" : "none" },
+          ]}
           keyboardShouldPersistTaps="always"
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           sections={sections}
           ListEmptyComponent={() => <Txt>Resultado no encontrado</Txt>}
           renderSectionHeader={({
@@ -167,7 +163,7 @@ const SearchBar = () => {
             </View>
           )}
           renderItem={({ item }) => (
-            <SearchItem id={item.id} name={item.name} />
+            <SearchItem id={item.id.toString()} name={item.name} />
           )}
         />
       </View>
@@ -179,9 +175,9 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 99,
     marginBottom: verticalScale(5),
-    // paddingHorizontal: horizontalScale(20),
     width: "100%",
   },
+
   textInput: {
     backgroundColor: "#f3f4f6",
     borderRadius: moderateScale(10),
@@ -196,55 +192,15 @@ const styles = StyleSheet.create({
     left: "5%",
     top: "30%",
   },
+  sectionList: {
+    position: "absolute",
+    backgroundColor: "white",
+    width: "100%",
+    borderWidth: moderateScale(0.5),
+    borderRadius: moderateScale(10),
+    paddingHorizontal: horizontalScale(10),
+    marginTop: verticalScale(5),
+  },
 });
 
 export default SearchBar;
-
-// const SearchBar = () => {
-//   const {
-//     data: services,
-//     isLoading: isServicesLoading,
-//     isSuccess: isServicesSuccess,
-//   } = useQuery({
-//     queryKey: ["services"],
-//     queryFn: async () =>
-//       await supabase.from("services").select("id, name").throwOnError(),
-//   });
-//   const {
-//     data: outsources,
-//     isLoading: isOutsourcersLoading,
-//     isSuccess: isOutsourcersSuccess,
-//   } = useQuery({
-//     queryKey: ["outsourcers"],
-//     queryFn: async () =>
-//       await supabase
-//         .from("outsourcers")
-//         .select("id, name, service (name)")
-//         .throwOnError(),
-//   });
-//   const [isSearching, setIsSearching] = useState(false);
-//   const [search, setSearch] = useState("");
-//   const [temporaryServices, setTemporaryServices] = useState<any>();
-//   const [temporaryOutsourcers, setTemporaryOutsourcers] = useState<any>();
-
-//   if (isServicesSuccess) setTemporaryServices(services);
-//   if (isOutsourcersSuccess) setTemporaryOutsourcers(outsources);
-
-//   useEffect(() => {
-//     if (isServicesSuccess)
-//       setTemporaryServices(
-//         services.filter(service =>
-//           service.name.toLowerCase().startsWith(search.toLowerCase()),
-//         ),
-//       );
-
-//     if (isOutsourcersSuccess)
-//       setTemporaryOutsourcers(
-//         outsourcers.filter(outsourcer =>
-//           outsourcer.service.name
-//             .toLowerCase()
-//             .startsWith(search.toLowerCase()),
-//         ),
-//       );
-//   }, [search]);
-// };
