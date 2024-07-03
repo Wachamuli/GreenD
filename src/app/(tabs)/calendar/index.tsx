@@ -1,63 +1,60 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Calendar as CalendarComponent } from "react-native-calendars";
+
+import dayjs from "dayjs";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "../../../lib/supabase";
+
 import Txt from "../../../components/info/Txt";
+import Header from "../../../components/info/Header";
+import ErrorView from "../../../components/info/ErrorView";
+import LoadingIndicator from "../../../components/info/LoadingIndicator";
+import ServiceRequestCard from "../../../components/containers/ServiceRequestCard";
+import MyCalendar, {
+  SelectedDay,
+} from "../../../components/controls/MyCalendar";
+import { ColorPalette } from "../../../styles/colorPalette";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../utilities/metrics";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import dayjs from "dayjs";
-import { ColorPalette } from "../../../styles/colorPalette";
-import Header from "../../../components/info/Header";
-import { useFocusEffect } from "expo-router";
-import { ServiceRequestCard } from "../../../components/containers/ServiceRequestCard";
+import { ServiceRequest } from "../../../lib/supabase.type.alias";
 
-type SelectedDay = {
-  [x: string]: {
-    selected: boolean;
-    selectedColor: string;
-    textColor: string;
-  };
-}[];
+const today = dayjs(new Date()).format("YYYY-MM-DD");
 
 const Calendar = () => {
-  const [serviceRequests, setServiceRequests] = useState<any>();
+  const {
+    data: serviceRequests,
+    error: requestsError,
+    isLoading: isRequestLoading,
+    isSuccess: isRequestsSuccess,
+  } = useQuery({
+    queryKey: ["serviceRequests"],
+    queryFn: async () =>
+      await supabase
+        .from("service_requests")
+        .select("*, outsourcer(name, logo), service(name) ")
+        .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
+        .throwOnError(),
+  });
+  const [selectedDay, setSelectedDay] = useState(today);
   const [bookingDays, setBookingDays] = useState<SelectedDay>();
-  const [selectedDay, setSelectedDay] = useState<string>(
-    dayjs(new Date()).format("YYYY-MM-DD"),
-  );
+  const [filteredRequests, setFilteredRequests] = useState<ServiceRequest[]>();
 
-  const getBookings = async (selectedDay: string) => {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
+  const marked = useMemo(() => {
+    return {
+      ...bookingDays,
+      [selectedDay]: {
+        selected: true,
+        selectedColor: ColorPalette.primary,
+        textColor: "white",
+      },
+    };
+  }, [bookingDays, selectedDay]);
 
-    if (!user || userError) {
-      console.error(userError?.message || "Could not get user.");
-      return;
-    }
-
-    const { data: serviceRequests } = await supabase
-      .from("service_requests")
-      .select("*, outsourcer(name, logo), service(name) ")
-      .or("status.eq.Pending, status.eq.Confirmed, status.eq.InProgress")
-      .eq("user_id", user.id);
-
-    const filteredServices = serviceRequests?.filter(
-      requests => requests.r_date === selectedDay,
-    );
-
-    setServiceRequests(filteredServices);
-
-    const formattedBookingDays = serviceRequests?.reduce(
+  const getBookingDays = async () => {
+    const formattedBookingDays = serviceRequests?.data?.reduce(
       (acc: SelectedDay, item) => {
         acc[item.r_date] = {
           marked: true,
@@ -72,108 +69,37 @@ const Calendar = () => {
     setBookingDays(formattedBookingDays);
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      getBookings(selectedDay);
-    }, []),
-  );
-
   useEffect(() => {
-    getBookings(selectedDay);
-  }, [selectedDay]);
+    if (!isRequestsSuccess) return;
 
-  let date = new Date();
+    getBookingDays();
+    setFilteredRequests(
+      serviceRequests.data?.filter(request => request.r_date === selectedDay),
+    );
+  }, [selectedDay, isRequestsSuccess]);
 
-  const marked = useMemo(() => {
-    return {
-      ...bookingDays,
-      [selectedDay]: {
-        selected: true,
-        selectedColor: ColorPalette.primary,
-        textColor: "white",
-      },
-    };
-  }, [selectedDay, bookingDays]);
+  if (requestsError) return <ErrorView />;
+
+  if (isRequestLoading) return <LoadingIndicator />;
 
   return (
-    <View
-      style={{
-        paddingHorizontal: horizontalScale(20),
-        backgroundColor: "white",
-        flex: 1,
-      }}>
+    <View style={styles.container}>
       <FlatList
-        data={serviceRequests}
+        data={filteredRequests}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <>
-            <CalendarComponent
-              firstDay={1}
-              futureScrollRange={6}
-              pastScrollRange={6}
-              disableAllTouchEventsForInactiveDays
-              enableSwipeMonths
-              markedDates={marked}
-              onDayPress={date => {
-                setSelectedDay(date.dateString);
-              }}
-              renderHeader={date => (
-                <Txt style={styles.headerStyle}>
-                  {dayjs(date).format("MMMM YYYY")}{" "}
-                </Txt>
-              )}
-              renderArrow={direction =>
-                direction === "right" ? (
-                  <FontAwesomeIcon icon={faChevronRight} />
-                ) : (
-                  <FontAwesomeIcon icon={faChevronLeft} />
-                )
-              }
-              style={{ borderRadius: moderateScale(10), overflow: "hidden" }}
-              theme={{
-                textDayFontFamily: "ffNormal",
-                textDayHeaderFontFamily: "ffBold",
-                calendarBackground: "#f3f5ff",
-                selectedDayBackgroundColor: ColorPalette.primary,
-                "stylesheet.calendar.header": {
-                  dayTextAtIndex0: {
-                    color: "black",
-                  },
-                  dayTextAtIndex1: {
-                    color: "black",
-                  },
-                  dayTextAtIndex2: {
-                    color: "black",
-                  },
-                  dayTextAtIndex3: {
-                    color: "black",
-                  },
-                  dayTextAtIndex4: {
-                    color: "black",
-                  },
-                  dayTextAtIndex5: {
-                    color: "black",
-                  },
-                  dayTextAtIndex6: {
-                    color: "black",
-                  },
-                },
-              }}
-            />
+            <MyCalendar markedDates={marked} onValueChange={setSelectedDay} />
 
             <Header
-              title={`Citas (${serviceRequests?.length})`}
-              style={{
-                fontSize: moderateScale(18),
-                marginTop: verticalScale(10),
-              }}
+              title={`Citas (${filteredRequests?.length})`}
+              style={styles.subHeader}
             />
           </>
         )}
         renderItem={({ item }) => <ServiceRequestCard {...item} />}
         ListEmptyComponent={() => (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View style={styles.emptyList}>
             <Txt style={{ color: ColorPalette.tertiary }}>
               Sin citas disponibles para hoy
             </Txt>
@@ -185,14 +111,28 @@ const Calendar = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: horizontalScale(20),
+  },
   calendarContainer: {
     borderRadius: moderateScale(10),
     overflow: "hidden",
+  },
+  subHeader: {
+    fontSize: moderateScale(18),
+    marginTop: verticalScale(10),
   },
   headerStyle: {
     textTransform: "capitalize",
     fontFamily: "ffBold",
     fontSize: moderateScale(14),
+  },
+  emptyList: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

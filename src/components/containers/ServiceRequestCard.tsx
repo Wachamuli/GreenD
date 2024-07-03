@@ -14,7 +14,7 @@ import StatusLabel from "../info/StatusLabel";
 import CircleButton from "../controls/CircleButton";
 import { ColorPalette } from "../../styles/colorPalette";
 
-export const ServiceRequestCard = (item: any) => {
+const ServiceRequestCard = (item: any) => {
   return (
     <Tappable
       onPress={() => {
