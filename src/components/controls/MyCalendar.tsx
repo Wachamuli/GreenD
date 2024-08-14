@@ -53,7 +53,7 @@ const MyCalendar = (props: Props): JSX.Element => {
         textColor: "white",
       },
     };
-  }, [selectedDay]);
+  }, [selectedDay, props.markedDates]);
 
   return (
     <View>
@@ -69,8 +69,9 @@ const MyCalendar = (props: Props): JSX.Element => {
         theme={calendarTheme}
         onDayPress={day => {
           setSelectedDay(day.dateString);
-          // props.onValueChange(props.name, day.dateString);
-          props.onValueChange(day.dateString);
+          console.log(day.dateString)
+          props.onValueChange(props.name, day.dateString);
+          // props.onValueChange(day.dateString);
           if (error) error.message = "";
         }}
         renderHeader={date => (

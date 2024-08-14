@@ -100,7 +100,7 @@ const ServiceDetails = (): JSX.Element => {
 
   useEffect(() => {
     navigation.setOptions({ title: service?.name });
-  }, [service]);
+  }, [service, navigation]);
 
   useEffect(() => {
     const handleBeforeRemove = (event: any) => {

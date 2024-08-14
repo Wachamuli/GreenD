@@ -19,11 +19,12 @@ import DateTimeDisplayer from "../../../components/controls/DateTimeDisplayer";
 import TimePicker from "../../../components/controls/TimePicker";
 import Btn from "../../../components/controls/Btn";
 import { router, useLocalSearchParams } from "expo-router";
+import dayjs from "dayjs";
 
 const ServiceBookingScreen = () => {
   const params = useLocalSearchParams();
   const [time, setTime] = useState("");
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const { handleSubmit, control, setValue } = useForm<ServiceBookingSchema>({
     resolver: zodResolver(serviceBookingSchema),
   });
@@ -31,7 +32,6 @@ const ServiceBookingScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <MyCalendar
-        // onValueChange={setDate}
         onValueChange={setValue}
         name="calendar"
         control={control}
@@ -44,7 +44,7 @@ const ServiceBookingScreen = () => {
           name="timePicker"
           control={control}
         />
-        <DateTimeDisplayer date={date} time={time} />
+        {/* <DateTimeDisplayer date={date} time={time} /> */}
       </View>
 
       <Txt style={styles.header}>Tiempos recomendados</Txt>
@@ -88,7 +88,7 @@ const ServiceBookingScreen = () => {
               note: params.note,
               selectedDetails: params.selectedDetails,
               selectedOutsourcer: params.selectedOutsourcer,
-              selectedDay: values.calendar.toDateString(),
+              selectedDay: values.calendar,
               selectedTime: values.timePicker,
             },
           }),

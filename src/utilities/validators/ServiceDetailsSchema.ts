@@ -8,9 +8,7 @@ export const serviceDetailsSchema = z.object({
 
 export const serviceBookingSchema = z.object({
   timePicker: z.string(),
-  calendar: z.coerce.date({
-    errorMap: () => ({ message: "Seleccione una fecha válida" }),
-  }),
+  calendar: z.string({message: "Seleccione una fecha"}),
 });
 
 export type ServiceDetailsSchema = z.infer<typeof serviceDetailsSchema>;
