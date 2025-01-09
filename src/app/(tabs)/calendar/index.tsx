@@ -10,7 +10,9 @@ import Header from "../../../components/info/Header";
 import ErrorView from "../../../components/info/ErrorView";
 import LoadingIndicator from "../../../components/info/LoadingIndicator";
 import ServiceRequestCard from "../../../components/containers/ServiceRequestCard";
-import MyCalendar, {
+import { Calendar as MyCalendar } from "react-native-calendars";
+import {
+  // MyCalendar,
   SelectedDay,
 } from "../../../components/controls/MyCalendar";
 import { ColorPalette } from "../../../styles/colorPalette";
@@ -20,6 +22,11 @@ import {
   verticalScale,
 } from "../../../utilities/metrics";
 import { ServiceRequest } from "../../../lib/supabase.type.alias";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 
 const today = dayjs(new Date()).format("YYYY-MM-DD");
 
@@ -65,6 +72,7 @@ const Calendar = () => {
       },
       {},
     );
+    console.log(formattedBookingDays);
 
     setBookingDays(formattedBookingDays);
   };
@@ -89,7 +97,60 @@ const Calendar = () => {
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={() => (
         <>
-          <MyCalendar markedDates={marked} onValueChange={setSelectedDay} />
+          {/* <MyCalendar markedDates={marked} onValueChange={setSelectedDay} /> */}
+          <View>
+            <MyCalendar
+              firstDay={1}
+              pastScrollRange={1}
+              futureScrollRange={1}
+              enableSwipeMonths
+              disableAllTouchEventsForDisabledDays
+              disableAllTouchEventsForInactiveDays
+              markedDates={marked}
+              style={styles.calendarContainer}
+              theme={{
+                textDayFontFamily: "ffNormal",
+                textDayHeaderFontFamily: "ffBold",
+                calendarBackground: "#f3f5ff",
+                "stylesheet.calendar.header": {
+                  dayTextAtIndex0: {
+                    color: "black",
+                  },
+                  dayTextAtIndex1: {
+                    color: "black",
+                  },
+                  dayTextAtIndex2: {
+                    color: "black",
+                  },
+                  dayTextAtIndex3: {
+                    color: "black",
+                  },
+                  dayTextAtIndex4: {
+                    color: "black",
+                  },
+                  dayTextAtIndex5: {
+                    color: "black",
+                  },
+                  dayTextAtIndex6: {
+                    color: "black",
+                  },
+                },
+              }}
+              onDayPress={day => {
+                setSelectedDay(day.dateString);
+              }}
+              renderHeader={date => (
+                <Txt style={styles.headerStyle}>
+                  {dayjs(date).format("MMMM YYYY")}{" "}
+                </Txt>
+              )}
+              // renderArrow={direction => (
+              //   <FontAwesomeIcon
+              //     icon={direction === "right" ? faChevronRight : faChevronLeft}
+              //   />
+              // )}
+            />
+          </View>
 
           <Header
             title={`Citas (${filteredRequests?.length})`}

@@ -31,7 +31,8 @@ function ServiceRequest() {
     isLoading,
   } = useQuery({
     queryKey: ["services"],
-    queryFn: async () => await supabase.from("services").select("id, name"),
+    queryFn: async () =>
+      await supabase.from("services").select("id, name").throwOnError(),
   });
 
   if (error) return <ErroView />;
