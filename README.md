@@ -7,19 +7,19 @@ with __Expo__, enabling users to book home services like plumbing and painting. 
 
 ### Authentication Flow
 
-![[./assets/authentication-flow.png]]
+![authentication flow](./assets/authentication-flow.png)
 
 ### Order Service Flow
 
-![[./assets/order-service-flow.png]]
+![order service flow](./assets/order-service-flow.png)
 
 ### Request Management
 
-![[./assets/request-management.png]]
+![request management](./assets/request-management.png)
 
 ### Settings & Scheduling
 
-![[./assets/settings-and-scheduling.png]]
+![settings and scheduling](./assets/settings-and-scheduling.png)
 
 
 # 🚀 Technical Highlights
