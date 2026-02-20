@@ -1,4 +1,36 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Green Residential
+
+Green Residential is a __cross-platform mobile application__ using __React Native__ and TypeScript
+with __Expo__, enabling users to book home services like plumbing and painting. Features include service scheduling, appointment tracking, and reporting tools. I engineered the back-end using __Supabase__ (PostgreSQL), implemented secure authentication via JWT and Edge Functions.
+
+# Showcase
+
+### Authentication Flow
+
+![[./assets/authentication-flow.png]]
+
+### Order Service Flow
+
+![[./assets/order-service-flow.png]]
+
+### Request Management
+
+![[./assets/request-management.png]]
+
+### Settings & Scheduling
+
+![[./assets/settings-and-scheduling.png]]
+
+
+# 🚀 Technical Highlights
+
+- **Server State Management:** Implemented **TanStack Query (v5)** for robust caching, optimistic updates, and seamless data synchronization with the backend.
+    
+- **Type-Safe Forms:** Leveraged **Zod** schema validation with **React Hook Form** to ensure zero-error user inputs.
+    
+- **Scalable Backend:** Engineered using **Supabase (PostgreSQL)**, utilizing **Edge Functions** for server-side logic and **JWT** for secure, role-based authentication.
+    
+- **Modern Navigation:** Built with **Expo Router**, providing a native-feeling file-based routing system.
 
 # Getting Started
 
@@ -25,21 +57,13 @@ Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _roo
 ### For Android
 
 ```bash
-# using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
 ### For iOS
 
 ```bash
-# using npm
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
 If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
@@ -55,25 +79,6 @@ Now that you have successfully run the app, let's modify it.
 
    For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
 
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
 # Troubleshooting
 
 If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
