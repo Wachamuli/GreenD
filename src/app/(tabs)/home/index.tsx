@@ -21,10 +21,10 @@ const Home = (): JSX.Element => {
         <Header title="Ofertas" style={styles.header} />
         <Carousel
           images={[
-            "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
-            "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
-            "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
-            "https://zeawfjfjjegnpsfvfapw.supabase.co/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+            "http://10.0.2.2:54321/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+            "http://10.0.2.2:54321/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+            "http://10.0.2.2:54321/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
+            "http://10.0.2.2:54321/storage/v1/object/public/outsourcer_logos/deal_banner_placeholder.png",
           ]}
         />
 

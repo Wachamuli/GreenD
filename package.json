@@ -64,7 +64,7 @@
     "metro-react-native-babel-preset": "0.76.8",
     "prettier": "^2.4.1",
     "react-test-renderer": "18.2.0",
-    "supabase": "^1.112.0",
+    "supabase": "^2.76.15",
     "typescript": "~5.3.3"
   },
   "engines": {
